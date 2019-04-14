@@ -7,7 +7,6 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import twilightforest.TFConfig;
 
 public class BlockTwilightCake extends BlockCakeBase {
     public BlockTwilightCake(String registry) {
@@ -26,7 +25,7 @@ public class BlockTwilightCake extends BlockCakeBase {
 
     @Override
     public int getCakeDimension() {
-        return TFConfig.dimension.dimensionID;
+        return twilightforest.TFConfig.dimension.dimensionID;
     }
 
     @Override

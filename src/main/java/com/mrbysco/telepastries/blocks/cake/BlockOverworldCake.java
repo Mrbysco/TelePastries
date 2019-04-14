@@ -1,9 +1,7 @@
 package com.mrbysco.telepastries.blocks.cake;
 
 import com.mrbysco.telepastries.config.TeleConfig;
-import com.mrbysco.telepastries.util.CakeTeleporter;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;

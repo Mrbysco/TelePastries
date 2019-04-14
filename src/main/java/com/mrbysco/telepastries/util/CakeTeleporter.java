@@ -2,6 +2,7 @@ package com.mrbysco.telepastries.util;
 
 import com.mrbysco.telepastries.Reference;
 import com.mrbysco.telepastries.config.TeleConfig;
+import mcjty.lostcities.config.LostCityConfiguration;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,6 +19,8 @@ import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 
 public class CakeTeleporter extends Teleporter {
     private final WorldServer worldServer;
@@ -61,6 +64,8 @@ public class CakeTeleporter extends Teleporter {
                 endPlacement(entityPlayerMP);
             }
 
+            customCompat(entityPlayerMP, dimension, x, y, z);
+
             if (oldDimension == 1) {
                 player.setPositionAndUpdate(x, y, z);
                 worldServer.spawnEntity(player);
@@ -69,6 +74,26 @@ public class CakeTeleporter extends Teleporter {
 
         } else {
             throw new IllegalArgumentException("Dimension: " + dimension + " doesn't exist!");
+        }
+    }
+
+    private void customCompat(EntityPlayerMP playerMP, int dimension, double x, double y, double z) {
+
+        if(Loader.isModLoaded("twilightforest")) {
+            if(dimension == twilightforest.TFConfig.dimension.dimensionID){
+                twilightPlacement(playerMP, x, y, z);
+            }
+        }
+
+        if(Loader.isModLoaded("lostcities")) {
+            if(dimension == mcjty.lostcities.config.LostCityConfiguration.DIMENSION_ID){
+                lostCitiesPlacement(playerMP, x, y, z);
+            }
+        }
+        if(Loader.isModLoaded("huntingdim")) {
+            if(dimension == net.darkhax.huntingdim.handler.ConfigurationHandler.dimensionId) {
+                huntingDimensionPlacement(playerMP, x, y, z);
+            }
         }
     }
 
@@ -136,6 +161,7 @@ public class CakeTeleporter extends Teleporter {
             }
         }
     }
+
     private void teleportToNether(EntityPlayerMP playerMP, double x, double y, double z){
         if(TeleConfig.pastries.nether.netherCake1x1Logic) {
             protectPlayer(playerMP, new BlockPos(x, y, z));
@@ -195,5 +221,26 @@ public class CakeTeleporter extends Teleporter {
 
         playerIn.setLocationAndAngles((double)position.getX() + 0.5D, (double)platformPos.getY(), (double)position.getZ() + 0.5D, 90.0F, 0.0F);
         playerIn.setPositionAndUpdate((double)position.getX() + 0.5D, (double)platformPos.getY(), (double)position.getZ() + 0.5D);
+    }
+
+    @Optional.Method(modid = "twilightforest")
+    private void twilightPlacement(EntityPlayerMP playerMP, double x, double y, double z){
+        if(twilightforest.TFConfig.dimension.skylightForest) {
+            protectPlayer(playerMP, new BlockPos(x, y, z));
+        }
+    }
+
+    @Optional.Method(modid = "lostcities")
+    private void lostCitiesPlacement(EntityPlayerMP playerMP, double x, double y, double z){
+        if(LostCityConfiguration.DIMENSION_PROFILE.equals("space")) {
+            protectPlayer(playerMP, new BlockPos(x, y, z));
+        }
+    }
+
+    @Optional.Method(modid = "huntingdim")
+    private void huntingDimensionPlacement(EntityPlayerMP playerMP, double x, double y, double z){
+        if(net.darkhax.huntingdim.handler.ConfigurationHandler.isVoidWorld) {
+            protectPlayer(playerMP, new BlockPos(x, y, z));
+        }
     }
 }

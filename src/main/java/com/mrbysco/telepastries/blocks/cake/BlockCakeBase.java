@@ -60,7 +60,7 @@ public class BlockCakeBase extends BlockPastryBase {
                 }
             }
             return true;
-        } else if(worldIn.provider.getDimension() != getCakeDimension()){
+        } else if(!worldIn.isRemote && worldIn.provider.getDimension() != getCakeDimension()){
             if (playerIn.canEat(true) || playerIn.isCreative()) {
                 eatCake(worldIn, pos, state, playerIn);
                 return true;
@@ -93,10 +93,9 @@ public class BlockCakeBase extends BlockPastryBase {
         if (!player.isDead) {
             if (!world.isRemote && !player.isRiding() && !player.isBeingRidden() && player.isNonBoss()) {
                 EntityPlayerMP playerMP = (EntityPlayerMP)player;
-//                CakeTeleporter teleporter = new CakeTeleporter(playerMP.getServer().getWorld(getCakeDimension()), playerMP.getPosition());
-//                teleporter.addDimensionPosition(playerMP, playerMP.dimension, playerMP.getPosition().add(0,1,0));
-//                teleporter.teleportToDimension(playerMP, getCakeDimension(), playerMP.getPosition());
-                System.out.println(playerMP.getServer().getWorld(getCakeDimension()).getSpawnPoint());
+                CakeTeleporter teleporter = new CakeTeleporter(playerMP.getServer().getWorld(getCakeDimension()), playerMP.getPosition());
+                teleporter.addDimensionPosition(playerMP, playerMP.dimension, playerMP.getPosition().add(0,1,0));
+                teleporter.teleportToDimension(playerMP, getCakeDimension(), playerMP.getPosition());
             }
         }
     }
