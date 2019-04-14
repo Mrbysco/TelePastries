@@ -21,7 +21,6 @@ public class BlockEndCake extends BlockCakeBase {
             if (!world.isRemote && !player.isRiding() && !player.isBeingRidden() && player.isNonBoss()) {
                 EntityPlayerMP playerMP = (EntityPlayerMP)player;
                 WorldServer worldServer = playerMP.getServer().getWorld(getCakeDimension());
-                System.out.println(worldServer.getSpawnCoordinate());
                 CakeTeleporter teleporter = new CakeTeleporter(worldServer, worldServer.getSpawnCoordinate());
                 teleporter.addDimensionPosition(playerMP, playerMP.dimension, playerMP.getPosition().add(0,1,0));
                 teleporter.teleportToDimension(playerMP, getCakeDimension(), worldServer.getSpawnCoordinate());
