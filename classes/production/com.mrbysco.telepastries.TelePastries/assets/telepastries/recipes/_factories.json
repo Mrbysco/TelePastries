@@ -1,0 +1,7 @@
+{
+    "conditions" : {
+        "twilightforestinstalled": "com.mrbysco.telepastries.conditions.TwilightForestInstalled",
+        "lostcitiesinstalled": "com.mrbysco.telepastries.conditions.LostCitiesInstalled",
+        "huntingdimensioninstalled": "com.mrbysco.telepastries.conditions.HuntingDimensionInstalled"
+    }
+}

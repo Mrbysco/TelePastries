@@ -1,0 +1,16 @@
+[
+    {
+        "modid": "telepastries",
+        "name": "TelePastries",
+        "description": "Pastries that teleport players.",
+        "version": "${version}",
+        "mcversion": "${mcversion}",
+        "url": "",
+        "updateUrl": "",
+        "authorList": ["Mrbysco"],
+        "credits": "My friend 8138763 for the name",
+        "logoFile": "",
+        "screenshots": [],
+        "dependencies": []
+    }
+]

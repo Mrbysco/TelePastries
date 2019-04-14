@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "telepastries:end_cake"
+  },
+  "pattern": [
+    "EEE",
+    "ECE",
+    "EEE"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "minecraft:cake"
+    },
+    "E": {
+      "item": "minecraft:ender_eye"
+    }
+  }
+}

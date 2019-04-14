@@ -1,0 +1,88 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+
+version = "1.0"
+group = "com.mrbysco.telepastries" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "TelePastries"
+
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "1.12.2-14.23.5.2835"
+    runDir = "run"
+    mappings = "stable_39"
+}
+
+repositories {
+    maven {
+        // location of the maven that hosts jei files
+        name = "Progwml6 maven"
+        url = "http://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        // location of a maven mirror for jei files, as a fallback
+        name = "ModMaven"
+        url = "modmaven.k-4u.nl"
+    }
+    maven {
+        url "http://maven.blamejared.com"
+    }
+    maven {
+        url "http://tehnut.info/maven"
+    }
+    maven {
+        name = "thiakil"
+        url = "http://maven.thiakil.com"
+    }
+    maven {
+        name = "TOP Maven"
+        url = "http://maven.tterrag.com"
+    }
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+}
+
+dependencies {
+    deobfCompile "mezz.jei:jei_1.12.2:4.15.0.+"
+    deobfCompile "mcp.mobius.waila:Hwyla:1.8.24-B39_1.12"
+    deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-1.4.+"
+	
+	deobfCompile "the-twilight-forest:twilightforest-1.12.2:3.8.689:universal"
+	deobfCompile 'the-lost-cities:lostcities:1.12:2.0.17'
+	deobfCompile 'bookshelf:Bookshelf:1.12.2:2.3.577'
+	deobfCompile 'hunting-dimension:HuntingDimension:1.12.2:1.0.36'
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}

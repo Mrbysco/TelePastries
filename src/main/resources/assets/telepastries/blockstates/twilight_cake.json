@@ -1,0 +1,21 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"particle": "telepastries:blocks/twilight/cake_side",
+			"bottom": "telepastries:blocks/twilight/cake_bottom",
+			"top": "telepastries:blocks/twilight/cake_top",
+			"side": "telepastries:blocks/twilight/cake_side",
+			"inside": "telepastries:blocks/twilight/cake_inner"
+		}
+	},
+	"variants": {
+		"bites=0": { "model": "minecraft:cake_uneaten" },
+		"bites=1": { "model": "minecraft:cake_slice1" },
+		"bites=2": { "model": "minecraft:cake_slice2" },
+		"bites=3": { "model": "minecraft:cake_slice3" },
+		"bites=4": { "model": "minecraft:cake_slice4" },
+		"bites=5": { "model": "minecraft:cake_slice5" },
+		"bites=6": { "model": "minecraft:cake_slice6" }
+	}
+}
