@@ -12,6 +12,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -52,7 +53,9 @@ public class CakeTeleporter extends Teleporter {
         }
 
         if (worldServer != null && worldServer.getMinecraftServer() != null) {
-            worldServer.getMinecraftServer().getPlayerList().transferPlayerToDimension(entityPlayerMP, dimension, new CakeTeleporter(worldServer, new BlockPos(x,y,z)));
+            PlayerList playerList = worldServer.getMinecraftServer().getPlayerList();
+            playerList.transferPlayerToDimension(entityPlayerMP, dimension, this);
+
             player.setPositionAndUpdate(x, y, z);
 
             if(dimension == -1)
