@@ -63,9 +63,9 @@ public class BlockCakeBase extends BlockPastryBase {
             return true;
         } else if(!worldIn.isRemote && worldIn.provider.getDimension() != getCakeDimension()){
             if (playerIn.canEat(true) || playerIn.isCreative()) {
-                //TelePastries.logger.debug("At onBlockActivated before eatCake");
+                TelePastries.logger.debug("At onBlockActivated before eatCake");
                 eatCake(worldIn, pos, state, playerIn);
-                //TelePastries.logger.debug("At onBlockActivated after eatCake");
+                TelePastries.logger.debug("At onBlockActivated after eatCake");
                 return true;
             } else {
                 return false;
@@ -87,9 +87,9 @@ public class BlockCakeBase extends BlockPastryBase {
             if (!ForgeHooks.onTravelToDimension(playerIn, getCakeDimension()))
                 return;
 
-            //TelePastries.logger.debug("At eatCake before teleportToDimension");
+            TelePastries.logger.debug("At eatCake before teleportToDimension");
             teleportToDimension(worldIn, pos, playerIn);
-            //TelePastries.logger.debug("At eatCake after teleportToDimension");
+            TelePastries.logger.debug("At eatCake after teleportToDimension");
         } else {
             if(!playerIn.capabilities.isCreativeMode && consumeCake()) {
                 worldIn.setBlockToAir(pos);
@@ -101,8 +101,8 @@ public class BlockCakeBase extends BlockPastryBase {
         if (!player.isDead) {
             if (!world.isRemote && !player.isRiding() && !player.isBeingRidden() && player.isNonBoss()) {
                 EntityPlayerMP playerMP = (EntityPlayerMP)player;
-                //TelePastries.logger.debug("teleportToDimension oldDimension: " + world.provider.getDimension());
-                //TelePastries.logger.debug("teleportToDimension target cakeDimension: " + getCakeDimension());
+                TelePastries.logger.debug("teleportToDimension oldDimension: " + world.provider.getDimension());
+                TelePastries.logger.debug("teleportToDimension target cakeDimension: " + getCakeDimension());
                 CakeTeleporter teleporter = new CakeTeleporter(playerMP.getServer().getWorld(getCakeDimension()), playerMP.getPosition());
                 teleporter.addDimensionPosition(playerMP, playerMP.dimension, playerMP.getPosition().add(0,1,0));
                 teleporter.teleportToDimension(playerMP, getCakeDimension(), playerMP.getPosition());

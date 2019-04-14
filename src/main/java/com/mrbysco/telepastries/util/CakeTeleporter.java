@@ -10,13 +10,17 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketEntityEffect;
+import net.minecraft.network.play.server.SPacketRespawn;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Teleporter;
+import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 
@@ -43,7 +47,8 @@ public class CakeTeleporter extends Teleporter {
 
         if (this.world != null && this.world.getMinecraftServer() != null) {
             PlayerList playerList = this.world.getMinecraftServer().getPlayerList();
-            playerList.transferPlayerToDimension(entityPlayerMP, dimension, this);
+//            playerList.transferPlayerToDimension(entityPlayerMP, dimension, this);
+            bookshelfChangeDimension(entityPlayerMP, dimension, entityPlayerMP.getServer().getPlayerList());
 
             player.setPositionAndUpdate(x, y, z);
 
@@ -69,6 +74,68 @@ public class CakeTeleporter extends Teleporter {
         } else {
             throw new IllegalArgumentException("Dimension: " + dimension + " doesn't exist!");
         }
+    }
+
+    public static void bookshelfChangeDimension(EntityPlayerMP player, int dimension, PlayerList playerData) {
+        if (!net.minecraftforge.common.ForgeHooks.onTravelToDimension(player, dimension)) {
+            return;
+        }
+
+        final int oldDim = player.dimension;
+        final boolean wasAlive = player.isEntityAlive();
+        final WorldServer worldOld = playerData.getServerInstance().getWorld(player.dimension);
+        final WorldServer worldNew = playerData.getServerInstance().getWorld(dimension);
+
+        if (player.isBeingRidden()) {
+
+            player.removePassengers();
+        }
+
+        if (player.isRiding()) {
+
+            player.dismountRidingEntity();
+        }
+
+        player.dimension = dimension;
+        player.connection.sendPacket(new SPacketRespawn(player.dimension, player.world.getDifficulty(), player.world.getWorldInfo().getTerrainType(), player.interactionManager.getGameType()));
+        worldOld.removeEntityDangerously(player);
+
+        bookshelfChangeWorld(player, worldOld, worldNew);
+        playerData.preparePlayer(player, worldOld);
+        player.connection.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+        player.interactionManager.setWorld(worldNew);
+        playerData.updateTimeAndWeatherForPlayer(player, worldNew);
+        playerData.syncPlayerInventory(player);
+
+        if (player.isDead && wasAlive) {
+
+            player.isDead = false;
+        }
+
+        for (final PotionEffect potioneffect : player.getActivePotionEffects()) {
+
+            player.connection.sendPacket(new SPacketEntityEffect(player.getEntityId(), potioneffect));
+        }
+
+        FMLCommonHandler.instance().firePlayerChangedDimensionEvent(player, oldDim, dimension);
+    }
+
+    public static void bookshelfChangeWorld (Entity entity, WorldServer worldOld, WorldServer worldNew) {
+
+        final WorldProvider providerOld = worldOld.provider;
+        final WorldProvider providerNew = worldNew.provider;
+        final double moveFactor = providerOld.getMovementFactor() / providerNew.getMovementFactor();
+        final double x = MathHelper.clamp(entity.posX * moveFactor, -29999872, 29999872);
+        final double z = MathHelper.clamp(entity.posZ * moveFactor, -29999872, 29999872);
+
+        if (entity.isEntityAlive()) {
+
+            entity.setLocationAndAngles(x, entity.posY, z, entity.rotationYaw, entity.rotationPitch);
+            worldNew.spawnEntity(entity);
+            worldNew.updateEntityWithOptionalForce(entity, false);
+        }
+
+        entity.setWorld(worldNew);
     }
 
     private void customCompat(EntityPlayerMP playerMP, int dimension, double x, double y, double z) {
@@ -135,7 +202,7 @@ public class CakeTeleporter extends Teleporter {
     }
 
     private void endPlacement(EntityPlayerMP player) {
-        //TelePastries.logger.debug("before endPlacement");
+        TelePastries.logger.debug("before endPlacement");
 
         int i = MathHelper.floor(player.posX);
         int j = MathHelper.floor(player.posY) - 1;
@@ -156,7 +223,7 @@ public class CakeTeleporter extends Teleporter {
             }
         }
 
-        //TelePastries.logger.debug("after endPlacement");
+        TelePastries.logger.debug("after endPlacement");
     }
 
     private void relocateInNether(EntityPlayerMP playerMP, double x, double y, double z){
@@ -164,9 +231,9 @@ public class CakeTeleporter extends Teleporter {
             protectPlayer(playerMP, new BlockPos(x, y, z));
         } else {
             if  (hasDimensionPosition(playerMP, -1)) {
-                //TelePastries.logger.debug("at relocateInNether before protectPlayer");
+                TelePastries.logger.debug("at relocateInNether before protectPlayer");
                 protectPlayer(playerMP, new BlockPos(x, y, z));
-                //TelePastries.logger.debug("at relocateInNether after protectPlayer");
+                TelePastries.logger.debug("at relocateInNether after protectPlayer");
             } else {
                 double moveFactor = 0.125D;
                 double d0 = MathHelper.clamp(x * moveFactor, this.world.getWorldBorder().minX() + 16.0D, this.world.getWorldBorder().maxX() - 16.0D);
@@ -224,22 +291,22 @@ public class CakeTeleporter extends Teleporter {
 
     @Optional.Method(modid = "twilightforest")
     private void twilightPlacement(EntityPlayerMP playerMP, double x, double y, double z){
-        //TelePastries.logger.debug("at twilightPlacement before protectPlayer");
+        TelePastries.logger.debug("at twilightPlacement before protectPlayer");
         protectPlayer(playerMP, new BlockPos(x, y, z));
-        //TelePastries.logger.debug("at twilightPlacement after protectPlayer");
+        TelePastries.logger.debug("at twilightPlacement after protectPlayer");
     }
 
     @Optional.Method(modid = "lostcities")
     private void lostCitiesPlacement(EntityPlayerMP playerMP, double x, double y, double z){
-        //TelePastries.logger.debug("at lostCitiesPlacement before protectPlayer");
+        TelePastries.logger.debug("at lostCitiesPlacement before protectPlayer");
         protectPlayer(playerMP, new BlockPos(x, y, z));
-        //TelePastries.logger.debug("at lostCitiesPlacement after protectPlayer");
+        TelePastries.logger.debug("at lostCitiesPlacement after protectPlayer");
     }
 
     @Optional.Method(modid = "huntingdim")
     private void huntingDimensionPlacement(EntityPlayerMP playerMP, double x, double y, double z){
-        //TelePastries.logger.debug("at huntingDimensionPlacement before protectPlayer");
+        TelePastries.logger.debug("at huntingDimensionPlacement before protectPlayer");
         protectPlayer(playerMP, new BlockPos(x, y, z));
-        //TelePastries.logger.debug("at huntingDimensionPlacement after protectPlayer");
+        TelePastries.logger.debug("at huntingDimensionPlacement after protectPlayer");
     }
 }
