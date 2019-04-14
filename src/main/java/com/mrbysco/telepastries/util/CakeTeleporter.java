@@ -2,7 +2,6 @@ package com.mrbysco.telepastries.util;
 
 import com.mrbysco.telepastries.Reference;
 import com.mrbysco.telepastries.config.TeleConfig;
-import mcjty.lostcities.config.LostCityConfiguration;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -55,7 +54,7 @@ public class CakeTeleporter extends Teleporter {
 
             if(dimension == -1)
             {
-                teleportToNether(entityPlayerMP, x, y, z);
+                relocateInNether(entityPlayerMP, x, y, z);
             }
 
             if(dimension == 1) {
@@ -160,7 +159,7 @@ public class CakeTeleporter extends Teleporter {
         }
     }
 
-    private void teleportToNether(EntityPlayerMP playerMP, double x, double y, double z){
+    private void relocateInNether(EntityPlayerMP playerMP, double x, double y, double z){
         if(TeleConfig.pastries.nether.netherCake1x1Logic) {
             protectPlayer(playerMP, new BlockPos(x, y, z));
         } else {
@@ -223,22 +222,16 @@ public class CakeTeleporter extends Teleporter {
 
     @Optional.Method(modid = "twilightforest")
     private void twilightPlacement(EntityPlayerMP playerMP, double x, double y, double z){
-        if(twilightforest.TFConfig.dimension.skylightForest) {
-            protectPlayer(playerMP, new BlockPos(x, y, z));
-        }
+        protectPlayer(playerMP, new BlockPos(x, y, z));
     }
 
     @Optional.Method(modid = "lostcities")
     private void lostCitiesPlacement(EntityPlayerMP playerMP, double x, double y, double z){
-        if(LostCityConfiguration.DIMENSION_PROFILE.equals("space")) {
-            protectPlayer(playerMP, new BlockPos(x, y, z));
-        }
+        protectPlayer(playerMP, new BlockPos(x, y, z));
     }
 
     @Optional.Method(modid = "huntingdim")
     private void huntingDimensionPlacement(EntityPlayerMP playerMP, double x, double y, double z){
-        if(net.darkhax.huntingdim.handler.ConfigurationHandler.isVoidWorld) {
-            protectPlayer(playerMP, new BlockPos(x, y, z));
-        }
+        protectPlayer(playerMP, new BlockPos(x, y, z));
     }
 }
