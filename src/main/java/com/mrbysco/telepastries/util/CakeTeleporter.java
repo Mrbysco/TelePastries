@@ -42,7 +42,7 @@ public class CakeTeleporter extends Teleporter {
 
         if (this.world != null && this.world.getMinecraftServer() != null) {
             PlayerList playerList = this.world.getMinecraftServer().getPlayerList();
-            TeleportUtil.changeDimension(entityPlayerMP, dimension, entityPlayerMP.getServer().getPlayerList());
+            playerList.transferPlayerToDimension(entityPlayerMP, dimension, this);
 
             player.setPositionAndUpdate(x, y, z);
 
@@ -182,7 +182,20 @@ public class CakeTeleporter extends Teleporter {
 
     private void protectPlayer(EntityPlayerMP playerIn, BlockPos position)
     {
+        boolean foundSuitablePlatform = false;
         if (this.world.provider.getDimension() != 0) {
+            for(int j1 = 0; j1 < 5; j1++)
+            {
+                BlockPos checkingPos = position.add(0, -(j1), 0);
+                /** Check to see if the block is solid. */
+                if(this.world.getBlockState(checkingPos).isFullBlock())
+                {
+                    /** If there are solid blocks within a 3 block radius under you set foundSuitablePlatform to true */
+                    foundSuitablePlatform = true;
+                    break;
+                }
+            }
+
             for (int x = -2; x <= 2; x++) {
                 for (int z = -2; z <= 2; z++) {
                     if((x == -2 || x == 2) && (z == -2 || z == 2)) {
@@ -194,9 +207,11 @@ public class CakeTeleporter extends Teleporter {
                         if(this.world.getBlockState(position.add(x, 3, z)).getMaterial().isLiquid()) {
                             this.world.setBlockState(position.add(x, 3, z), Blocks.OBSIDIAN.getDefaultState());
                         }
-                        BlockPos testPos = new BlockPos(position.add(x, -2, z));
-                        if (!this.world.getBlockState(testPos).isFullBlock() || this.world.getBlockState(testPos).getMaterial().isLiquid()) {
-                            this.world.setBlockState(testPos, Blocks.OBSIDIAN.getDefaultState());
+                        if(!foundSuitablePlatform) {
+                            BlockPos testPos = new BlockPos(position.add(x, -2, z));
+                            if (!this.world.getBlockState(testPos).isFullBlock() || this.world.getBlockState(testPos).getMaterial().isLiquid()) {
+                                this.world.setBlockState(testPos, Blocks.OBSIDIAN.getDefaultState());
+                            }
                         }
                     }
                 }
