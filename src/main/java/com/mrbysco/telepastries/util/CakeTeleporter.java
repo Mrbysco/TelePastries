@@ -94,7 +94,12 @@ public class CakeTeleporter extends Teleporter {
         NBTTagCompound playerData = player.getEntityData();
         NBTTagCompound data = getTag(playerData, EntityPlayer.PERSISTED_NBT_TAG);
 
-        data.setLong(Reference.MOD_PREFIX + oldDim, position.toLong());
+        if(oldDim == 1) {
+            BlockPos spawnPlatform = player.getServer().getWorld(1).getSpawnCoordinate();
+            data.setLong(Reference.MOD_PREFIX + oldDim, spawnPlatform.toLong());
+        } else {
+            data.setLong(Reference.MOD_PREFIX + oldDim, position.toLong());
+        }
 
         playerData.setTag(EntityPlayer.PERSISTED_NBT_TAG, data);
     }
