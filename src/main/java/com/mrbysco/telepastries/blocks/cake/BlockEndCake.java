@@ -22,7 +22,7 @@ public class BlockEndCake extends BlockCakeBase {
                 EntityPlayerMP playerMP = (EntityPlayerMP)player;
                 WorldServer worldServer = playerMP.getServer().getWorld(getCakeDimension());
                 CakeTeleporter teleporter = new CakeTeleporter(worldServer, worldServer.getSpawnCoordinate());
-                teleporter.addDimensionPosition(playerMP, playerMP.dimension, playerMP.getPosition().add(0,1,0));
+                teleporter.addDimensionPosition(playerMP, playerMP.dimension, worldServer.getSpawnCoordinate());
                 teleporter.teleportToDimension(playerMP, getCakeDimension(), worldServer.getSpawnCoordinate());
             }
         }

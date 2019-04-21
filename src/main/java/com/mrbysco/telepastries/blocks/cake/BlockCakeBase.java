@@ -72,11 +72,11 @@ public class BlockCakeBase extends BlockPastryBase {
             }
         }
 
-        return false;
+        return true;
     }
 
     private void eatCake(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
-        int l = worldIn.getBlockState(pos).getValue(BITES);
+        int l = state.getValue(BITES);
 
         if (l < 6) {
             if(!playerIn.capabilities.isCreativeMode && consumeCake()) {

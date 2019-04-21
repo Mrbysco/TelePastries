@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-version = "0.3.3"
+version = "0.3.4"
 group = "com.mrbysco.telepastries" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TelePastries"
 
@@ -60,7 +60,7 @@ repositories {
 dependencies {
     deobfCompile "mezz.jei:jei_1.12.2:4.15.0.+"
     deobfCompile "mcp.mobius.waila:Hwyla:1.8.24-B39_1.12"
-    deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-1.4.+"
+    deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-1.4.28-17"
 	
 	deobfCompile "the-twilight-forest:twilightforest-1.12.2:3.8.689:universal"
 	deobfCompile 'the-lost-cities:lostcities:1.12:2.0.17'
