@@ -55,16 +55,16 @@ public class CakeTeleporter extends Teleporter {
                 endPlacement(entityPlayerMP);
             }
 
-            if(dimension != 0) {
-                customCompat(entityPlayerMP, dimension, x, y, z);
-            }
-
             if (oldDimension == 1) {
                 player.setPositionAndUpdate(x, y, z);
                 this.world.spawnEntity(player);
                 this.world.updateEntityWithOptionalForce(player, false);
             }
 
+
+            if(dimension != 0) {
+                customCompat(entityPlayerMP, dimension, x, y, z);
+            }
         } else {
             throw new IllegalArgumentException("Dimension: " + dimension + " doesn't exist!");
         }
@@ -225,12 +225,12 @@ public class CakeTeleporter extends Teleporter {
 
         BlockPos platformPos = new BlockPos(position.add(1, 2, 1));
         for (int y = 1; y <= 3; y++) {
-            if (this.world.getBlockState(position.add(0, y, 0)).isFullBlock()) {
+            if (this.world.getBlockState(position.add(0, y, 0)).isFullBlock() || this.world.getBlockState(position.add(0, y, 0)).getMaterial().isLiquid()) {
                 for (int x = -1; x <= 1; x++) {
                     for (int z = -1; z <= 1; z++) {
-                        BlockPos testPos = new BlockPos(position.add(x, y, z));
-                        if (this.world.getBlockState(testPos).isFullBlock()) {
-                            this.world.setBlockToAir(position.add(x, y, z));
+                        BlockPos testPos = position.add(x, y, z);
+                        if (this.world.getBlockState(testPos).isFullBlock() || this.world.getBlockState(testPos).getMaterial().isLiquid()) {
+                            this.world.setBlockToAir(testPos);
                         }
                     }
                 }
@@ -260,5 +260,11 @@ public class CakeTeleporter extends Teleporter {
         //TelePastries.logger.debug("at huntingDimensionPlacement before protectPlayer");
         protectPlayer(playerMP, new BlockPos(x, y, z));
         //TelePastries.logger.debug("at huntingDimensionPlacement after protectPlayer");
+    }
+
+    public boolean aboveMax(BlockPos pos) {
+        boolean flag1 = (this.world.provider.getDimension() == -1 && !TeleConfig.pastries.nether.netherCake1x1Logic && (pos.getY() >= 122 || pos.add(0,1,0).getY() >= 122));
+        boolean flag2 = this.world.isOutsideBuildHeight(pos);
+        return flag1 || flag2;
     }
 }
