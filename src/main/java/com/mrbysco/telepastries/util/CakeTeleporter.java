@@ -180,10 +180,7 @@ public class CakeTeleporter extends Teleporter {
                 d0 = (double)MathHelper.clamp((int)d0, -29999872, 29999872);
                 d1 = (double)MathHelper.clamp((int)d1, -29999872, 29999872);
 
-                double newY = y;
-                if(y > (world.getActualHeight() - 10)) {
-                    newY = MathHelper.clamp(y, 70, this.world.getActualHeight() - 10);
-                }
+                double newY = MathHelper.clamp(y, 70, this.world.getActualHeight() - 10);
                 protectPlayer(playerMP, new BlockPos(d0, newY, d1));
             }
         }
