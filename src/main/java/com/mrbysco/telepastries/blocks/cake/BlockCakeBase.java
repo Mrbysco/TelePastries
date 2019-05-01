@@ -13,6 +13,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -69,6 +70,12 @@ public class BlockCakeBase extends BlockPastryBase {
             if (playerIn.canEat(true) || playerIn.isCreative()) {
                 if(TeleConfig.general.resetPastry && stack.getItem() == Item.getByNameOrId(TeleConfig.general.resetItem)) {
                     removeDimensionPosition((EntityPlayerMP)playerIn, getCakeDimension());
+
+                    if(Item.getByNameOrId(TeleConfig.general.resetItem) == Items.MILK_BUCKET) {
+                        if(!playerIn.capabilities.isCreativeMode) {
+                            stack = new ItemStack(Items.BUCKET);
+                        }
+                    }
                 } else {
                     //TelePastries.logger.debug("At onBlockActivated before eatCake");
                     eatCake(worldIn, pos, state, playerIn);
