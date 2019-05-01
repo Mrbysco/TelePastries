@@ -61,10 +61,10 @@ public class CakeTeleporter extends Teleporter {
                 this.world.updateEntityWithOptionalForce(player, false);
             }
 
-
             if(dimension != 0) {
                 customCompat(entityPlayerMP, dimension, x, y, z);
             }
+
         } else {
             throw new IllegalArgumentException("Dimension: " + dimension + " doesn't exist!");
         }

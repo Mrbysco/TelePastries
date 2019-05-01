@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-version = "0.3.5"
+version = "0.3.4"
 group = "com.mrbysco.telepastries" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TelePastries"
 
@@ -69,6 +69,7 @@ dependencies {
 	deobfCompile 'hunting-dimension:HuntingDimension:1.12.2:1.0.36'
 	deobfCompile 'bnbgaminglib:BNBGamingLib:1.12.2:2.17.6'
 	deobfCompile 'topography:Topography:1.12.2:1.5.1'
+	//deobfCompile 'compact-machines:compactmachines3-1.12.2:3.0.17:b267'
 }
 
 processResources {
