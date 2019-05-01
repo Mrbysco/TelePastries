@@ -119,7 +119,7 @@ public class BlockCakeBase extends BlockPastryBase {
                 //TelePastries.logger.debug("teleportToDimension oldDimension: " + world.provider.getDimension());
                 //TelePastries.logger.debug("teleportToDimension target cakeDimension: " + getCakeDimension(world));
                 CakeTeleporter teleporter = new CakeTeleporter(playerMP.getServer().getWorld(getCakeDimension(world)), playerMP.getPosition());
-                teleporter.addDimensionPosition(playerMP, playerMP.dimension, playerMP.getPosition().add(0,1,0));
+                teleporter.addDimensionPosition(playerMP, playerMP.dimension, playerMP.getPosition().add(0,0.5,0));
                 teleporter.teleportToDimension(playerMP, getCakeDimension(world), playerMP.getPosition());
             }
         }

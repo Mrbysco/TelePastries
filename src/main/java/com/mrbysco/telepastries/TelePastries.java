@@ -33,7 +33,7 @@ public class TelePastries {
     public static TeleTab teleTab = new TeleTab();
 
     @EventHandler
-    public void PreInit(FMLPreInitializationEvent event)
+    public void preInit(FMLPreInitializationEvent event)
     {
         logger.info("Registering config");
         MinecraftForge.EVENT_BUS.register(new TeleConfig());
@@ -52,7 +52,7 @@ public class TelePastries {
     }
 
     @EventHandler
-    public void postInit(boolean event)
+    public void postInit(FMLPreInitializationEvent event)
     {
         proxy.PostInit();
     }
