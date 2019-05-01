@@ -10,11 +10,22 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Config(modid = Reference.MOD_ID, name = "TelePastries", category = "")
 @Config.LangKey("telepastries.config.title")
 public class TeleConfig {
+    @Config.Comment({"General TelePastry settings"})
+    public static General general = new General();
+
     @Config.Comment({"General pastry settings"})
     public static Pastries pastries = new Pastries();
 
     @Config.Comment({"Mod Compat pastry settings"})
     public static CompatPastries pastriesCompat = new CompatPastries();
+
+    public static class General {
+        @Config.Comment("Defines if the pastry teleportation point can be reset with a milk bucket [default: false]")
+        public boolean resetPastry = false;
+
+        @Config.Comment("Defines the item needed to reset the pastry teleportation point [default: minecraft:milk_bucket]")
+        public String resetItem = "minecraft:milk_bucket";
+    }
 
     public static class Pastries {
         @Config.Comment({"Nether Pastry settings"})

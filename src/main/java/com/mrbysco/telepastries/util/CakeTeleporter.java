@@ -180,7 +180,11 @@ public class CakeTeleporter extends Teleporter {
                 d0 = (double)MathHelper.clamp((int)d0, -29999872, 29999872);
                 d1 = (double)MathHelper.clamp((int)d1, -29999872, 29999872);
 
-                protectPlayer(playerMP, new BlockPos(d0, y, d1));
+                double newY = y;
+                if(y > (world.getActualHeight() - 10)) {
+                    newY = MathHelper.clamp(y, 70, this.world.getActualHeight() - 10);
+                }
+                protectPlayer(playerMP, new BlockPos(d0, newY, d1));
             }
         }
     }
@@ -245,6 +249,7 @@ public class CakeTeleporter extends Teleporter {
     private void twilightPlacement(EntityPlayerMP playerMP, double x, double y, double z){
         //TelePastries.logger.debug("at twilightPlacement before protectPlayer");
         protectPlayer(playerMP, new BlockPos(x, y, z));
+        playerMP.setSpawnChunk(new BlockPos(playerMP), true, this.world.provider.getDimension());
         //TelePastries.logger.debug("at twilightPlacement after protectPlayer");
     }
 
@@ -252,6 +257,7 @@ public class CakeTeleporter extends Teleporter {
     private void lostCitiesPlacement(EntityPlayerMP playerMP, double x, double y, double z){
         //TelePastries.logger.debug("at lostCitiesPlacement before protectPlayer");
         protectPlayer(playerMP, new BlockPos(x, y, z));
+        playerMP.setSpawnChunk(new BlockPos(playerMP), true, this.world.provider.getDimension());
         //TelePastries.logger.debug("at lostCitiesPlacement after protectPlayer");
     }
 
