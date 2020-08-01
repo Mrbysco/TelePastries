@@ -1,0 +1,12 @@
+modLoader="javafml"
+loaderVersion="[32,)"
+license="MIT"
+
+[[mods]]
+modId="telepastries"
+version="${file.jarVersion}"
+displayName="TelePastries"
+displayURL="https://github.com/Mrbysco/TelePastries"
+authors="Mrbysco"
+description='''Pastries that teleport players.'''
+credits="My friend 8138763 for the name"

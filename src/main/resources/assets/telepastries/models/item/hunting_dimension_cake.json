@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "telepastries:items/hunting_dimension_cake"
+        "layer0": "telepastries:item/hunting_dimension_cake"
     }
 }

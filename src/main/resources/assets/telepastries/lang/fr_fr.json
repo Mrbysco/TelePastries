@@ -1,0 +1,23 @@
+{
+    "_comment": "Config",
+    "telepastries.config.title": "Configuration de TelePastries",
+
+    "_comment": "Creative Tab",
+    "itemGroup.tele_tab": "TelePastries",
+
+    "_comment": "Block",
+    "block.telepastries.nether_cake": "Gâteau du Nether",
+    "block.telepastries.end_cake": "Gâteau de l'End",
+    "block.telepastries.overworld_cake": "Gâteau de la Surface",
+
+    "block.telepastries.twilight_cake": "Gâteau de la Twilight Forest",
+    "block.telepastries.lost_city_cake": "Gâteau des Cités perdues",
+    "block.telepastries.hunting_dimension_cake": "Gâteau de la dimension de chasse",
+
+    "_comment": "Message",
+    "telepastries.pastry.reset.complete": "La position sauvegardée de la dimension %s a été réinitialisée.",
+    "telepastries.pastry.reset.failed": "La dimension %s n'a pas de position sauvegardée.",
+
+    "_comment": "Waila",
+    "telepastries.bites": "Parts de gâteau"
+}

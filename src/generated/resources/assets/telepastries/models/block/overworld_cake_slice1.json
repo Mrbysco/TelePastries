@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:block/cake_slice1",
+  "textures": {
+    "particle": "telepastries:block/overworld/cake_side",
+    "bottom": "telepastries:block/overworld/cake_bottom",
+    "top": "telepastries:block/overworld/cake_top",
+    "side": "telepastries:block/overworld/cake_side",
+    "inside": "telepastries:block/overworld/cake_inner"
+  }
+}

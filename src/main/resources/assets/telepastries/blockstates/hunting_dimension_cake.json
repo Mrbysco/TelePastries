@@ -2,11 +2,11 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
-			"particle": "telepastries:blocks/hunting/cake_side",
-			"bottom": "telepastries:blocks/hunting/cake_bottom",
-			"top": "telepastries:blocks/hunting/cake_top",
-			"side": "telepastries:blocks/hunting/cake_side",
-			"inside": "telepastries:blocks/hunting/cake_inner"
+			"particle": "telepastries:block/hunting/cake_side",
+			"bottom": "telepastries:block/hunting/cake_bottom",
+			"top": "telepastries:block/hunting/cake_top",
+			"side": "telepastries:block/hunting/cake_side",
+			"inside": "telepastries:block/hunting/cake_inner"
 		}
 	},
 	"variants": {

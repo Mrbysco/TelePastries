@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "telepastries:overworld_cake"
+  },
+  "pattern": [
+    "SSS",
+    "SCS",
+    "SSS"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "minecraft:cake"
+    },
+    "S": {
+      "tag": "minecraft:saplings"
+    }
+  }
+}

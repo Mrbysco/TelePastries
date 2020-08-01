@@ -2,34 +2,50 @@ package com.mrbysco.telepastries.blocks.cake.compat;
 
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import com.mrbysco.telepastries.config.TeleConfig;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.ModList;
+
+import java.util.List;
 
 public class BlockTwilightCake extends BlockCakeBase {
-    public BlockTwilightCake(String registry) {
-        super(registry);
+    public BlockTwilightCake(AbstractBlock.Properties properties) {
+        super(properties);
     }
 
     @Override
-    public void teleportToDimension(World world, BlockPos pos, EntityPlayer player) {
-        super.teleportToDimension(world, pos, player);
+    public void teleportToDimension(IWorld world, BlockPos pos, PlayerEntity player) {
+        if(ModList.get().isLoaded("twilightforest")) {
+            super.teleportToDimension(world, pos, player);
+        }
+        player.sendMessage(new StringTextComponent("Cake is disabled because Twilight Forest isn't installed").mergeStyle(TextFormatting.RED), Util.DUMMY_UUID);
     }
 
     @Override
-    public Item getRefillItem() {
-        return Item.REGISTRY.getObject(new ResourceLocation(TeleConfig.pastriesCompat.twilightForest.twilightForestCakeRefillItem));
+    public boolean isRefillItem(ItemStack stack) {
+        List<? extends String> items = TeleConfig.SERVER.TwilightCakeRefillItems.get();
+        if (items == null || items.isEmpty()) return false;
+        ResourceLocation registryLocation = stack.getItem().getRegistryName();
+        return registryLocation != null && items.contains(registryLocation.toString());
     }
 
     @Override
-    public int getCakeDimension() {
-        return twilightforest.TFConfig.dimension.dimensionID;
+    public RegistryKey<World> getCakeWorld() {
+        return RegistryKey.func_240903_a_(Registry.WORLD_KEY, new ResourceLocation("twilightforest", "twilightforest"));
     }
 
     @Override
     public boolean consumeCake() {
-        return TeleConfig.pastriesCompat.twilightForest.consumeTwilightForestCake;
+        return TeleConfig.SERVER.consumeTwilightCake.get();
     }
 }

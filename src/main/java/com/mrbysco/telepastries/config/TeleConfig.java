@@ -1,113 +1,149 @@
 package com.mrbysco.telepastries.config;
 
-import com.mrbysco.telepastries.Reference;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import com.mrbysco.telepastries.TelePastries;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.config.ModConfig;
+import org.apache.commons.lang3.tuple.Pair;
 
-@Config(modid = Reference.MOD_ID, name = "TelePastries", category = "")
-@Config.LangKey("telepastries.config.title")
+import java.util.Arrays;
+import java.util.List;
+
 public class TeleConfig {
-    @Config.Comment({"General TelePastry settings"})
-    public static General general = new General();
 
-    @Config.Comment({"General pastry settings"})
-    public static Pastries pastries = new Pastries();
+    public static class Server {
+        public final BooleanValue resetPastry;
+        public final ConfigValue<List<? extends String>> resetItems;
 
-    @Config.Comment({"Mod Compat pastry settings"})
-    public static CompatPastries pastriesCompat = new CompatPastries();
+        public final BooleanValue consumeNetherCake;
+        public final ConfigValue<List<? extends String>> netherCakeRefillItems;
+        public final BooleanValue netherCake1x1Logic;
 
-    public static class General {
-        @Config.Comment("Defines if the pastry teleportation point can be reset with a milk bucket [default: false]")
-        public boolean resetPastry = false;
+        public final BooleanValue consumeEndCake;
+        public final ConfigValue<List<? extends String>> endCakeRefillItems;
 
-        @Config.Comment("Defines the item needed to reset the pastry teleportation point [default: minecraft:milk_bucket]")
-        public String resetItem = "minecraft:milk_bucket";
+        public final BooleanValue consumeOverworldCake;
+        public final ConfigValue<List<? extends String>> overworldCakeRefillItems;
+
+        public final BooleanValue consumeTwilightCake;
+        public final ConfigValue<List<? extends String>> TwilightCakeRefillItems;
+
+        Server(ForgeConfigSpec.Builder builder) {
+            builder.comment("General settings")
+                    .push("General");
+
+            resetPastry = builder
+                    .comment("Defines if the pastry teleportation point can be reset with a milk bucket [default: false]")
+                    .define("resetPastry", false);
+
+            String[] resetItem = new String[]
+                    {
+                            "minecraft:milk_bucket"
+                    };
+
+            resetItems = builder
+                    .comment("Defines the item needed to reset the pastry teleportation point [default: minecraft:milk_bucket]")
+                    .defineList("resetItems", Arrays.asList(resetItem), o -> (o instanceof String));
+
+            builder.pop();
+            builder.comment("Nether settings")
+                    .push("Nether");
+
+            consumeNetherCake = builder
+                    .comment("Defines if the Nether Cake gets partly consumed when eaten [default: true]")
+                    .define("consumeNetherCake", true);
+
+            String[] netherItems = new String[]
+                    {
+                            "minecraft:obsidian"
+                    };
+
+            netherCakeRefillItems = builder
+                    .comment("Set the refill items used by Nether Cake (Only change if you know what you're doing) [modid:itemname].")
+                    .defineList("netherCakeRefillItems", Arrays.asList(netherItems), o -> (o instanceof String));
+
+            netherCake1x1Logic = builder
+                    .comment("Defines if the Nether Cake should teleport the player 1x1 (Use this if you're replacing the Nether dimension with one that is 1x1) [default: false].")
+                    .define("netherCake1x1Logic", false);
+
+            builder.pop();
+            builder.comment("End settings")
+                    .push("End");
+
+            consumeEndCake = builder
+                    .comment("Defines if the End Cake gets partly consumed when eaten [default: true]")
+                    .define("consumeEndCake", true);
+
+            String[] endItems = new String[]
+                    {
+                            "minecraft:ender_eye"
+                    };
+
+            endCakeRefillItems = builder
+                    .comment("Set the refill items used by End Cake (Only change if you know what you're doing) [modid:itemname].")
+                    .defineList("endCakeRefillItems", Arrays.asList(endItems), o -> (o instanceof String));
+
+            builder.pop();
+            builder.comment("Overworld settings")
+                    .push("Overworld");
+
+            consumeOverworldCake = builder
+                    .comment("Defines if the Overworld Cake gets partly consumed when eaten [default: true]")
+                    .define("consumeOverworldCake", true);
+
+            String[] overworldItems = new String[]
+                    {
+                            "minecraft:oak_sapling",
+                            "minecraft:spruce_sapling",
+                            "minecraft:birch_sapling",
+                            "minecraft:jungle_sapling",
+                            "minecraft:acacia_sapling",
+                            "minecraft:dark_oak_sapling"
+                    };
+
+            overworldCakeRefillItems = builder
+                    .comment("Set the refill items used by Overworld Cake (Only change if you know what you're doing) [modid:itemname].")
+                    .defineList("overworldCakeRefillItems", Arrays.asList(overworldItems), o -> (o instanceof String));
+
+            builder.pop();
+            builder.comment("Compat settings")
+                    .push("Compat");
+
+            consumeTwilightCake = builder
+                    .comment("Defines if the Twilight Forest Cake gets partly consumed when eaten [default: true]")
+                    .define("consumeTwilightCake", true);
+
+            String[] twilightItems = new String[]
+                    {
+                            "minecraft:diamond"
+                    };
+
+            TwilightCakeRefillItems = builder
+                    .comment("Set the refill items used by Twilight Forest Cake (Only change if you know what you're doing) [modid:itemname]")
+                    .defineList("TwilightCakeRefillItems", Arrays.asList(twilightItems), o -> (o instanceof String));
+
+            builder.pop();
+        }
     }
 
-    public static class Pastries {
-        @Config.Comment({"Nether Pastry settings"})
-        public final Nether nether = new Nether();
+    public static final ForgeConfigSpec serverSpec;
+    public static final TeleConfig.Server SERVER;
 
-        @Config.Comment({"End Pastry settings"})
-        public final End end = new End();
-
-        @Config.Comment({"Overworld Pastry settings"})
-        public final Overworld overworld = new Overworld();
-
-        public static class Nether{
-            @Config.Comment("Defines if the Nether Cake gets partly consumed when eaten [default: true]")
-            public boolean consumeNetherCake = true;
-
-            @Config.Comment("Set the refill item used by Nether Cake (Only change if you know what you're doing) [modid:itemname].")
-            public String netherCakeRefillItem = "minecraft:obsidian";
-
-            @Config.Comment("Defines if the Nether Cake should teleport the player 1x1 (Use this if you're replacing the Nether dimension with one that is 1x1) [default: false].")
-            public boolean netherCake1x1Logic = false;
-        }
-
-        public static class End{
-            @Config.Comment("Defines if the End Cake gets partly consumed when eaten [default: true]")
-            public boolean consumeEndCake = true;
-
-            @Config.Comment("Set the refill item used by End Cake (Only change if you know what you're doing) [modid:itemname].")
-            public String endCakeRefillItem = "minecraft:ender_eye";
-        }
-
-        public static class Overworld{
-            @Config.Comment("Defines if the Overworld Cake gets partly consumed when eaten [default: true]")
-            public boolean consumeOverworldCake = true;
-
-            @Config.Comment("Set the refill item used by Overworld Cake (Only change if you know what you're doing) [modid:itemname].")
-            public String overworldCakeRefillItem = "minecraft:sapling";
-        }
+    static {
+        final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(TeleConfig.Server::new);
+        serverSpec = specPair.getRight();
+        SERVER = specPair.getLeft();
     }
 
-
-    public static class CompatPastries {
-        @Config.Comment({"Twilight Forest Pastry settings"})
-        public final TwilightForest twilightForest = new TwilightForest();
-
-        @Config.Comment({"Lost Cities Pastry settings"})
-        public final LostCities lostCities = new LostCities();
-
-        @Config.Comment({"Hunting Dimension Pastry settings"})
-        public final HuntingDimension huntingDimension = new HuntingDimension();
-
-        public static class TwilightForest{
-            @Config.Comment("Defines if the Twilight Forest Cake gets partly consumed when eaten [default: true]")
-            public boolean consumeTwilightForestCake = true;
-
-            @Config.Comment("Set the refill item used by Twilight Forest Cake (Only change if you know what you're doing) [modid:itemname].")
-            public String twilightForestCakeRefillItem = "minecraft:diamond";
-        }
-
-        public static class LostCities{
-            @Config.Comment("Defines if the Lost Cities Cake gets partly consumed when eaten [default: true]")
-            public boolean consumeLostCitiesCake = true;
-
-            @Config.Comment("Set the refill item used by Lost Cities Cake (Only change if you know what you're doing) [modid:itemname].")
-            public String lostCitiesCakeRefillItem = "minecraft:bed";
-        }
-
-        public static class HuntingDimension{
-            @Config.Comment("Defines if the Hunting Dimension Cake gets partly consumed when eaten [default: true]")
-            public boolean consumeHuntingDimensionCake = true;
-
-            @Config.Comment("Set the refill item used by Hunting Dimension Cake (Only change if you know what you're doing) [modid:itemname].")
-            public String huntingDimensionCakeRefillItem = "minecraft:arrow";
-        }
+    @SubscribeEvent
+    public static void onLoad(final ModConfig.Loading configEvent) {
+        TelePastries.LOGGER.debug("Loaded TelePastries' config file {}", configEvent.getConfig().getFileName());
     }
 
-    @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
-    private static class EventHandler {
-        @SubscribeEvent
-        public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
-            if (event.getModID().equals(Reference.MOD_ID)) {
-                ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
-            }
-        }
+    @SubscribeEvent
+    public static void onFileChange(final ModConfig.Reloading configEvent) {
+        TelePastries.LOGGER.debug("TelePastries' config just got changed on the file system!");
     }
 }

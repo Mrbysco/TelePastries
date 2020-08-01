@@ -1,47 +1,42 @@
 package com.mrbysco.telepastries.blocks.cake;
 
 import com.mrbysco.telepastries.config.TeleConfig;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
+
+import java.util.List;
 
 public class BlockOverworldCake extends BlockCakeBase {
-    public BlockOverworldCake(String registry) {
-        super(registry);
+    public BlockOverworldCake(AbstractBlock.Properties properties) {
+        super(properties);
     }
 
     @Override
-    public void teleportToDimension(World world, BlockPos pos, EntityPlayer player) {
+    public void teleportToDimension(IWorld world, BlockPos pos, PlayerEntity player) {
         super.teleportToDimension(world, pos, player);
     }
 
     @Override
-    public Item getRefillItem() {
-        return Item.REGISTRY.getObject(new ResourceLocation(TeleConfig.pastries.overworld.overworldCakeRefillItem));
+    public boolean isRefillItem(ItemStack stack) {
+        List<? extends String> items = TeleConfig.SERVER.overworldCakeRefillItems.get();
+        if (items == null || items.isEmpty()) return false;
+        ResourceLocation registryLocation = stack.getItem().getRegistryName();
+        return registryLocation != null && items.contains(registryLocation.toString());
     }
 
     @Override
-    public int getCakeDimension(World worldIn) {
-        int cakeDim = getCakeDimension();
-        if(worldIn.getWorldType().getName().equals("compactsky")) {
-            int[] ids = DimensionManager.getDimensions(DimensionType.byName("CompactMachines"));
-            cakeDim = ids[0];
-        }
-
-        return cakeDim;
-    }
-
-    @Override
-    public int getCakeDimension() {
-        return 0;
+    public RegistryKey<World> getCakeWorld() {
+        return World.field_234918_g_;
     }
 
     @Override
     public boolean consumeCake() {
-        return TeleConfig.pastries.overworld.consumeOverworldCake;
+        return TeleConfig.SERVER.consumeOverworldCake.get();
     }
 }

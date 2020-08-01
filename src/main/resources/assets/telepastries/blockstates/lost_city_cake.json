@@ -2,11 +2,11 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
-			"particle": "telepastries:blocks/cities/cake_side",
-			"bottom": "telepastries:blocks/cities/cake_bottom",
-			"top": "telepastries:blocks/cities/cake_top",
-			"side": "telepastries:blocks/cities/cake_side",
-			"inside": "telepastries:blocks/cities/cake_inner"
+			"particle": "telepastries:block/cities/cake_side",
+			"bottom": "telepastries:block/cities/cake_bottom",
+			"top": "telepastries:block/cities/cake_top",
+			"side": "telepastries:block/cities/cake_side",
+			"inside": "telepastries:block/cities/cake_inner"
 		}
 	},
 	"variants": {

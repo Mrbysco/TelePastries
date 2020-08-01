@@ -1,17 +1,15 @@
 package com.mrbysco.telepastries.init;
 
-import com.mrbysco.telepastries.Reference;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class TeleTab extends CreativeTabs {
-
-    public TeleTab() {
-        super(Reference.MOD_ID);
-    }
-
-    @Override
-    public ItemStack createIcon() {
-        return new ItemStack(TeleBlocks.overworld_cake);
-    }
+public class TeleTab {
+    public static final ItemGroup TELE_TAB = new ItemGroup("tele_tab") {
+        @OnlyIn(Dist.CLIENT)
+        public ItemStack createIcon() {
+            return new ItemStack(TeleRegistry.OVERWORLD_CAKE.get());
+        }
+    };
 }
