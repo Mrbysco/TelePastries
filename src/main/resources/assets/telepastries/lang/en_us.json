@@ -17,6 +17,7 @@
     "_comment": "Message",
     "telepastries.pastry.reset.complete": "Dimension %s 's saved position has been reset.",
     "telepastries.pastry.reset.failed": "Dimension %s does not have a saved position.",
+    "telepastries.pastry.support.disabled": "Cake is disabled because %s isn't installed",
 
     "_comment": "Waila",
     "telepastries.bites": "Cake bites"

@@ -1,13 +1,10 @@
 package com.mrbysco.telepastries.generator;
 
-import static com.mrbysco.telepastries.init.TeleRegistry.*;
-
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import com.mrbysco.telepastries.Reference;
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import com.mrbysco.telepastries.init.TeleRegistry;
-import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
@@ -32,6 +29,8 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import static com.mrbysco.telepastries.init.TeleRegistry.*;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PastriesGenerator {

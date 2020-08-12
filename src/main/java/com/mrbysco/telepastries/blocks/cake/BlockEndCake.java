@@ -28,7 +28,7 @@ public class BlockEndCake extends BlockCakeBase {
             if (!world.isRemote && !player.isPassenger() && !player.isBeingRidden() && player.isNonBoss()) {
                 ServerPlayerEntity playerMP = (ServerPlayerEntity)player;
                 MinecraftServer server = player.getServer();
-                ServerWorld destinationWorld = server.getWorld(getCakeWorld());
+                ServerWorld destinationWorld = server != null ? server.getWorld(getCakeWorld()) : null;
                 if(destinationWorld == null)
                     return;
 

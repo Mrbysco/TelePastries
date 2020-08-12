@@ -73,7 +73,8 @@ public class BlockCakeBase extends BlockPastryBase {
 
                             if(stack.getItem() == Items.MILK_BUCKET) {
                                 if(!player.abilities.isCreativeMode) {
-                                    stack = new ItemStack(Items.BUCKET);
+                                    stack.shrink(1);
+                                    player.setHeldItem(handIn, new ItemStack(Items.BUCKET));
                                 }
                             }
                             return ActionResultType.SUCCESS;
@@ -138,7 +139,7 @@ public class BlockCakeBase extends BlockPastryBase {
             if (!world.isRemote && !player.isPassenger() && !player.isBeingRidden() && player.isNonBoss()) {
                 ServerPlayerEntity playerMP = (ServerPlayerEntity) player;
                 MinecraftServer server = player.getServer();
-                ServerWorld destinationWorld = server.getWorld(getCakeWorld());
+                ServerWorld destinationWorld = server != null ? server.getWorld(getCakeWorld()) : null;
                 if(destinationWorld == null)
                     return;
 
@@ -182,14 +183,9 @@ public class BlockCakeBase extends BlockPastryBase {
         return (7 - blockState.get(BITES)) * 2;
     }
 
-    protected int getBites(BlockState state)
-    {
-        return state.get(BITES);
-    }
-
     protected void removeDimensionPosition(ServerPlayerEntity player, RegistryKey<World> dim) {
         CompoundNBT playerData = player.getPersistentData();
-        CompoundNBT data = getTag(playerData, PlayerEntity.PERSISTED_NBT_TAG);
+        CompoundNBT data = getTag(playerData);
 
         if(data.contains(Reference.MOD_PREFIX + dim.func_240901_a_())) {
             data.remove(Reference.MOD_PREFIX + dim.func_240901_a_());
@@ -201,10 +197,10 @@ public class BlockCakeBase extends BlockPastryBase {
         playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
     }
 
-    protected CompoundNBT getTag(CompoundNBT tag, String key) {
-        if(tag == null || !tag.contains(key)) {
+    protected CompoundNBT getTag(CompoundNBT tag) {
+        if(tag == null || !tag.contains(PlayerEntity.PERSISTED_NBT_TAG)) {
             return new CompoundNBT();
         }
-        return tag.getCompound(key);
+        return tag.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
     }
 }
