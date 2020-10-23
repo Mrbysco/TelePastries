@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[34.1.23,)"
+loaderVersion="[34,)"
 license="MIT"
 
 [[mods]]
@@ -10,3 +10,10 @@ displayURL="https://github.com/Mrbysco/TelePastries"
 authors="Mrbysco"
 description='''Pastries that teleport players.'''
 credits="My friend 8138763 for the name"
+
+[[dependencies.telepastries]]
+modId="forge"
+mandatory=true
+versionRange="[34.1.23,)"
+ordering="NONE"
+side="BOTH"
