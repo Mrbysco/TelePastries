@@ -41,7 +41,7 @@ public class BlockTwilightCake extends BlockCakeBase {
 
     @Override
     public RegistryKey<World> getCakeWorld() {
-        return RegistryKey.func_240903_a_(Registry.WORLD_KEY, new ResourceLocation("twilightforest", "twilightforest"));
+        return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation("twilightforest", "twilightforest"));
     }
 
     @Override

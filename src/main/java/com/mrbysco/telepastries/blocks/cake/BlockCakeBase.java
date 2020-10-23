@@ -30,6 +30,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -67,7 +68,7 @@ public class BlockCakeBase extends BlockPastryBase {
                     }
                     return ActionResultType.SUCCESS;
                 } else {
-                    if(worldIn.func_234923_W_() != getCakeWorld()) {
+                    if(worldIn.getDimensionKey() != getCakeWorld()) {
                         if(TeleConfig.SERVER.resetPastry.get() && isResetItem(stack)) {
                             removeDimensionPosition((ServerPlayerEntity)player, getCakeWorld());
 
@@ -134,8 +135,8 @@ public class BlockCakeBase extends BlockPastryBase {
     }
 
     public void teleportToDimension(IWorld worldIn, BlockPos pos, PlayerEntity player) {
-        if (player.isAlive()) {
-            World world = worldIn.getWorld();
+        if (player.isAlive() && !worldIn.isRemote()) {
+            World world = ((IServerWorld)worldIn).getWorld();
             if (!world.isRemote && !player.isPassenger() && !player.isBeingRidden() && player.isNonBoss()) {
                 ServerPlayerEntity playerMP = (ServerPlayerEntity) player;
                 MinecraftServer server = player.getServer();
@@ -144,7 +145,7 @@ public class BlockCakeBase extends BlockPastryBase {
                     return;
 
                 CakeTeleporter teleporter = new CakeTeleporter(destinationWorld);
-                teleporter.addDimensionPosition(playerMP, playerMP.getServerWorld().func_234923_W_(), playerMP.getPosition().add(0,1,0));
+                teleporter.addDimensionPosition(playerMP, playerMP.getServerWorld().getDimensionKey(), playerMP.getPosition().add(0,1,0));
                 playerMP.changeDimension(destinationWorld, teleporter);
             }
         }
@@ -155,7 +156,7 @@ public class BlockCakeBase extends BlockPastryBase {
     }
 
     public RegistryKey<World> getCakeWorld() {
-        return World.field_234918_g_;
+        return World.OVERWORLD;
     }
 
     public boolean consumeCake() {
@@ -187,11 +188,11 @@ public class BlockCakeBase extends BlockPastryBase {
         CompoundNBT playerData = player.getPersistentData();
         CompoundNBT data = getTag(playerData);
 
-        if(data.contains(Reference.MOD_PREFIX + dim.func_240901_a_())) {
-            data.remove(Reference.MOD_PREFIX + dim.func_240901_a_());
-            player.sendMessage(new TranslationTextComponent("telepastries.pastry.reset.complete", dim.func_240901_a_()), Util.DUMMY_UUID);
+        if(data.contains(Reference.MOD_PREFIX + dim.getLocation())) {
+            data.remove(Reference.MOD_PREFIX + dim.getLocation());
+            player.sendMessage(new TranslationTextComponent("telepastries.pastry.reset.complete", dim.getLocation()), Util.DUMMY_UUID);
         } else {
-            player.sendMessage(new TranslationTextComponent("telepastries.pastry.reset.failed", dim.func_240901_a_()), Util.DUMMY_UUID);
+            player.sendMessage(new TranslationTextComponent("telepastries.pastry.reset.failed", dim.getLocation()), Util.DUMMY_UUID);
         }
 
         playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);

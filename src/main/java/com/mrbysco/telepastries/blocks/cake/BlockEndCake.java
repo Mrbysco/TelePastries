@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -23,8 +24,8 @@ public class BlockEndCake extends BlockCakeBase {
 
     @Override
     public void teleportToDimension(IWorld worldIn, BlockPos pos, PlayerEntity player) {
-        if (player.isAlive()) {
-            World world = worldIn.getWorld();
+        if (player.isAlive() && !worldIn.isRemote()) {
+            World world = ((IServerWorld)worldIn).getWorld();
             if (!world.isRemote && !player.isPassenger() && !player.isBeingRidden() && player.isNonBoss()) {
                 ServerPlayerEntity playerMP = (ServerPlayerEntity)player;
                 MinecraftServer server = player.getServer();
@@ -33,7 +34,7 @@ public class BlockEndCake extends BlockCakeBase {
                     return;
 
                 CakeTeleporter teleporter = new CakeTeleporter(destinationWorld);
-                teleporter.addDimensionPosition(playerMP, playerMP.getServerWorld().func_234923_W_(), playerMP.getPosition().add(0,1,0));
+                teleporter.addDimensionPosition(playerMP, playerMP.getServerWorld().getDimensionKey(), playerMP.getPosition().add(0,1,0));
                 playerMP.changeDimension(destinationWorld, teleporter);
             }
         }
@@ -49,7 +50,7 @@ public class BlockEndCake extends BlockCakeBase {
 
     @Override
     public RegistryKey<World> getCakeWorld() {
-        return World.field_234920_i_;
+        return World.THE_END;
     }
 
     @Override

@@ -17,8 +17,8 @@ import net.minecraft.loot.ValidationTracker;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ExistingFileHelper;
 import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
@@ -63,16 +63,16 @@ public class PastriesGenerator {
 
         @Override
         protected void validate(Map<ResourceLocation, LootTable> map, ValidationTracker validationresults) {
-            map.forEach((name, table) -> LootTableManager.func_227508_a_(validationresults, name, table));
+            map.forEach((name, table) -> LootTableManager.validateLootTable(validationresults, name, table));
         }
 
         private class TeleBlocks extends BlockLootTables {
             @Override
             protected void addTables() {
-                this.registerLootTable(OVERWORLD_CAKE.get(), func_218482_a());
-                this.registerLootTable(NETHER_CAKE.get(), func_218482_a());
-                this.registerLootTable(END_CAKE.get(), func_218482_a());
-                this.registerLootTable(TWILIGHT_CAKE.get(), func_218482_a());
+                this.registerLootTable(OVERWORLD_CAKE.get(), blockNoDrop());
+                this.registerLootTable(NETHER_CAKE.get(), blockNoDrop());
+                this.registerLootTable(END_CAKE.get(), blockNoDrop());
+                this.registerLootTable(TWILIGHT_CAKE.get(), blockNoDrop());
             }
 
             @Override

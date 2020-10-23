@@ -32,7 +32,7 @@ public class BlockOverworldCake extends BlockCakeBase {
 
     @Override
     public RegistryKey<World> getCakeWorld() {
-        return World.field_234918_g_;
+        return World.OVERWORLD;
     }
 
     @Override

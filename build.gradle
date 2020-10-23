@@ -103,7 +103,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 	
-    compile fg.deobf("mezz.jei:jei-1.16.1:7.0.0.+");
+    compile fg.deobf("mezz.jei:jei-1.16.3:7.6.0.49");
 	
     //deobfCompile "mcp.mobius.waila:Hwyla:1.8.26-B41_1.12.2"
     //deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-1.4.28-17"

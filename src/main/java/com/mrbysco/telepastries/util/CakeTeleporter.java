@@ -18,25 +18,25 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.fml.ModList;
 
 import java.util.function.Function;
 
-public class CakeTeleporter extends Teleporter {
+public class CakeTeleporter implements ITeleporter {
+    protected final ServerWorld world;
 
-    public CakeTeleporter(ServerWorld world) {
-        super(world);
+    public CakeTeleporter(ServerWorld worldIn) {
+        this.world = worldIn;
     }
 
     @Override
     public Entity placeEntity(Entity newEntity, ServerWorld currentWorld, ServerWorld destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
         Entity entity = repositionEntity.apply(false); //Must be false or we fall on vanilla
 
-        BlockPos dimPos = getDimensionPosition(entity, destWorld.func_234923_W_(), entity.getPosition());
-        System.out.println("Position to teleport entity to: " + dimPos);
+        BlockPos dimPos = getDimensionPosition(entity, destWorld.getDimensionKey(), entity.getPosition());
         doSafetyChecks(entity, currentWorld, destWorld, (double)dimPos.getX() + 0.5D, dimPos.getY(), (double)dimPos.getZ() + 0.5D);
         return entity;
     }
@@ -54,21 +54,21 @@ public class CakeTeleporter extends Teleporter {
         }
         entity.setMotion(Vector3d.ZERO);
 
-        if(destWorld.func_234923_W_() == World.field_234919_h_) {
+        if(destWorld.getDimensionKey() == World.THE_NETHER) {
             relocateInNether(entity, x, y, z);
-        } else if(destWorld.func_234923_W_() == World.field_234920_i_) {
+        } else if(destWorld.getDimensionKey() == World.THE_END) {
             endPlacement(entity);
-        } else if(destWorld.func_234923_W_() != World.field_234918_g_) {
+        } else if(destWorld.getDimensionKey() != World.OVERWORLD) {
             customCompat(entity, destWorld);
         }
     }
 
     public void addDimensionPosition(Entity entityIn, RegistryKey<World> dim, BlockPos position) {
         CompoundNBT entityData = entityIn.getPersistentData();
-        CompoundNBT data = getTag(entityData, PlayerEntity.PERSISTED_NBT_TAG);
-        ResourceLocation dimLocation = dim.func_240901_a_();
+        CompoundNBT data = getTag(entityData);
+        ResourceLocation dimLocation = dim.getLocation();
 
-        if(dim == World.field_234920_i_) {
+        if(dim == World.THE_END) {
             BlockPos spawnPlatform = entityIn.getServer().getWorld(dim).field_241108_a_;
             System.out.println("Setting position of " + dimLocation + " to: " + spawnPlatform);
             data.putLong(Reference.MOD_PREFIX + dimLocation, spawnPlatform.toLong());
@@ -81,8 +81,8 @@ public class CakeTeleporter extends Teleporter {
 
     public BlockPos getDimensionPosition(Entity entityIn, RegistryKey<World> dim, BlockPos position) {
         CompoundNBT entityData = entityIn.getPersistentData();
-        CompoundNBT data = getTag(entityData, PlayerEntity.PERSISTED_NBT_TAG);
-        ResourceLocation dimLocation = dim.func_240901_a_();
+        CompoundNBT data = getTag(entityData);
+        ResourceLocation dimLocation = dim.getLocation();
 
         BlockPos dimPos = position;
         if(data.contains(Reference.MOD_PREFIX + dimLocation)) {
@@ -97,28 +97,17 @@ public class CakeTeleporter extends Teleporter {
 
     public boolean hasDimensionPosition(Entity entityIn, RegistryKey<World> dim) {
         CompoundNBT entityData = entityIn.getPersistentData();
-        CompoundNBT data = getTag(entityData, PlayerEntity.PERSISTED_NBT_TAG);
+        CompoundNBT data = getTag(entityData);
 
-        System.out.println("Checking if entity has position stored for : " + dim.func_240901_a_());
-        System.out.println("Answer is: " + data.contains(Reference.MOD_PREFIX + dim.func_240901_a_()));
-        return data.contains(Reference.MOD_PREFIX + dim.func_240901_a_());
+        System.out.println("Checking if entity has position stored for : " + dim.getLocation());
+        return data.contains(Reference.MOD_PREFIX + dim.getLocation());
     }
 
-    private CompoundNBT getTag(CompoundNBT tag, String key) {
-        if(tag == null || !tag.contains(key)) {
+    private CompoundNBT getTag(CompoundNBT tag) {
+        if(tag == null || !tag.contains(PlayerEntity.PERSISTED_NBT_TAG)) {
             return new CompoundNBT();
         }
-        return tag.getCompound(key);
-    }
-
-    @Override
-    public boolean placeInPortal(Entity p_222268_1_, float p_222268_2_) {
-        return false;
-    }
-
-    @Override
-    public boolean makePortal(Entity entityIn) {
-        return false;
+        return tag.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
     }
 
     private void endPlacement(Entity entityIn) {
@@ -150,7 +139,7 @@ public class CakeTeleporter extends Teleporter {
         if(TeleConfig.SERVER.netherCake1x1Logic.get()) {
             protectEntity(entityIn, new BlockPos(x, y, z));
         } else {
-            if (hasDimensionPosition(entityIn, World.field_234919_h_)) {
+            if (hasDimensionPosition(entityIn, World.THE_NETHER)) {
                 //TelePastries.logger.debug("at relocateInNether before protectPlayer");
                 protectEntity(entityIn, new BlockPos(x, y, z));
                 //TelePastries.logger.debug("at relocateInNether after protectPlayer");
@@ -171,7 +160,7 @@ public class CakeTeleporter extends Teleporter {
 
     private void protectEntity(Entity playerIn, BlockPos position) {
         boolean foundSuitablePlatform = false;
-        if (this.world.func_234923_W_() != World.field_234918_g_) {
+        if (this.world.getDimensionKey() != World.OVERWORLD) {
             for(int j1 = 0; j1 < 5; j1++) {
                 BlockPos checkingPos = position.add(0, -(j1), 0);
                 /* Check to see if the block is solid. */
@@ -224,12 +213,12 @@ public class CakeTeleporter extends Teleporter {
 
     private void customCompat(Entity entity, ServerWorld destWorld) {
         if(ModList.get().isLoaded("twilightforest")) {
-            RegistryKey<World> twilightKey = RegistryKey.func_240903_a_(Registry.WORLD_KEY, new ResourceLocation("twilightforest", "twilightforest"));
-            if(destWorld.func_234923_W_() == twilightKey) {
+            RegistryKey<World> twilightKey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation("twilightforest", "twilightforest"));
+            if(destWorld.getDimensionKey() == twilightKey) {
                 protectEntity(entity, entity.getPosition());
                 if(entity instanceof ServerPlayerEntity) {
                     ServerPlayerEntity playerMP = (ServerPlayerEntity)entity;
-                    playerMP.func_241153_a_(twilightKey, playerMP.getPosition(), true, false);
+                    playerMP.func_242111_a(twilightKey, playerMP.getPosition(), playerMP.rotationYaw, true, false);
                 }
             }
         }
@@ -251,7 +240,7 @@ public class CakeTeleporter extends Teleporter {
 //    }
 
     public boolean aboveMax(BlockPos pos) {
-        boolean flag1 = (world.func_234923_W_() == World.field_234919_h_ && !TeleConfig.SERVER.netherCake1x1Logic.get() && (pos.getY() >= 122 || pos.add(0,1,0).getY() >= 122));
+        boolean flag1 = (world.getDimensionKey() == World.THE_NETHER && !TeleConfig.SERVER.netherCake1x1Logic.get() && (pos.getY() >= 122 || pos.add(0,1,0).getY() >= 122));
         boolean flag2 = world.isOutsideBuildHeight(pos);
         return flag1 || flag2;
     }

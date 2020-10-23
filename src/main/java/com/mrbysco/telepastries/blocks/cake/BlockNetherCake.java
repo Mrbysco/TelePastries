@@ -32,7 +32,7 @@ public class BlockNetherCake extends BlockCakeBase {
 
     @Override
     public RegistryKey<World> getCakeWorld() {
-        return World.field_234919_h_;
+        return World.THE_NETHER;
     }
 
     @Override
