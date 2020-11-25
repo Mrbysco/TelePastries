@@ -14,6 +14,8 @@ import java.util.List;
 public class TeleConfig {
 
     public static class Server {
+        public final BooleanValue ignoreHunger;
+
         public final BooleanValue resetPastry;
         public final ConfigValue<List<? extends String>> resetItems;
 
@@ -33,6 +35,10 @@ public class TeleConfig {
         Server(ForgeConfigSpec.Builder builder) {
             builder.comment("General settings")
                     .push("General");
+
+            ignoreHunger = builder
+                    .comment("Defines if the pastry usage requires hunger, when set to true it ignores hunger [default: false]")
+                    .define("ignoreHunger", false);
 
             resetPastry = builder
                     .comment("Defines if the pastry teleportation point can be reset with a milk bucket [default: false]")

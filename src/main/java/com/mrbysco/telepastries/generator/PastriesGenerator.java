@@ -30,7 +30,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static com.mrbysco.telepastries.init.TeleRegistry.*;
+import static com.mrbysco.telepastries.init.TeleRegistry.END_CAKE;
+import static com.mrbysco.telepastries.init.TeleRegistry.NETHER_CAKE;
+import static com.mrbysco.telepastries.init.TeleRegistry.OVERWORLD_CAKE;
+import static com.mrbysco.telepastries.init.TeleRegistry.TWILIGHT_CAKE;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PastriesGenerator {

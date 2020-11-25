@@ -102,7 +102,7 @@ public class BlockCakeBase extends BlockPastryBase {
     }
 
     private ActionResultType eatSlice(IWorld world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!player.canEat(false)) {
+        if (!player.canEat(TeleConfig.SERVER.ignoreHunger.get())) {
             return ActionResultType.PASS;
         } else {
             player.addStat(Stats.EAT_CAKE_SLICE);
