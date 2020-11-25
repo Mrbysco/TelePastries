@@ -1,6 +1,7 @@
 package com.mrbysco.telepastries.util;
 
 import com.mrbysco.telepastries.Reference;
+import com.mrbysco.telepastries.TelePastries;
 import com.mrbysco.telepastries.config.TeleConfig;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -70,10 +71,10 @@ public class CakeTeleporter implements ITeleporter {
 
         if(dim == World.THE_END) {
             BlockPos spawnPlatform = entityIn.getServer().getWorld(dim).field_241108_a_;
-            System.out.println("Setting position of " + dimLocation + " to: " + spawnPlatform);
+            TelePastries.LOGGER.debug("Setting %s's position of %s to: %s", entityIn.getDisplayName().getUnformattedComponentText(), dimLocation, spawnPlatform);
             data.putLong(Reference.MOD_PREFIX + dimLocation, spawnPlatform.toLong());
         } else {
-            System.out.println("Setting position of " + dimLocation + " to: " + position);
+            TelePastries.LOGGER.debug("Setting %s's position of %s to: %s", entityIn.getDisplayName().getUnformattedComponentText(), dimLocation, position);
             data.putLong(Reference.MOD_PREFIX + dimLocation, position.toLong());
         }
         entityData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
@@ -87,11 +88,11 @@ public class CakeTeleporter implements ITeleporter {
         BlockPos dimPos = position;
         if(data.contains(Reference.MOD_PREFIX + dimLocation)) {
             dimPos = BlockPos.fromLong(data.getLong(Reference.MOD_PREFIX + dimLocation));
-            System.out.println("Found position of " + dimLocation + " to: " + dimPos);
+            TelePastries.LOGGER.debug("Found %s's position of %s to: %s", entityIn.getDisplayName().getUnformattedComponentText(), dimLocation, dimPos);
             return dimPos;
         }
 
-        System.out.println("Could not find previous location. Using current location");
+        TelePastries.LOGGER.debug("Could not find %'s previous location. Using current location", entityIn.getDisplayName().getUnformattedComponentText());
         return dimPos;
     }
 
@@ -99,7 +100,7 @@ public class CakeTeleporter implements ITeleporter {
         CompoundNBT entityData = entityIn.getPersistentData();
         CompoundNBT data = getTag(entityData);
 
-        System.out.println("Checking if entity has position stored for : " + dim.getLocation());
+        TelePastries.LOGGER.debug("Checking if entity has position stored for : " + dim.getLocation());
         return data.contains(Reference.MOD_PREFIX + dim.getLocation());
     }
 
