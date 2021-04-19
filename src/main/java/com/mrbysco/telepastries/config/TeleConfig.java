@@ -52,14 +52,14 @@ public class TeleConfig {
                     .comment("Defines if the pastry teleportation point can be reset with a milk bucket [default: false]")
                     .define("resetPastry", false);
 
-            String[] resetItem = new String[]
+            String[] resetItemsList = new String[]
                     {
                             "minecraft:milk_bucket"
                     };
 
             resetItems = builder
                     .comment("Defines the item needed to reset the pastry teleportation point [default: minecraft:milk_bucket]")
-                    .defineList("resetItems", Arrays.asList(resetItem), o -> (o instanceof String));
+                    .defineList("resetItems", () -> Arrays.asList(resetItemsList), o -> (o instanceof String));
 
             builder.pop();
             builder.comment("Nether settings")
@@ -76,7 +76,7 @@ public class TeleConfig {
 
             netherCakeRefillItems = builder
                     .comment("Set the refill items used by Nether Cake (Only change if you know what you're doing) [modid:itemname].")
-                    .defineList("netherCakeRefillItems", Arrays.asList(netherItems), o -> (o instanceof String));
+                    .defineList("netherCakeRefillItems", () -> Arrays.asList(netherItems), o -> (o instanceof String));
 
             netherCake1x1Logic = builder
                     .comment("Defines if the Nether Cake should teleport the player 1x1 (Use this if you're replacing the Nether dimension with one that is 1x1) [default: false].")
@@ -97,7 +97,7 @@ public class TeleConfig {
 
             endCakeRefillItems = builder
                     .comment("Set the refill items used by End Cake (Only change if you know what you're doing) [modid:itemname].")
-                    .defineList("endCakeRefillItems", Arrays.asList(endItems), o -> (o instanceof String));
+                    .defineList("endCakeRefillItems", () -> Arrays.asList(endItems), o -> (o instanceof String));
 
             builder.pop();
             builder.comment("Overworld settings")
@@ -119,7 +119,7 @@ public class TeleConfig {
 
             overworldCakeRefillItems = builder
                     .comment("Set the refill items used by Overworld Cake (Only change if you know what you're doing) [modid:itemname].")
-                    .defineList("overworldCakeRefillItems", Arrays.asList(overworldItems), o -> (o instanceof String));
+                    .defineList("overworldCakeRefillItems", () -> Arrays.asList(overworldItems), o -> (o instanceof String));
 
             builder.pop();
             builder.comment("Compat settings")
@@ -136,7 +136,7 @@ public class TeleConfig {
 
             twilightCakeRefillItems = builder
                     .comment("Set the refill items used by the Twilight Forest Cake (Only change if you know what you're doing) [modid:itemname]")
-                    .defineList("TwilightCakeRefillItems", Arrays.asList(twilightItems), o -> (o instanceof String));
+                    .defineList("TwilightCakeRefillItems", () -> Arrays.asList(twilightItems), o -> (o instanceof String));
 
             consumeLostCitiesCake = builder
                     .comment("Defines if the Lost Cities Cake gets partly consumed when eaten [default: true]")
@@ -149,7 +149,7 @@ public class TeleConfig {
 
             lostCitiesCakeRefillItem = builder
                     .comment("Set the refill items used by the Lost Cities Cake (Only change if you know what you're doing) [modid:itemname]")
-                    .defineList("lostCitiesCakeRefillItem", Arrays.asList(lostcityItems), o -> (o instanceof String));
+                    .defineList("lostCitiesCakeRefillItem", () -> Arrays.asList(lostcityItems), o -> (o instanceof String));
 
             consumeCustomCake = builder
                     .comment("Defines if the Custom Cake gets partly consumed when eaten [default: true]")
@@ -170,7 +170,7 @@ public class TeleConfig {
 
             customCakeRefillItem = builder
                     .comment("Set the refill items used by the Custom Cake (Only change if you know what you're doing) [modid:itemname]")
-                    .defineList("customCakeRefillItem", Arrays.asList(customItems), o -> (o instanceof String));
+                    .defineList("customCakeRefillItem", () -> Arrays.asList(customItems), o -> (o instanceof String));
 
             builder.pop();
         }

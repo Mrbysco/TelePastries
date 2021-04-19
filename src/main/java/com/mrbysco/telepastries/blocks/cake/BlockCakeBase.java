@@ -1,6 +1,7 @@
 package com.mrbysco.telepastries.blocks.cake;
 
 import com.mrbysco.telepastries.Reference;
+import com.mrbysco.telepastries.TelePastries;
 import com.mrbysco.telepastries.blocks.BlockPastryBase;
 import com.mrbysco.telepastries.config.TeleConfig;
 import com.mrbysco.telepastries.util.CakeTeleporter;
@@ -57,7 +58,7 @@ public class BlockCakeBase extends BlockPastryBase {
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
             ItemStack stack = player.getHeldItem(handIn);
-            if(consumeCake() && isRefillItem(stack)) {
+            if(consumeCake() && !isRefillItem(stack)) {
                 int i = state.get(BITES);
                 if(i > 0) {
                     worldIn.setBlockState(pos, state.with(BITES, Integer.valueOf(i - 1)), 3);
@@ -101,12 +102,14 @@ public class BlockCakeBase extends BlockPastryBase {
         } else {
             player.addStat(Stats.EAT_CAKE_SLICE);
             player.getFoodStats().addStats(2, 0.1F);
-            if(!player.abilities.isCreativeMode) {
-                int i = state.get(BITES);
-                if (i < 6) {
-                    world.setBlockState(pos, state.with(BITES, Integer.valueOf(i + 1)), 3);
-                } else {
-                    world.removeBlock(pos, false);
+            if(consumeCake()) {
+                if(!player.abilities.isCreativeMode) {
+                    int i = state.get(BITES);
+                    if (i < 6) {
+                        world.setBlockState(pos, state.with(BITES, Integer.valueOf(i + 1)), 3);
+                    } else {
+                        world.removeBlock(pos, false);
+                    }
                 }
             }
 
@@ -135,8 +138,10 @@ public class BlockCakeBase extends BlockPastryBase {
                 ServerPlayerEntity playerMP = (ServerPlayerEntity) player;
                 MinecraftServer server = player.getServer();
                 ServerWorld destinationWorld = server != null ? server.getWorld(getCakeWorld()) : null;
-                if(destinationWorld == null)
+                if(destinationWorld == null) {
+                    TelePastries.LOGGER.error("Destination of cake invalid {} isn't known", getCakeWorld().getLocation());
                     return;
+                }
 
                 CakeTeleporter teleporter = new CakeTeleporter(destinationWorld);
                 teleporter.addDimensionPosition(playerMP, playerMP.getServerWorld().getDimensionKey(), playerMP.getPosition().add(0,1,0));
