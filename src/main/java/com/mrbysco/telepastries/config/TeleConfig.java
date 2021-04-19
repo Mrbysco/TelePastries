@@ -156,12 +156,12 @@ public class TeleConfig {
                     .define("consumeCustomCake", true);
 
             customCakeName = builder
-                    .comment("Defines the name of the cake [default: true]")
+                    .comment("Defines the name of the cake [default: \"Custom\"]")
                     .define("customCakeName", "Custom", o -> (o instanceof String));
 
             customCakeDimension = builder
-                    .comment("Defines the dimension bound to the custom cake [default: true]")
-                    .define("customCakeDimension", "", o -> (o instanceof String));
+                    .comment("Defines the dimension bound to the custom cake [default: \"minecraft:the_overworld\"]")
+                    .define("customCakeDimension", "minecraft:the_overworld", o -> (o instanceof String));
 
             String[] customItems = new String[]
                     {

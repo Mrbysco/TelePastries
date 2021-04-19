@@ -14,11 +14,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.ModList;
 
 import java.util.List;
 
@@ -35,7 +33,7 @@ public class BlockCustomCake extends BlockCakeBase {
             if(player.getActiveHand() == handIn && !worldIn.isRemote) {
                 player.sendMessage(new TranslationTextComponent("telepastries.pastry.custom.unbound").mergeStyle(TextFormatting.RED), Util.DUMMY_UUID);
             }
-            return ActionResultType.PASS;
+            return ActionResultType.SUCCESS;
         }
     }
 

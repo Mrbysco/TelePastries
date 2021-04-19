@@ -34,7 +34,7 @@ public class BlockTwilightCake extends BlockCakeBase {
             if(player.getActiveHand() == handIn && !worldIn.isRemote) {
                 player.sendMessage(new TranslationTextComponent("telepastries.pastry.support.disabled", "twilightforest").mergeStyle(TextFormatting.RED), Util.DUMMY_UUID);
             }
-            return ActionResultType.PASS;
+            return ActionResultType.SUCCESS;
         }
     }
 

@@ -57,44 +57,38 @@ public class BlockCakeBase extends BlockPastryBase {
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
             ItemStack stack = player.getHeldItem(handIn);
-            if (consumeCake()) {
-                if(!stack.isEmpty() && isRefillItem(stack)) {
-                    int i = state.get(BITES);
-                    if(i > 0) {
-                        worldIn.setBlockState(pos, state.with(BITES, Integer.valueOf(i - 1)), 3);
-                    }
-                    if(!player.abilities.isCreativeMode) {
-                        stack.shrink(1);
-                    }
-                    return ActionResultType.SUCCESS;
-                } else {
-                    if(worldIn.getDimensionKey() != getCakeWorld()) {
-                        if(TeleConfig.SERVER.resetPastry.get() && isResetItem(stack)) {
-                            removeDimensionPosition((ServerPlayerEntity)player, getCakeWorld());
+            if(consumeCake() && isRefillItem(stack)) {
+                int i = state.get(BITES);
+                if(i > 0) {
+                    worldIn.setBlockState(pos, state.with(BITES, Integer.valueOf(i - 1)), 3);
+                }
+                if(!player.abilities.isCreativeMode) {
+                    stack.shrink(1);
+                }
+                return ActionResultType.SUCCESS;
+            } else {
+                if(worldIn.getDimensionKey().getLocation() != getCakeWorld().getLocation()) {
+                    if(TeleConfig.SERVER.resetPastry.get() && isResetItem(stack)) {
+                        removeDimensionPosition((ServerPlayerEntity)player, getCakeWorld());
 
-                            if(stack.getItem() == Items.MILK_BUCKET) {
-                                if(!player.abilities.isCreativeMode) {
-                                    stack.shrink(1);
-                                    player.setHeldItem(handIn, new ItemStack(Items.BUCKET));
-                                }
+                        if(stack.getItem() == Items.MILK_BUCKET) {
+                            if(!player.abilities.isCreativeMode) {
+                                stack.shrink(1);
+                                player.setHeldItem(handIn, new ItemStack(Items.BUCKET));
                             }
-                            return ActionResultType.SUCCESS;
-                        } else {
-                            //TelePastries.logger.debug("At onBlockActivated before eatCake");
-                            if (this.eatSlice(worldIn, pos, state, player).isSuccessOrConsume()) {
-                                return ActionResultType.SUCCESS;
-                            }
-                            //TelePastries.logger.debug("At onBlockActivated after eatCake");
-                            return ActionResultType.FAIL;
                         }
+                        return ActionResultType.SUCCESS;
                     } else {
+                        //TelePastries.logger.debug("At onBlockActivated before eatCake");
+                        if (this.eatSlice(worldIn, pos, state, player).isSuccessOrConsume()) {
+                            return ActionResultType.SUCCESS;
+                        }
+                        //TelePastries.logger.debug("At onBlockActivated after eatCake");
                         return ActionResultType.FAIL;
                     }
+                } else {
+                    return ActionResultType.FAIL;
                 }
-            }
-
-            if (stack.isEmpty()) {
-                return ActionResultType.CONSUME;
             }
         }
 
