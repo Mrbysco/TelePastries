@@ -13,6 +13,7 @@
     "block.telepastries.twilight_cake": "Gâteau de la Twilight Forest",
     "block.telepastries.lost_city_cake": "Gâteau des Cités perdues",
     "block.telepastries.hunting_dimension_cake": "Gâteau de la dimension de chasse",
+    "block.telepastries.custom_cake": "Gâteau de %s",
 
     "_comment": "Message",
     "telepastries.pastry.reset.complete": "La position sauvegardée de la dimension %s a été réinitialisée.",

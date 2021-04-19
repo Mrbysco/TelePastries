@@ -137,7 +137,7 @@ public class BlockCakeBase extends BlockPastryBase {
     public void teleportToDimension(IWorld worldIn, BlockPos pos, PlayerEntity player) {
         if (player.isAlive() && !worldIn.isRemote()) {
             World world = ((IServerWorld)worldIn).getWorld();
-            if (!world.isRemote && !player.isPassenger() && !player.isBeingRidden() && player.isNonBoss()) {
+            if (!world.isRemote && !player.isPassenger() && !player.isBeingRidden() && player.canChangeDimension()) {
                 ServerPlayerEntity playerMP = (ServerPlayerEntity) player;
                 MinecraftServer server = player.getServer();
                 ServerWorld destinationWorld = server != null ? server.getWorld(getCakeWorld()) : null;

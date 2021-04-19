@@ -30,7 +30,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static com.mrbysco.telepastries.init.TeleRegistry.CUSTOM_CAKE;
 import static com.mrbysco.telepastries.init.TeleRegistry.END_CAKE;
+import static com.mrbysco.telepastries.init.TeleRegistry.LOST_CITY_CAKE;
 import static com.mrbysco.telepastries.init.TeleRegistry.NETHER_CAKE;
 import static com.mrbysco.telepastries.init.TeleRegistry.OVERWORLD_CAKE;
 import static com.mrbysco.telepastries.init.TeleRegistry.TWILIGHT_CAKE;
@@ -76,6 +78,8 @@ public class PastriesGenerator {
                 this.registerLootTable(NETHER_CAKE.get(), blockNoDrop());
                 this.registerLootTable(END_CAKE.get(), blockNoDrop());
                 this.registerLootTable(TWILIGHT_CAKE.get(), blockNoDrop());
+                this.registerLootTable(LOST_CITY_CAKE.get(), blockNoDrop());
+                this.registerLootTable(CUSTOM_CAKE.get(), blockNoDrop());
             }
 
             @Override
@@ -97,6 +101,8 @@ public class PastriesGenerator {
             makeCake(NETHER_CAKE.get(), "nether");
             makeCake(END_CAKE.get(), "end");
             makeCake(TWILIGHT_CAKE.get(), "twilight");
+            makeCake(LOST_CITY_CAKE.get(), "cities");
+            makeCake(CUSTOM_CAKE.get(), "custom");
         }
 
         private void makeCake(Block block, String dimension) {

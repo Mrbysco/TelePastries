@@ -30,7 +30,15 @@ public class TeleConfig {
         public final ConfigValue<List<? extends String>> overworldCakeRefillItems;
 
         public final BooleanValue consumeTwilightCake;
-        public final ConfigValue<List<? extends String>> TwilightCakeRefillItems;
+        public final ConfigValue<List<? extends String>> twilightCakeRefillItems;
+
+        public final BooleanValue consumeLostCitiesCake;
+        public final ConfigValue<List<? extends String>> lostCitiesCakeRefillItem;
+
+        public final BooleanValue consumeCustomCake;
+        public final ConfigValue<? extends String> customCakeName;
+        public final ConfigValue<? extends String> customCakeDimension;
+        public final ConfigValue<List<? extends String>> customCakeRefillItem;
 
         Server(ForgeConfigSpec.Builder builder) {
             builder.comment("General settings")
@@ -126,19 +134,53 @@ public class TeleConfig {
                             "minecraft:diamond"
                     };
 
-            TwilightCakeRefillItems = builder
-                    .comment("Set the refill items used by Twilight Forest Cake (Only change if you know what you're doing) [modid:itemname]")
+            twilightCakeRefillItems = builder
+                    .comment("Set the refill items used by the Twilight Forest Cake (Only change if you know what you're doing) [modid:itemname]")
                     .defineList("TwilightCakeRefillItems", Arrays.asList(twilightItems), o -> (o instanceof String));
+
+            consumeLostCitiesCake = builder
+                    .comment("Defines if the Lost Cities Cake gets partly consumed when eaten [default: true]")
+                    .define("consumeLostCitiesCake", true);
+
+            String[] lostcityItems = new String[]
+                    {
+                            "minecraft:bed"
+                    };
+
+            lostCitiesCakeRefillItem = builder
+                    .comment("Set the refill items used by the Lost Cities Cake (Only change if you know what you're doing) [modid:itemname]")
+                    .defineList("lostCitiesCakeRefillItem", Arrays.asList(lostcityItems), o -> (o instanceof String));
+
+            consumeCustomCake = builder
+                    .comment("Defines if the Custom Cake gets partly consumed when eaten [default: true]")
+                    .define("consumeCustomCake", true);
+
+            customCakeName = builder
+                    .comment("Defines the name of the cake [default: true]")
+                    .define("customCakeName", "Custom", o -> (o instanceof String));
+
+            customCakeDimension = builder
+                    .comment("Defines the dimension bound to the custom cake [default: true]")
+                    .define("customCakeDimension", "", o -> (o instanceof String));
+
+            String[] customItems = new String[]
+                    {
+                            "minecraft:cobblestone"
+                    };
+
+            customCakeRefillItem = builder
+                    .comment("Set the refill items used by the Custom Cake (Only change if you know what you're doing) [modid:itemname]")
+                    .defineList("customCakeRefillItem", Arrays.asList(customItems), o -> (o instanceof String));
 
             builder.pop();
         }
     }
 
     public static final ForgeConfigSpec serverSpec;
-    public static final TeleConfig.Server SERVER;
+    public static final Server SERVER;
 
     static {
-        final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(TeleConfig.Server::new);
+        final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Server::new);
         serverSpec = specPair.getRight();
         SERVER = specPair.getLeft();
     }

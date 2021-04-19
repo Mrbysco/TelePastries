@@ -1,44 +1,38 @@
 package com.mrbysco.telepastries.compat.waila;
 
-//@WailaPlugin
-public class TeleWailaCompat { //implements IWailaDataProvider, IWailaPlugin {
-//    private static final String CONFIG_TELEPASTRY_BITES = "telepastries.bites.name";
-//
-//    @Override
-//    public void register(IWailaRegistrar registrar) {
-//        TeleWailaCompat instance = new TeleWailaCompat();
-//        for(Block block : TeleBlocks.BLOCKS)
-//        {
-//            registrar.registerBodyProvider(instance, block.getClass());
-//        }
-//
-//        registrar.addConfig(Reference.MOD_NAME, CONFIG_TELEPASTRY_BITES, true);
-//    }
-//
-//    @Override
-//    public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<String> getWailaHead(ItemStack itemStack, List<String> tooltip, IWailaDataAccessor accessor,
-//                                     IWailaConfigHandler config) {
-//        return tooltip;
-//    }
-//
-//    @Override
-//    public List<String> getWailaBody(ItemStack itemStack, List<String> tooltip, IWailaDataAccessor accessor,
-//                                     IWailaConfigHandler config) {
-//        Block block = accessor.getBlock();
-//        if (block instanceof BlockCakeBase) {
-//            tooltip.add(TextFormatting.GRAY + "Bites: " + (6 - accessor.getBlockState().getValue(BlockCakeBase.BITES)) + " / 6");
-//        }
-//        return tooltip;
-//    }
-//
-//    @Override
-//    public List<String> getWailaTail(ItemStack itemStack, List<String> tooltip, IWailaDataAccessor accessor,
-//                                     IWailaConfigHandler config) {
-//        return tooltip;
-//    }
+import com.mrbysco.telepastries.Reference;
+import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
+import mcp.mobius.waila.api.IComponentProvider;
+import mcp.mobius.waila.api.IDataAccessor;
+import mcp.mobius.waila.api.IPluginConfig;
+import mcp.mobius.waila.api.IRegistrar;
+import mcp.mobius.waila.api.IWailaPlugin;
+import mcp.mobius.waila.api.TooltipPosition;
+import mcp.mobius.waila.api.WailaPlugin;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+
+import java.util.List;
+
+@WailaPlugin
+public class TeleWailaCompat implements IWailaPlugin {
+	private static final ResourceLocation CONFIG_TELEPASTRY_BITES = new ResourceLocation(Reference.MOD_ID, "telepastries.bites.name");
+
+	@Override
+	public void register(IRegistrar registrar) {
+		registrar.registerComponentProvider(PastryBodyHandler.INSTANCE, TooltipPosition.BODY, BlockCakeBase.class);
+
+		registrar.addConfig(CONFIG_TELEPASTRY_BITES, true);
+	}
+
+	public static class PastryBodyHandler implements IComponentProvider {
+		public static final PastryBodyHandler INSTANCE = new PastryBodyHandler();
+
+		@Override
+		public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			tooltip.add(new StringTextComponent("Bites: " + (6 - accessor.getBlockState().get(BlockCakeBase.BITES)) + " / 6").mergeStyle(TextFormatting.GRAY));
+		}
+	}
 }

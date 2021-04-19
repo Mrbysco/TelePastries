@@ -10,5 +10,7 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(TeleRegistry.NETHER_CAKE.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(TeleRegistry.OVERWORLD_CAKE.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(TeleRegistry.END_CAKE.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(TeleRegistry.LOST_CITY_CAKE.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(TeleRegistry.CUSTOM_CAKE.get(), RenderType.getCutout());
     }
 }

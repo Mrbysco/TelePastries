@@ -70,7 +70,7 @@ public class CakeTeleporter implements ITeleporter {
         ResourceLocation dimLocation = dim.getLocation();
 
         if(dim == World.THE_END) {
-            BlockPos spawnPlatform = entityIn.getServer().getWorld(dim).field_241108_a_;
+            BlockPos spawnPlatform = entityIn.getServer().getWorld(dim).END_SPAWN_AREA;
             TelePastries.LOGGER.debug("Setting %s's position of %s to: %s", entityIn.getDisplayName().getUnformattedComponentText(), dimLocation, spawnPlatform);
             data.putLong(Reference.MOD_PREFIX + dimLocation, spawnPlatform.toLong());
         } else {
@@ -213,26 +213,44 @@ public class CakeTeleporter implements ITeleporter {
     }
 
     private void customCompat(Entity entity, ServerWorld destWorld) {
-        if(ModList.get().isLoaded("twilightforest")) {
+        if (ModList.get().isLoaded("twilightforest")) {
             RegistryKey<World> twilightKey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation("twilightforest", "twilightforest"));
-            if(destWorld.getDimensionKey() == twilightKey) {
+            if (destWorld.getDimensionKey() == twilightKey) {
                 protectEntity(entity, entity.getPosition());
-                if(entity instanceof ServerPlayerEntity) {
-                    ServerPlayerEntity playerMP = (ServerPlayerEntity)entity;
+                if (entity instanceof ServerPlayerEntity) {
+                    ServerPlayerEntity playerMP = (ServerPlayerEntity) entity;
                     playerMP.func_242111_a(twilightKey, playerMP.getPosition(), playerMP.rotationYaw, true, false);
                 }
             }
         }
+
+        if (ModList.get().isLoaded("lostcities")) {
+            RegistryKey<World> lostCityKey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation("lostcities", "lostcity"));
+            if (destWorld.getDimensionKey() == lostCityKey) {
+                protectEntity(entity, entity.getPosition());
+                if (entity instanceof ServerPlayerEntity) {
+                    ServerPlayerEntity playerMP = (ServerPlayerEntity) entity;
+                    playerMP.func_242111_a(lostCityKey, playerMP.getPosition(), playerMP.rotationYaw, true, false);
+                }
+            }
+        }
+
+        if (ModList.get().isLoaded("topography")) {
+            //Make sure to stay between 220 and 250 Y.
+            RegistryKey<World> infiniteDarkKey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation("topography", "infinite_dark"));
+            if (destWorld.getDimensionKey() == infiniteDarkKey) {
+                BlockPos entityPos = entity.getPosition();
+                if(entityPos.getY() < 220) {
+                    entityPos.add(0, 220 - entityPos.getY(), 0);
+                }
+                if(entityPos.getY() > 250) {
+                    entityPos.add(0, -(entityPos.getY() - 250), 0);
+                }
+                protectEntity(entity, entityPos);
+            }
+        }
     }
-//
-//    @Optional.Method(modid = "lostcities")
-//    private void lostCitiesPlacement(ServerPlayerEntity playerMP, double x, double y, double z){
-//        //TelePastries.logger.debug("at lostCitiesPlacement before protectPlayer");
-//        protectPlayer(playerMP, new BlockPos(x, y, z));
-//        playerMP.setSpawnPoint(new BlockPos(playerMP), true, this.world.getDimension().getType());
-//        //TelePastries.logger.debug("at lostCitiesPlacement after protectPlayer");
-//    }
-//
+
 //    @Optional.Method(modid = "huntingdim")
 //    private void huntingDimensionPlacement(ServerPlayerEntity playerMP, double x, double y, double z){
 //        //TelePastries.logger.debug("at huntingDimensionPlacement before protectPlayer");
