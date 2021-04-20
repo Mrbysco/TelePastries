@@ -241,10 +241,10 @@ public class CakeTeleporter implements ITeleporter {
             if (destWorld.getDimensionKey() == infiniteDarkKey) {
                 BlockPos entityPos = entity.getPosition();
                 if(entityPos.getY() < 220) {
-                    entityPos.add(0, 220 - entityPos.getY(), 0);
+                    entityPos = new BlockPos(entityPos.getX(), 220, entityPos.getZ());
                 }
                 if(entityPos.getY() > 250) {
-                    entityPos.add(0, -(entityPos.getY() - 250), 0);
+                    entityPos = new BlockPos(entityPos.getX(), 250, entityPos.getZ());
                 }
                 protectEntity(entity, entityPos);
             }
