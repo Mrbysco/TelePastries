@@ -2,9 +2,6 @@ package com.mrbysco.telepastries.blocks.cake.compat;
 
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import net.minecraft.block.AbstractBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 
 public class BlockHuntingDimensionCake extends BlockCakeBase {
     public BlockHuntingDimensionCake(AbstractBlock.Properties properties) {

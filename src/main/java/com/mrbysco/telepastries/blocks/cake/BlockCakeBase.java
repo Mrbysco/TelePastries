@@ -58,7 +58,7 @@ public class BlockCakeBase extends BlockPastryBase {
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
             ItemStack stack = player.getHeldItem(handIn);
-            if(consumeCake() && !isRefillItem(stack)) {
+            if(consumeCake() && isRefillItem(stack)) {
                 int i = state.get(BITES);
                 if(i > 0) {
                     worldIn.setBlockState(pos, state.with(BITES, Integer.valueOf(i - 1)), 3);
