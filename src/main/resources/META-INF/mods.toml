@@ -10,3 +10,10 @@ displayURL="https://github.com/Mrbysco/TelePastries"
 authors="Mrbysco"
 description='''Pastries that teleport players.'''
 credits="My friend 8138763 for the name"
+
+[[dependencies.telepastries]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16.4,1.17)"
+ordering="NONE"
+side="BOTH"
