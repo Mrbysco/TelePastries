@@ -190,9 +190,13 @@ public class CakeTeleporter implements ITeleporter {
     //Safety stuff
     private static PortalInfo moveToSafeCoords(ServerWorld world, Entity entity, BlockPos pos) {
         if (world.getDimensionKey() != World.OVERWORLD) {
+            if(!world.isAirBlock(pos)) {
+                makePlatform(world, pos);
+            }
             int distanceDown;
             for(distanceDown = 1; world.isAirBlock(pos.down(distanceDown)); ++distanceDown) {
             }
+
             boolean foundSuitablePlatform = distanceDown < 3;
 
             if(!foundSuitablePlatform) {
@@ -200,7 +204,7 @@ public class CakeTeleporter implements ITeleporter {
             }
         }
 
-        return makePortalInfo(entity, pos.getX(), pos.getY(), pos.getZ());
+        return makePortalInfo(entity, (double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D);
     }
 
     private static void makePlatform(ServerWorld world, BlockPos pos) {
