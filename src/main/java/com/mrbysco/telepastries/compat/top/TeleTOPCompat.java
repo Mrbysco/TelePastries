@@ -46,8 +46,8 @@ public class TeleTOPCompat {
 			if (block instanceof BlockCakeBase) {
 				probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
 						.item(new ItemStack(block))
-						.text(new StringTextComponent("Bites: ").mergeStyle(TextFormatting.GREEN))
-						.progress(6 - blockState.get(BlockCakeBase.BITES), 6);
+						.text(new StringTextComponent("Bites: ").withStyle(TextFormatting.GREEN))
+						.progress(6 - blockState.getValue(BlockCakeBase.BITES), 6);
 			}
 		}
     }

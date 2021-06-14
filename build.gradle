@@ -96,8 +96,8 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}")
 
     compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
     runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")

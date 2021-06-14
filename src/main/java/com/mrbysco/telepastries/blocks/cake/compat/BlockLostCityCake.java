@@ -27,12 +27,12 @@ public class BlockLostCityCake extends BlockCakeBase {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(ModList.get().isLoaded("lostcities")) {
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, worldIn, pos, player, handIn, hit);
         } else {
-            if(player.getActiveHand() == handIn && !worldIn.isRemote) {
-                player.sendMessage(new TranslationTextComponent("telepastries.pastry.support.disabled", "lostcities").mergeStyle(TextFormatting.RED), Util.DUMMY_UUID);
+            if(player.getUsedItemHand() == handIn && !worldIn.isClientSide) {
+                player.sendMessage(new TranslationTextComponent("telepastries.pastry.support.disabled", "lostcities").withStyle(TextFormatting.RED), Util.NIL_UUID);
             }
             return ActionResultType.SUCCESS;
         }
@@ -48,7 +48,7 @@ public class BlockLostCityCake extends BlockCakeBase {
 
     @Override
     public RegistryKey<World> getCakeWorld() {
-        return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation("lostcities", "lostcity"));
+        return RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("lostcities", "lostcity"));
     }
 
     @Override

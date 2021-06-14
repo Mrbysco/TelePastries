@@ -32,7 +32,7 @@ public class TeleWailaCompat implements IWailaPlugin {
 
 		@Override
 		public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
-			tooltip.add(new StringTextComponent("Bites: " + (6 - accessor.getBlockState().get(BlockCakeBase.BITES)) + " / 6").mergeStyle(TextFormatting.GRAY));
+			tooltip.add(new StringTextComponent("Bites: " + (6 - accessor.getBlockState().getValue(BlockCakeBase.BITES)) + " / 6").withStyle(TextFormatting.GRAY));
 		}
 	}
 }

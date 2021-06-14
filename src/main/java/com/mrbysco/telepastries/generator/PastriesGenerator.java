@@ -30,12 +30,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static com.mrbysco.telepastries.init.TeleRegistry.CUSTOM_CAKE;
-import static com.mrbysco.telepastries.init.TeleRegistry.END_CAKE;
-import static com.mrbysco.telepastries.init.TeleRegistry.LOST_CITY_CAKE;
-import static com.mrbysco.telepastries.init.TeleRegistry.NETHER_CAKE;
-import static com.mrbysco.telepastries.init.TeleRegistry.OVERWORLD_CAKE;
-import static com.mrbysco.telepastries.init.TeleRegistry.TWILIGHT_CAKE;
+import static com.mrbysco.telepastries.init.TeleRegistry.*;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PastriesGenerator {
@@ -68,18 +63,18 @@ public class PastriesGenerator {
 
         @Override
         protected void validate(Map<ResourceLocation, LootTable> map, ValidationTracker validationresults) {
-            map.forEach((name, table) -> LootTableManager.validateLootTable(validationresults, name, table));
+            map.forEach((name, table) -> LootTableManager.validate(validationresults, name, table));
         }
 
         private class TeleBlocks extends BlockLootTables {
             @Override
             protected void addTables() {
-                this.registerLootTable(OVERWORLD_CAKE.get(), blockNoDrop());
-                this.registerLootTable(NETHER_CAKE.get(), blockNoDrop());
-                this.registerLootTable(END_CAKE.get(), blockNoDrop());
-                this.registerLootTable(TWILIGHT_CAKE.get(), blockNoDrop());
-                this.registerLootTable(LOST_CITY_CAKE.get(), blockNoDrop());
-                this.registerLootTable(CUSTOM_CAKE.get(), blockNoDrop());
+                this.add(OVERWORLD_CAKE.get(), noDrop());
+                this.add(NETHER_CAKE.get(), noDrop());
+                this.add(END_CAKE.get(), noDrop());
+                this.add(TWILIGHT_CAKE.get(), noDrop());
+                this.add(LOST_CITY_CAKE.get(), noDrop());
+                this.add(CUSTOM_CAKE.get(), noDrop());
             }
 
             @Override
@@ -158,7 +153,7 @@ public class PastriesGenerator {
 
             getVariantBuilder(block)
                     .forAllStates(state -> {
-                        int bites = state.get(BlockCakeBase.BITES);
+                        int bites = state.getValue(BlockCakeBase.BITES);
                         boolean untouched = bites == 0;
                         return ConfiguredModel.builder()
                                 .modelFile(untouched ? model : models().getBuilder(block.getRegistryName().getPath() + "_slice" + bites)).build();

@@ -13,7 +13,7 @@ public class CustomCakeBlockItem extends BlockItem {
 	}
 
 	@Override
-	public ITextComponent getDisplayName(ItemStack stack) {
-		return new TranslationTextComponent(this.getTranslationKey(stack), TeleConfig.SERVER.customCakeName.get());
+	public ITextComponent getName(ItemStack stack) {
+		return new TranslationTextComponent(this.getDescriptionId(stack), TeleConfig.SERVER.customCakeName.get());
 	}
 }

@@ -26,20 +26,20 @@ public class BlockCustomCake extends BlockCakeBase {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(!TeleConfig.SERVER.customCakeDimension.get().isEmpty()) {
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, worldIn, pos, player, handIn, hit);
         } else {
-            if(player.getActiveHand() == handIn && !worldIn.isRemote) {
-                player.sendMessage(new TranslationTextComponent("telepastries.pastry.custom.unbound").mergeStyle(TextFormatting.RED), Util.DUMMY_UUID);
+            if(player.getUsedItemHand() == handIn && !worldIn.isClientSide) {
+                player.sendMessage(new TranslationTextComponent("telepastries.pastry.custom.unbound").withStyle(TextFormatting.RED), Util.NIL_UUID);
             }
             return ActionResultType.SUCCESS;
         }
     }
 
     @Override
-    public IFormattableTextComponent getTranslatedName() {
-        return new TranslationTextComponent(this.getTranslationKey(), TeleConfig.SERVER.customCakeName.get());
+    public IFormattableTextComponent getName() {
+        return new TranslationTextComponent(this.getDescriptionId(), TeleConfig.SERVER.customCakeName.get());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class BlockCustomCake extends BlockCakeBase {
 
     @Override
     public RegistryKey<World> getCakeWorld() {
-        return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(TeleConfig.SERVER.customCakeDimension.get()));
+        return RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(TeleConfig.SERVER.customCakeDimension.get()));
     }
 
     @Override

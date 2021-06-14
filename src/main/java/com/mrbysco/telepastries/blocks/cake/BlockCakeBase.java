@@ -40,48 +40,55 @@ import net.minecraftforge.common.ForgeHooks;
 import java.util.List;
 
 public class BlockCakeBase extends BlockPastryBase {
-    public static final IntegerProperty BITES = BlockStateProperties.BITES_0_6;
-    protected static final VoxelShape[] SHAPES = new VoxelShape[]{Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D), Block.makeCuboidShape(3.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D), Block.makeCuboidShape(5.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D), Block.makeCuboidShape(7.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D), Block.makeCuboidShape(9.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D), Block.makeCuboidShape(11.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D), Block.makeCuboidShape(13.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D)};
+    public static final IntegerProperty BITES = BlockStateProperties.BITES;
+    protected static final VoxelShape[] SHAPES = new VoxelShape[]{
+            Block.box(1.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D),
+            Block.box(3.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D),
+            Block.box(5.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D),
+            Block.box(7.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D),
+            Block.box(9.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D),
+            Block.box(11.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D),
+            Block.box(13.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D)};
 
     public BlockCakeBase(AbstractBlock.Properties properties) {
-        super(properties.hardnessAndResistance(0.5F).sound(SoundType.CLOTH).tickRandomly());
-        this.setDefaultState(this.stateContainer.getBaseState().with(BITES, Integer.valueOf(0)));
+        super(properties.strength(0.5F).sound(SoundType.WOOL).randomTicks());
+        this.registerDefaultState(this.stateDefinition.any().setValue(BITES, Integer.valueOf(0)));
     }
 
     @Override
     @SuppressWarnings("deprecated")
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return SHAPES[state.get(BITES)];
+        return SHAPES[state.getValue(BITES)];
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote) {
-            ItemStack stack = player.getHeldItem(handIn);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!worldIn.isClientSide) {
+            ItemStack stack = player.getItemInHand(handIn);
             if(consumeCake() && isRefillItem(stack)) {
-                int i = state.get(BITES);
+                int i = state.getValue(BITES);
                 if(i > 0) {
-                    worldIn.setBlockState(pos, state.with(BITES, Integer.valueOf(i - 1)), 3);
+                    worldIn.setBlock(pos, state.setValue(BITES, Integer.valueOf(i - 1)), 3);
                 }
-                if(!player.abilities.isCreativeMode) {
+                if(!player.abilities.instabuild) {
                     stack.shrink(1);
                 }
                 return ActionResultType.SUCCESS;
             } else {
-                if(worldIn.getDimensionKey().getLocation() != getCakeWorld().getLocation()) {
+                if(worldIn.dimension().location() != getCakeWorld().location()) {
                     if(TeleConfig.SERVER.resetPastry.get() && isResetItem(stack)) {
                         removeDimensionPosition((ServerPlayerEntity)player, getCakeWorld());
 
                         if(stack.getItem() == Items.MILK_BUCKET) {
-                            if(!player.abilities.isCreativeMode) {
+                            if(!player.abilities.instabuild) {
                                 stack.shrink(1);
-                                player.setHeldItem(handIn, new ItemStack(Items.BUCKET));
+                                player.setItemInHand(handIn, new ItemStack(Items.BUCKET));
                             }
                         }
                         return ActionResultType.SUCCESS;
                     } else {
                         //TelePastries.logger.debug("At onBlockActivated before eatCake");
-                        if (this.eatSlice(worldIn, pos, state, player).isSuccessOrConsume()) {
+                        if (this.eatSlice(worldIn, pos, state, player).consumesAction()) {
                             return ActionResultType.SUCCESS;
                         }
                         //TelePastries.logger.debug("At onBlockActivated after eatCake");
@@ -100,13 +107,13 @@ public class BlockCakeBase extends BlockPastryBase {
         if (!player.canEat(TeleConfig.SERVER.ignoreHunger.get())) {
             return ActionResultType.PASS;
         } else {
-            player.addStat(Stats.EAT_CAKE_SLICE);
-            player.getFoodStats().addStats(2, 0.1F);
+            player.awardStat(Stats.EAT_CAKE_SLICE);
+            player.getFoodData().eat(2, 0.1F);
             if(consumeCake()) {
-                if(!player.abilities.isCreativeMode) {
-                    int i = state.get(BITES);
+                if(!player.abilities.instabuild) {
+                    int i = state.getValue(BITES);
                     if (i < 6) {
-                        world.setBlockState(pos, state.with(BITES, Integer.valueOf(i + 1)), 3);
+                        world.setBlock(pos, state.setValue(BITES, Integer.valueOf(i + 1)), 3);
                     } else {
                         world.removeBlock(pos, false);
                     }
@@ -132,19 +139,19 @@ public class BlockCakeBase extends BlockPastryBase {
     }
 
     public void teleportToDimension(IWorld worldIn, BlockPos pos, PlayerEntity player) {
-        if (player.isAlive() && !worldIn.isRemote()) {
-            World world = ((IServerWorld)worldIn).getWorld();
-            if (!world.isRemote && !player.isPassenger() && !player.isBeingRidden() && player.canChangeDimension()) {
+        if (player.isAlive() && !worldIn.isClientSide()) {
+            World world = ((IServerWorld)worldIn).getLevel();
+            if (!world.isClientSide && !player.isPassenger() && !player.isVehicle() && player.canChangeDimensions()) {
                 ServerPlayerEntity playerMP = (ServerPlayerEntity) player;
                 MinecraftServer server = player.getServer();
-                ServerWorld destinationWorld = server != null ? server.getWorld(getCakeWorld()) : null;
+                ServerWorld destinationWorld = server != null ? server.getLevel(getCakeWorld()) : null;
                 if(destinationWorld == null) {
-                    TelePastries.LOGGER.error("Destination of cake invalid {} isn't known", getCakeWorld().getLocation());
+                    TelePastries.LOGGER.error("Destination of cake invalid {} isn't known", getCakeWorld().location());
                     return;
                 }
 
                 CakeTeleporter teleporter = new CakeTeleporter(destinationWorld);
-                teleporter.addDimensionPosition(playerMP, playerMP.getServerWorld().getDimensionKey(), playerMP.getPosition().add(0,1,0));
+                teleporter.addDimensionPosition(playerMP, playerMP.getLevel().dimension(), playerMP.blockPosition().offset(0,1,0));
                 playerMP.changeDimension(destinationWorld, teleporter);
             }
         }
@@ -162,36 +169,36 @@ public class BlockCakeBase extends BlockPastryBase {
         return true;
     }
 
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(BITES);
     }
 
     @Override
     @SuppressWarnings("deprecated")
-    public boolean hasComparatorInputOverride(BlockState state)
+    public boolean hasAnalogOutputSignal(BlockState state)
     {
         return true;
     }
 
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
     @SuppressWarnings("deprecated")
-    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-        return (7 - blockState.get(BITES)) * 2;
+    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+        return (7 - blockState.getValue(BITES)) * 2;
     }
 
     protected void removeDimensionPosition(ServerPlayerEntity player, RegistryKey<World> dim) {
         CompoundNBT playerData = player.getPersistentData();
         CompoundNBT data = getTag(playerData);
 
-        if(data.contains(Reference.MOD_PREFIX + dim.getLocation())) {
-            data.remove(Reference.MOD_PREFIX + dim.getLocation());
-            player.sendMessage(new TranslationTextComponent("telepastries.pastry.reset.complete", dim.getLocation()), Util.DUMMY_UUID);
+        if(data.contains(Reference.MOD_PREFIX + dim.location())) {
+            data.remove(Reference.MOD_PREFIX + dim.location());
+            player.sendMessage(new TranslationTextComponent("telepastries.pastry.reset.complete", dim.location()), Util.NIL_UUID);
         } else {
-            player.sendMessage(new TranslationTextComponent("telepastries.pastry.reset.failed", dim.getLocation()), Util.DUMMY_UUID);
+            player.sendMessage(new TranslationTextComponent("telepastries.pastry.reset.failed", dim.location()), Util.NIL_UUID);
         }
 
         playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
