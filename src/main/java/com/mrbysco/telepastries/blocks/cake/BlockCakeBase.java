@@ -29,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IServerWorld;
@@ -146,6 +147,7 @@ public class BlockCakeBase extends BlockPastryBase {
                 MinecraftServer server = player.getServer();
                 ServerWorld destinationWorld = server != null ? server.getLevel(getCakeWorld()) : null;
                 if(destinationWorld == null) {
+                    player.sendMessage(new TranslationTextComponent("telepastries.pastry.custom.invalid", getCakeWorld().location()).withStyle(TextFormatting.RED), Util.NIL_UUID);
                     TelePastries.LOGGER.error("Destination of cake invalid {} isn't known", getCakeWorld().location());
                     return;
                 }
