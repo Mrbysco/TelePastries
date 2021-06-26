@@ -47,13 +47,9 @@ public class CakeTeleporter implements ITeleporter {
     private static PortalInfo placeNearExistingCake(ServerWorld destWorld, Entity entity, BlockPos pos, boolean isPlayer) {
         int i = 200;
         BlockPos blockpos = pos;
-        boolean isFromEnd = entity.level.dimension() == World.END && destWorld.dimension() == World.OVERWORLD;
         boolean isToEnd = destWorld.dimension() == World.END;
 
-        if(isFromEnd) {
-            blockpos = destWorld.getHeightmapPos(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, destWorld.getSharedSpawnPos());
-            return new PortalInfo(new Vector3d((double)blockpos.getX() + 0.5D, (double)blockpos.getY(), (double)blockpos.getZ() + 0.5D), entity.getDeltaMovement(), entity.yRot, entity.xRot);
-        } else if(isToEnd) {
+        if(isToEnd) {
             ServerWorld.makeObsidianPlatform(destWorld);
             blockpos = ServerWorld.END_SPAWN_POINT;
 
@@ -194,9 +190,9 @@ public class CakeTeleporter implements ITeleporter {
                 makePlatform(world, pos);
             }
         } else {
-            if(!world.getBlockState(pos).getBlock().isPossibleToRespawnInThis() && world.getBlockState(pos.above()).getBlock().isPossibleToRespawnInThis() && world.getBlockState(pos.above(2)).getBlock().isPossibleToRespawnInThis()) {
-                BlockPos abovePos = pos.above(2);
-                return makePortalInfo(entity, abovePos.getX(), abovePos.getY(), abovePos.getZ());
+            if(world.getBlockState(pos.above()).getBlock().isPossibleToRespawnInThis() && world.getBlockState(pos.above(1)).getBlock().isPossibleToRespawnInThis()) {
+                BlockPos abovePos = pos.above(1);
+                return makePortalInfo(entity, abovePos.getX() + 0.5D, abovePos.getY(), abovePos.getZ() + 0.5D);
             }
             if(!world.isEmptyBlock(pos.below()) || !world.isEmptyBlock(pos)) {
                 makePlatform(world, pos);
