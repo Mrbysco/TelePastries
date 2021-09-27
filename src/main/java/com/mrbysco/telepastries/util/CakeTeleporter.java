@@ -162,10 +162,11 @@ public class CakeTeleporter implements ITeleporter {
             }
         }
 
-        if (ModList.get().isLoaded("topography")) {
+        if (ModList.get().isLoaded("topography") || ModList.get().isLoaded("ddd")) {
             //Make sure to stay between 220 and 250 Y.
             RegistryKey<World> infiniteDarkKey = RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("topography", "infinite_dark"));
-            if (destWorld.dimension() == infiniteDarkKey) {
+            RegistryKey<World> deepDarkKey = RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("ddd", "deep_dark"));
+            if (destWorld.dimension() == infiniteDarkKey || destWorld.dimension() == deepDarkKey) {
                 if(blockpos.getY() < 220) {
                     blockpos = new BlockPos(blockpos.getX(), 220, blockpos.getZ());
                 }
