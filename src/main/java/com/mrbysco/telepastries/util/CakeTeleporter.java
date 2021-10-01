@@ -3,6 +3,7 @@ package com.mrbysco.telepastries.util;
 import com.mrbysco.telepastries.Reference;
 import com.mrbysco.telepastries.TelePastries;
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
+import com.mrbysco.telepastries.config.TeleConfig;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PortalInfo;
 import net.minecraft.entity.Entity;
@@ -162,20 +163,22 @@ public class CakeTeleporter implements ITeleporter {
             }
         }
 
-        if (ModList.get().isLoaded("topography") || ModList.get().isLoaded("ddd")) {
-            //Make sure to stay between 220 and 250 Y.
-            RegistryKey<World> infiniteDarkKey = RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("topography", "infinite_dark"));
-            RegistryKey<World> deepDarkKey = RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("ddd", "deep_dark"));
-            if (destWorld.dimension() == infiniteDarkKey || destWorld.dimension() == deepDarkKey) {
-                if(blockpos.getY() < 220) {
-                    blockpos = new BlockPos(blockpos.getX(), 220, blockpos.getZ());
+        ResourceLocation customLocation = ResourceLocation.tryParse(TeleConfig.SERVER.customCakeDimension.get());
+        if (customLocation != null) {
+            RegistryKey<World> customWorldKey = RegistryKey.create(Registry.DIMENSION_REGISTRY, customLocation);
+            if (destWorld.dimension() == customWorldKey) {
+                int minY = TeleConfig.SERVER.customCakeMinY.get();
+                if(blockpos.getY() < minY) {
+                    blockpos = new BlockPos(blockpos.getX(), minY, blockpos.getZ());
                 }
-                if(blockpos.getY() > 250) {
-                    blockpos = new BlockPos(blockpos.getX(), 250, blockpos.getZ());
+                int maxY = TeleConfig.SERVER.customCakeMaxY.get();
+                if(blockpos.getY() > maxY) {
+                    blockpos = new BlockPos(blockpos.getX(), maxY, blockpos.getZ());
                 }
                 return makePortalInfo(entity, blockpos.getX(), blockpos.getY(), blockpos.getZ());
             }
         }
+
         return makePortalInfo(entity, blockpos.getX(), blockpos.getY(), blockpos.getZ());
     }
 

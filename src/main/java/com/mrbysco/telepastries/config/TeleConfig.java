@@ -4,6 +4,7 @@ import com.mrbysco.telepastries.TelePastries;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,6 +40,8 @@ public class TeleConfig {
         public final ConfigValue<? extends String> customCakeName;
         public final ConfigValue<? extends String> customCakeDimension;
         public final ConfigValue<List<? extends String>> customCakeRefillItem;
+        public final IntValue customCakeMinY;
+        public final IntValue customCakeMaxY;
 
         Server(ForgeConfigSpec.Builder builder) {
             builder.comment("General settings")
@@ -160,8 +163,8 @@ public class TeleConfig {
                     .define("customCakeName", "Custom", o -> (o instanceof String));
 
             customCakeDimension = builder
-                    .comment("Defines the dimension bound to the custom cake [default: \"minecraft:the_overworld\"]")
-                    .define("customCakeDimension", "minecraft:the_overworld", o -> (o instanceof String));
+                    .comment("Defines the dimension bound to the custom cake [default: \"minecraft:overworld\"]")
+                    .define("customCakeDimension", "minecraft:overworld", o -> (o instanceof String));
 
             String[] customItems = new String[]
                     {
@@ -171,6 +174,14 @@ public class TeleConfig {
             customCakeRefillItem = builder
                     .comment("Set the refill items used by the Custom Cake (Only change if you know what you're doing) [modid:itemname]")
                     .defineList("customCakeRefillItem", () -> Arrays.asList(customItems), o -> (o instanceof String));
+
+            customCakeMinY = builder
+                    .comment("Set the minimum Y location that the cake can spawn you at [Default: 2]")
+                    .defineInRange("customCakeMinY", 2, 1, 256);
+
+            customCakeMaxY = builder
+                    .comment("Set the maximum Y location that the cake can spawn you at [Default: 2]")
+                    .defineInRange("customCakeMaxY", 254, 1, 256);
 
             builder.pop();
         }

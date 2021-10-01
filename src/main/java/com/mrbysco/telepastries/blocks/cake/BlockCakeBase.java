@@ -96,6 +96,7 @@ public class BlockCakeBase extends BlockPastryBase {
                         return ActionResultType.FAIL;
                     }
                 } else {
+                    player.displayClientMessage(new TranslationTextComponent("telepastries.same_dimension"), true);
                     return ActionResultType.FAIL;
                 }
             }
