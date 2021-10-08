@@ -14,6 +14,7 @@ import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class BlockEndCake extends BlockCakeBase {
 
     @Override
     public void teleportToDimension(IWorld worldIn, BlockPos pos, PlayerEntity player) {
-        if (player.isAlive() && !worldIn.isClientSide()) {
+        if (player != null && !(player instanceof FakePlayer) && player.isAlive() && !worldIn.isClientSide()) {
             World world = ((IServerWorld)worldIn).getLevel();
             if (!world.isClientSide && !player.isPassenger() && !player.isVehicle() && player.canChangeDimensions()) {
                 ServerPlayerEntity playerMP = (ServerPlayerEntity)player;

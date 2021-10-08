@@ -88,10 +88,7 @@ repositories {
     maven {
         url = "https://maven.tehnut.info"
     }
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
-    }
+    maven { url = 'https://www.cursemaven.com'  }
 }
 
 dependencies {
@@ -105,6 +102,9 @@ dependencies {
 
     compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.16:${top_version}:api")
     runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.16:${top_version}")
+
+    compile fg.deobf("curse.maven:clickmachine-298275:3352162")
+    compile fg.deobf("curse.maven:placebo-283644:3437009")
 
 	//deobfCompile 'the-lost-cities:lostcities:1.12:2.0.17'
 	//deobfCompile 'bookshelf:Bookshelf:1.12.2:2.3.577'
