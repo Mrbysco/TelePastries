@@ -34,6 +34,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
@@ -76,7 +77,7 @@ public class BlockCakeBase extends BlockPastryBase {
                 }
                 return ActionResultType.SUCCESS;
             } else {
-                if(worldIn.dimension().location() != getCakeWorld().location()) {
+                if(canTeleportTo(worldIn.dimension().location(), getCakeWorld().location())) {
                     if(TeleConfig.SERVER.resetPastry.get() && isResetItem(stack)) {
                         removeDimensionPosition((ServerPlayerEntity)player, getCakeWorld());
 
@@ -96,13 +97,44 @@ public class BlockCakeBase extends BlockPastryBase {
                         return ActionResultType.FAIL;
                     }
                 } else {
-                    player.displayClientMessage(new TranslationTextComponent("telepastries.same_dimension"), true);
+                    if(worldIn.dimension().location().equals(getCakeWorld().location())) {
+                        player.displayClientMessage(new TranslationTextComponent("telepastries.same_dimension"), true);
+                    } else {
+                        player.displayClientMessage(new TranslationTextComponent("telepastries.teleport_restricted"), true);
+                    }
                     return ActionResultType.FAIL;
                 }
             }
         }
 
         return ActionResultType.SUCCESS;
+    }
+
+    public boolean canTeleportTo(ResourceLocation location, ResourceLocation toLocation) {
+        if(TeleConfig.SERVER.disableHopping.get()) {
+            ResourceLocation overworldLocation = World.OVERWORLD.location();
+            if(location.equals(overworldLocation)) {
+                return !location.equals(toLocation);
+            } else {
+                return toLocation.equals(overworldLocation) && !location.equals(overworldLocation);
+            }
+        } else {
+            return !location.equals(toLocation);
+        }
+    }
+
+    @Override
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        if(TeleConfig.SERVER.disableHopping.get()) {
+            ResourceLocation overworldLocation = World.OVERWORLD.location();
+            ResourceLocation worldLocation = ((World)worldIn).dimension().location();
+            if(worldLocation.equals(overworldLocation)) {
+                return !getCakeWorld().location().equals(overworldLocation);
+            } else {
+                return getCakeWorld().location().equals(overworldLocation);
+            }
+        }
+        return super.canSurvive(state, worldIn, pos);
     }
 
     private ActionResultType eatSlice(IWorld world, BlockPos pos, BlockState state, PlayerEntity player) {
@@ -154,7 +186,7 @@ public class BlockCakeBase extends BlockPastryBase {
                 }
 
                 CakeTeleporter teleporter = new CakeTeleporter(destinationWorld);
-                teleporter.addDimensionPosition(playerMP, playerMP.getLevel().dimension(), playerMP.blockPosition().offset(0,1,0));
+                CakeTeleporter.addDimensionPosition(playerMP, playerMP.getLevel().dimension(), playerMP.blockPosition().offset(0,1,0));
                 playerMP.changeDimension(destinationWorld, teleporter);
             }
         }

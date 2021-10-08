@@ -22,6 +22,7 @@
     "telepastries.pastry.custom.unbound": "Custom Cake has no dimension bound in config ",
     "telepastries.pastry.custom.invalid": "Destination of cake invalid %s",
     "telepastries.same_dimension": "Can't teleport to the same dimension",
+    "telepastries.teleport_restricted": "Can't teleport to a non-overworld dimension",
 
     "_comment": "Waila",
     "telepastries.bites": "Cake bites"

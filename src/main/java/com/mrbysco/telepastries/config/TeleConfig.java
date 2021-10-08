@@ -16,6 +16,7 @@ public class TeleConfig {
 
     public static class Server {
         public final BooleanValue ignoreHunger;
+        public final BooleanValue disableHopping;
 
         public final BooleanValue resetPastry;
         public final ConfigValue<List<? extends String>> resetItems;
@@ -50,6 +51,10 @@ public class TeleConfig {
             ignoreHunger = builder
                     .comment("Defines if the pastry usage requires hunger, when set to true it ignores hunger [default: false]")
                     .define("ignoreHunger", false);
+
+            disableHopping = builder
+                    .comment("Disable placement of non-overworld cakes in dimensions that aren't the overworld (Meaning you can't go from the nether straight to the end) [default: true]")
+                    .define("disableHopping", true);
 
             resetPastry = builder
                     .comment("Defines if the pastry teleportation point can be reset with a milk bucket [default: false]")
