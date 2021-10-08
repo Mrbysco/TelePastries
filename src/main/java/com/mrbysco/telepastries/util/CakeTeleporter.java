@@ -4,6 +4,7 @@ import com.mrbysco.telepastries.Reference;
 import com.mrbysco.telepastries.TelePastries;
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import com.mrbysco.telepastries.config.TeleConfig;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PortalInfo;
 import net.minecraft.entity.Entity;
@@ -13,6 +14,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -22,11 +24,13 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class CakeTeleporter implements ITeleporter {
@@ -48,6 +52,8 @@ public class CakeTeleporter implements ITeleporter {
         int i = 200;
         BlockPos blockpos = pos;
         boolean isToEnd = destWorld.dimension() == World.END;
+        boolean isToOverworld = destWorld.dimension() == World.OVERWORLD;
+        boolean isFromEnd = entity.level.dimension() == World.END && isToOverworld;
 
         if(isToEnd) {
             ServerWorld.makeObsidianPlatform(destWorld);
@@ -56,6 +62,42 @@ public class CakeTeleporter implements ITeleporter {
             return new PortalInfo(new Vector3d((double)blockpos.getX() + 0.5D, (double)blockpos.getY(), (double)blockpos.getZ() + 0.5D), entity.getDeltaMovement(), entity.yRot, entity.xRot);
         } else {
             blockpos = getDimensionPosition(entity, destWorld.dimension(), entity.blockPosition());
+            if(blockpos == null) {
+                if(isFromEnd && isToOverworld) {
+                    TelePastries.LOGGER.info("Couldn't locate a cake location, using spawn point instead");
+                    blockpos = destWorld.getHeightmapPos(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, destWorld.getSharedSpawnPos());
+                    float angle = entity.xRot;
+                    if(isPlayer && entity instanceof ServerPlayerEntity) {
+                        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) entity;
+                        BlockPos respawnPos = serverPlayer.getRespawnPosition();
+                        float respawnAngle = serverPlayer.getRespawnAngle();
+                        Optional<Vector3d> optional;
+                        if (serverPlayer != null && respawnPos != null) {
+                            optional = PlayerEntity.findRespawnPositionAndUseSpawnBlock(destWorld, respawnPos, respawnAngle, false, false);
+                        } else {
+                            optional = Optional.empty();
+                        }
+
+                        if (optional.isPresent()) {
+                            BlockState blockstate = destWorld.getBlockState(respawnPos);
+                            boolean blockIsRespawnAnchor = blockstate.is(Blocks.RESPAWN_ANCHOR);
+                            Vector3d vector3d = optional.get();
+                            float f1;
+                            if (!blockstate.is(BlockTags.BEDS) && !blockIsRespawnAnchor) {
+                                f1 = respawnAngle;
+                            } else {
+                                Vector3d vector3d1 = Vector3d.atBottomCenterOf(respawnPos).subtract(vector3d).normalize();
+                                f1 = (float) MathHelper.wrapDegrees(MathHelper.atan2(vector3d1.z, vector3d1.x) * (double) (180F / (float) Math.PI) - 90.0D);
+                            }
+                            angle = f1;
+                            blockpos = new BlockPos(vector3d.x, vector3d.y, vector3d.z);
+                            return new PortalInfo(new Vector3d((double)blockpos.getX() + 0.5D, (double)blockpos.getY(), (double)blockpos.getZ() + 0.5D), entity.getDeltaMovement(), angle, entity.xRot);
+                        }
+                    }
+                } else {
+                    blockpos = entity.blockPosition();
+                }
+            }
         }
 
         if (blockpos.equals(BlockPos.ZERO)) {
@@ -115,7 +157,7 @@ public class CakeTeleporter implements ITeleporter {
         CompoundNBT data = getTag(entityData);
         ResourceLocation dimLocation = dim.location();
 
-        BlockPos dimPos = position;
+        BlockPos dimPos = null;
         if(data.contains(Reference.MOD_PREFIX + dimLocation)) {
             dimPos = BlockPos.of(data.getLong(Reference.MOD_PREFIX + dimLocation));
             TelePastries.LOGGER.debug("Found {}'s position of {} to: {}", entityIn.getDisplayName().getContents(), dimLocation, dimPos);
