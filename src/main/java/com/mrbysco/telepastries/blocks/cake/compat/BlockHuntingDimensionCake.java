@@ -1,10 +1,10 @@
 package com.mrbysco.telepastries.blocks.cake.compat;
 
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
-import net.minecraft.block.AbstractBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class BlockHuntingDimensionCake extends BlockCakeBase {
-    public BlockHuntingDimensionCake(AbstractBlock.Properties properties) {
+    public BlockHuntingDimensionCake(BlockBehaviour.Properties properties) {
         super(properties);
     }
 //

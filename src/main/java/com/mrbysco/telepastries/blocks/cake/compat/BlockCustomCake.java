@@ -2,21 +2,21 @@ package com.mrbysco.telepastries.blocks.cake.compat;
 
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import com.mrbysco.telepastries.config.TeleConfig;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.List;
 
@@ -26,20 +26,20 @@ public class BlockCustomCake extends BlockCakeBase {
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if(!TeleConfig.SERVER.customCakeDimension.get().isEmpty()) {
             return super.use(state, worldIn, pos, player, handIn, hit);
         } else {
             if(player.getUsedItemHand() == handIn && !worldIn.isClientSide) {
-                player.sendMessage(new TranslationTextComponent("telepastries.pastry.custom.unbound").withStyle(TextFormatting.RED), Util.NIL_UUID);
+                player.sendMessage(new TranslatableComponent("telepastries.pastry.custom.unbound").withStyle(ChatFormatting.RED), Util.NIL_UUID);
             }
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
     }
 
     @Override
-    public IFormattableTextComponent getName() {
-        return new TranslationTextComponent(this.getDescriptionId(), TeleConfig.SERVER.customCakeName.get());
+    public MutableComponent getName() {
+        return new TranslatableComponent(this.getDescriptionId(), TeleConfig.SERVER.customCakeName.get());
     }
 
     @Override
@@ -51,8 +51,8 @@ public class BlockCustomCake extends BlockCakeBase {
     }
 
     @Override
-    public RegistryKey<World> getCakeWorld() {
-        return RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(TeleConfig.SERVER.customCakeDimension.get()));
+    public ResourceKey<Level> getCakeWorld() {
+        return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(TeleConfig.SERVER.customCakeDimension.get()));
     }
 
     @Override

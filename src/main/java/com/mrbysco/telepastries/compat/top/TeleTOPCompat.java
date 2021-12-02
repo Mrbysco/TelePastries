@@ -8,13 +8,14 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.api.ProbeMode;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.InterModComms;
 
 import java.util.function.Function;
@@ -35,18 +36,18 @@ public class TeleTOPCompat {
 
     public static final class PastryInfo implements IProbeInfoProvider {
 
-        @Override
-        public String getID() {
-            return Reference.MOD_ID;
-        }
+		@Override
+		public ResourceLocation getID() {
+			return new ResourceLocation(Reference.MOD_ID, "main");
+		}
 
 		@Override
-		public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data) {
+		public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, Player player, Level world, BlockState blockState, IProbeHitData data) {
 			final Block block = world.getBlockState(data.getPos()).getBlock();
 			if (block instanceof BlockCakeBase) {
 				probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
 						.item(new ItemStack(block))
-						.text(new StringTextComponent("Bites: ").withStyle(TextFormatting.GREEN))
+						.text(new TextComponent("Bites: ").withStyle(ChatFormatting.GREEN))
 						.progress(6 - blockState.getValue(BlockCakeBase.BITES), 6);
 			}
 		}

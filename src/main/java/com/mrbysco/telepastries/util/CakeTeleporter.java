@@ -4,28 +4,28 @@ import com.mrbysco.telepastries.Reference;
 import com.mrbysco.telepastries.TelePastries;
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import com.mrbysco.telepastries.config.TeleConfig;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PortalInfo;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.World;
-import net.minecraft.world.border.WorldBorder;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.border.WorldBorder;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.portal.PortalInfo;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.fml.ModList;
 
@@ -37,10 +37,10 @@ public class CakeTeleporter implements ITeleporter {
 
     @Nullable
     @Override
-    public PortalInfo getPortalInfo(Entity entity, ServerWorld destWorld, Function<ServerWorld, PortalInfo> defaultPortalInfo) {
+    public PortalInfo getPortalInfo(Entity entity, ServerLevel destWorld, Function<ServerLevel, PortalInfo> defaultPortalInfo) {
         PortalInfo pos;
 
-        pos = placeNearExistingCake(destWorld, entity, dimensionPosition(entity, destWorld), entity instanceof PlayerEntity);
+        pos = placeNearExistingCake(destWorld, entity, dimensionPosition(entity, destWorld), entity instanceof Player);
         pos = customCompat(destWorld, new BlockPos(pos.pos), entity);
         pos = moveToSafeCoords(destWorld, entity, pos != null ? new BlockPos(pos.pos) : dimensionPosition(entity, destWorld));
 
@@ -48,32 +48,31 @@ public class CakeTeleporter implements ITeleporter {
     }
 
     @Nullable
-    private static PortalInfo placeNearExistingCake(ServerWorld destWorld, Entity entity, BlockPos pos, boolean isPlayer) {
+    private static PortalInfo placeNearExistingCake(ServerLevel destWorld, Entity entity, BlockPos pos, boolean isPlayer) {
         int i = 200;
         BlockPos blockpos = pos;
-        boolean isToEnd = destWorld.dimension() == World.END;
-        boolean isToOverworld = destWorld.dimension() == World.OVERWORLD;
-        boolean isFromEnd = entity.level.dimension() == World.END && isToOverworld;
+        boolean isToEnd = destWorld.dimension() == Level.END;
+        boolean isToOverworld = destWorld.dimension() == Level.OVERWORLD;
+        boolean isFromEnd = entity.level.dimension() == Level.END && isToOverworld;
 
         if(isToEnd) {
-            ServerWorld.makeObsidianPlatform(destWorld);
-            blockpos = ServerWorld.END_SPAWN_POINT;
+            ServerLevel.makeObsidianPlatform(destWorld);
+            blockpos = ServerLevel.END_SPAWN_POINT;
 
-            return new PortalInfo(new Vector3d((double)blockpos.getX() + 0.5D, (double)blockpos.getY(), (double)blockpos.getZ() + 0.5D), entity.getDeltaMovement(), entity.yRot, entity.xRot);
+            return new PortalInfo(new Vec3((double)blockpos.getX() + 0.5D, (double)blockpos.getY(), (double)blockpos.getZ() + 0.5D), entity.getDeltaMovement(), entity.getYRot(), entity.getXRot());
         } else {
             blockpos = getDimensionPosition(entity, destWorld.dimension(), entity.blockPosition());
             if(blockpos == null) {
                 if(isFromEnd && isToOverworld) {
                     TelePastries.LOGGER.info("Couldn't locate a cake location, using spawn point instead");
-                    blockpos = destWorld.getHeightmapPos(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, destWorld.getSharedSpawnPos());
-                    float angle = entity.xRot;
-                    if(isPlayer && entity instanceof ServerPlayerEntity) {
-                        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) entity;
+                    blockpos = destWorld.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, destWorld.getSharedSpawnPos());
+                    float angle = entity.getXRot();
+                    if(isPlayer && entity instanceof ServerPlayer serverPlayer) {
                         BlockPos respawnPos = serverPlayer.getRespawnPosition();
                         float respawnAngle = serverPlayer.getRespawnAngle();
-                        Optional<Vector3d> optional;
+                        Optional<Vec3> optional;
                         if (serverPlayer != null && respawnPos != null) {
-                            optional = PlayerEntity.findRespawnPositionAndUseSpawnBlock(destWorld, respawnPos, respawnAngle, false, false);
+                            optional = Player.findRespawnPositionAndUseSpawnBlock(destWorld, respawnPos, respawnAngle, false, false);
                         } else {
                             optional = Optional.empty();
                         }
@@ -81,17 +80,17 @@ public class CakeTeleporter implements ITeleporter {
                         if (optional.isPresent()) {
                             BlockState blockstate = destWorld.getBlockState(respawnPos);
                             boolean blockIsRespawnAnchor = blockstate.is(Blocks.RESPAWN_ANCHOR);
-                            Vector3d vector3d = optional.get();
+                            Vec3 vector3d = optional.get();
                             float f1;
                             if (!blockstate.is(BlockTags.BEDS) && !blockIsRespawnAnchor) {
                                 f1 = respawnAngle;
                             } else {
-                                Vector3d vector3d1 = Vector3d.atBottomCenterOf(respawnPos).subtract(vector3d).normalize();
-                                f1 = (float) MathHelper.wrapDegrees(MathHelper.atan2(vector3d1.z, vector3d1.x) * (double) (180F / (float) Math.PI) - 90.0D);
+                                Vec3 vector3d1 = Vec3.atBottomCenterOf(respawnPos).subtract(vector3d).normalize();
+                                f1 = (float) Mth.wrapDegrees(Mth.atan2(vector3d1.z, vector3d1.x) * (double) (180F / (float) Math.PI) - 90.0D);
                             }
                             angle = f1;
                             blockpos = new BlockPos(vector3d.x, vector3d.y, vector3d.z);
-                            return new PortalInfo(new Vector3d((double)blockpos.getX() + 0.5D, (double)blockpos.getY(), (double)blockpos.getZ() + 0.5D), entity.getDeltaMovement(), angle, entity.xRot);
+                            return new PortalInfo(new Vec3((double)blockpos.getX() + 0.5D, (double)blockpos.getY(), (double)blockpos.getZ() + 0.5D), entity.getDeltaMovement(), angle, entity.getXRot());
                         }
                     }
                 } else {
@@ -107,9 +106,9 @@ public class CakeTeleporter implements ITeleporter {
         }
     }
 
-    private BlockPos dimensionPosition(Entity entity, World destWorld) {
-        boolean flag2 = destWorld.dimension() == World.NETHER;
-        if (entity.level.dimension() != World.NETHER && !flag2) {
+    private BlockPos dimensionPosition(Entity entity, Level destWorld) {
+        boolean flag2 = destWorld.dimension() == Level.NETHER;
+        if (entity.level.dimension() != Level.NETHER && !flag2) {
             return entity.blockPosition();
         } else {
             WorldBorder worldborder = destWorld.getWorldBorder();
@@ -118,43 +117,43 @@ public class CakeTeleporter implements ITeleporter {
             double d2 = Math.min(2.9999872E7D, worldborder.getMaxX() - 16.0D);
             double d3 = Math.min(2.9999872E7D, worldborder.getMaxZ() - 16.0D);
             double d4 = DimensionType.getTeleportationScale(entity.level.dimensionType(), destWorld.dimensionType());
-            BlockPos blockpos1 = new BlockPos(MathHelper.clamp(entity.getX() * d4, d0, d2), entity.getY(), MathHelper.clamp(entity.getZ() * d4, d1, d3));
+            BlockPos blockpos1 = new BlockPos(Mth.clamp(entity.getX() * d4, d0, d2), entity.getY(), Mth.clamp(entity.getZ() * d4, d1, d3));
 
             return blockpos1;
         }
     }
 
-    public CakeTeleporter(ServerWorld worldIn) {
+    public CakeTeleporter(ServerLevel worldIn) {
     }
 
     @Override
-    public Entity placeEntity(Entity newEntity, ServerWorld currentWorld, ServerWorld destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
+    public Entity placeEntity(Entity newEntity, ServerLevel currentWorld, ServerLevel destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
         newEntity.fallDistance = 0;
         if (newEntity instanceof LivingEntity) { //Give resistance
-            ((LivingEntity)newEntity).addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 200, 200, false, false));
+            ((LivingEntity)newEntity).addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 200, false, false));
         }
         return repositionEntity.apply(false); //Must be false or we fall on vanilla
     }
 
-    public static void addDimensionPosition(Entity entityIn, RegistryKey<World> dim, BlockPos position) {
-        CompoundNBT entityData = entityIn.getPersistentData();
-        CompoundNBT data = getTag(entityData);
+    public static void addDimensionPosition(Entity entityIn, ResourceKey<Level> dim, BlockPos position) {
+        CompoundTag entityData = entityIn.getPersistentData();
+        CompoundTag data = getTag(entityData);
         ResourceLocation dimLocation = dim.location();
 
-        if(dim == World.END) {
-            BlockPos spawnPlatform = ServerWorld.END_SPAWN_POINT;
+        if(dim == Level.END) {
+            BlockPos spawnPlatform = ServerLevel.END_SPAWN_POINT;
             TelePastries.LOGGER.debug("Setting {}'s position of {} to: {}", entityIn.getDisplayName().getContents(), dimLocation, spawnPlatform);
             data.putLong(Reference.MOD_PREFIX + dimLocation, spawnPlatform.asLong());
         } else {
             TelePastries.LOGGER.debug("Setting {}'s position of {} to: {}", entityIn.getDisplayName().getContents(), dimLocation, position);
             data.putLong(Reference.MOD_PREFIX + dimLocation, position.asLong());
         }
-        entityData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
+        entityData.put(Player.PERSISTED_NBT_TAG, data);
     }
 
-    public static BlockPos getDimensionPosition(Entity entityIn, RegistryKey<World> dim, BlockPos position) {
-        CompoundNBT entityData = entityIn.getPersistentData();
-        CompoundNBT data = getTag(entityData);
+    public static BlockPos getDimensionPosition(Entity entityIn, ResourceKey<Level> dim, BlockPos position) {
+        CompoundTag entityData = entityIn.getPersistentData();
+        CompoundTag data = getTag(entityData);
         ResourceLocation dimLocation = dim.location();
 
         BlockPos dimPos = null;
@@ -168,46 +167,44 @@ public class CakeTeleporter implements ITeleporter {
         return dimPos;
     }
 
-    public static boolean hasDimensionPosition(Entity entityIn, RegistryKey<World> dim) {
-        CompoundNBT entityData = entityIn.getPersistentData();
-        CompoundNBT data = getTag(entityData);
+    public static boolean hasDimensionPosition(Entity entityIn, ResourceKey<Level> dim) {
+        CompoundTag entityData = entityIn.getPersistentData();
+        CompoundTag data = getTag(entityData);
 
         TelePastries.LOGGER.debug("Checking if entity has position stored for : " + dim.location());
         return data.contains(Reference.MOD_PREFIX + dim.location());
     }
 
-    private static CompoundNBT getTag(CompoundNBT tag) {
-        if(tag == null || !tag.contains(PlayerEntity.PERSISTED_NBT_TAG)) {
-            return new CompoundNBT();
+    private static CompoundTag getTag(CompoundTag tag) {
+        if(tag == null || !tag.contains(Player.PERSISTED_NBT_TAG)) {
+            return new CompoundTag();
         }
-        return tag.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+        return tag.getCompound(Player.PERSISTED_NBT_TAG);
     }
 
-    private static PortalInfo customCompat(ServerWorld destWorld, BlockPos pos, Entity entity) {
+    private static PortalInfo customCompat(ServerLevel destWorld, BlockPos pos, Entity entity) {
         BlockPos blockpos = pos;
         if (ModList.get().isLoaded("twilightforest")) {
-            RegistryKey<World> twilightKey = RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("twilightforest", "twilightforest"));
+            ResourceKey<Level> twilightKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("twilightforest", "twilightforest"));
             if (destWorld.dimension() == twilightKey) {
-                if (entity instanceof ServerPlayerEntity) {
-                    ServerPlayerEntity playerMP = (ServerPlayerEntity) entity;
-                    playerMP.setRespawnPosition(twilightKey, pos, playerMP.yRot, true, false);
+                if (entity instanceof ServerPlayer playerMP) {
+                    playerMP.setRespawnPosition(twilightKey, pos, playerMP.getYRot(), true, false);
                 }
             }
         }
 
         if (ModList.get().isLoaded("lostcities")) {
-            RegistryKey<World> lostCityKey = RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("lostcities", "lostcity"));
+            ResourceKey<Level> lostCityKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("lostcities", "lostcity"));
             if (destWorld.dimension() == lostCityKey) {
-                if (entity instanceof ServerPlayerEntity) {
-                    ServerPlayerEntity playerMP = (ServerPlayerEntity) entity;
-                    playerMP.setRespawnPosition(lostCityKey, pos, playerMP.yRot, true, false);
+                if (entity instanceof ServerPlayer playerMP) {
+                    playerMP.setRespawnPosition(lostCityKey, pos, playerMP.getYRot(), true, false);
                 }
             }
         }
 
         ResourceLocation customLocation = ResourceLocation.tryParse(TeleConfig.SERVER.customCakeDimension.get());
         if (customLocation != null) {
-            RegistryKey<World> customWorldKey = RegistryKey.create(Registry.DIMENSION_REGISTRY, customLocation);
+            ResourceKey<Level> customWorldKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, customLocation);
             if (destWorld.dimension() == customWorldKey) {
                 int minY = TeleConfig.SERVER.customCakeMinY.get();
                 if(blockpos.getY() < minY) {
@@ -225,7 +222,7 @@ public class CakeTeleporter implements ITeleporter {
     }
 
     //Safety stuff
-    private static PortalInfo moveToSafeCoords(ServerWorld world, Entity entity, BlockPos pos) {
+    private static PortalInfo moveToSafeCoords(ServerLevel world, Entity entity, BlockPos pos) {
         if (world.isEmptyBlock(pos.below())) {
             int distance;
             for(distance = 1; world.getBlockState(pos.below(distance)).getBlock().isPossibleToRespawnInThis(); ++distance) {
@@ -247,7 +244,7 @@ public class CakeTeleporter implements ITeleporter {
         return makePortalInfo(entity, pos.getX(), pos.getY(), pos.getZ());
     }
 
-    private static void makePlatform(ServerWorld world, BlockPos pos) {
+    private static void makePlatform(ServerLevel world, BlockPos pos) {
         int i = pos.getX();
         int j = pos.getY() - 2;
         int k = pos.getZ();
@@ -275,10 +272,10 @@ public class CakeTeleporter implements ITeleporter {
     }
 
     private static PortalInfo makePortalInfo(Entity entity, double x, double y, double z) {
-        return makePortalInfo(entity, new Vector3d(x, y, z));
+        return makePortalInfo(entity, new Vec3(x, y, z));
     }
 
-    private static PortalInfo makePortalInfo(Entity entity, Vector3d pos) {
-        return new PortalInfo(pos, Vector3d.ZERO, entity.yRot, entity.xRot);
+    private static PortalInfo makePortalInfo(Entity entity, Vec3 pos) {
+        return new PortalInfo(pos, Vec3.ZERO, entity.getYRot(), entity.getXRot());
     }
 }

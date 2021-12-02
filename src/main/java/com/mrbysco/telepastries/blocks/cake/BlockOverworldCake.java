@@ -1,24 +1,24 @@
 package com.mrbysco.telepastries.blocks.cake;
 
 import com.mrbysco.telepastries.config.TeleConfig;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.List;
 
 public class BlockOverworldCake extends BlockCakeBase {
-    public BlockOverworldCake(AbstractBlock.Properties properties) {
+    public BlockOverworldCake(BlockBehaviour.Properties properties) {
         super(properties);
     }
 
     @Override
-    public void teleportToDimension(IWorld world, BlockPos pos, PlayerEntity player) {
+    public void teleportToDimension(LevelAccessor world, BlockPos pos, Player player) {
         super.teleportToDimension(world, pos, player);
     }
 
@@ -31,8 +31,8 @@ public class BlockOverworldCake extends BlockCakeBase {
     }
 
     @Override
-    public RegistryKey<World> getCakeWorld() {
-        return World.OVERWORLD;
+    public ResourceKey<Level> getCakeWorld() {
+        return Level.OVERWORLD;
     }
 
     @Override

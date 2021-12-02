@@ -5,38 +5,38 @@ import com.mrbysco.telepastries.TelePastries;
 import com.mrbysco.telepastries.blocks.BlockPastryBase;
 import com.mrbysco.telepastries.config.TeleConfig;
 import com.mrbysco.telepastries.util.CakeTeleporter;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.pathfinding.PathType;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -53,19 +53,19 @@ public class BlockCakeBase extends BlockPastryBase {
             Block.box(11.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D),
             Block.box(13.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D)};
 
-    public BlockCakeBase(AbstractBlock.Properties properties) {
+    public BlockCakeBase(BlockBehaviour.Properties properties) {
         super(properties.strength(0.5F).sound(SoundType.WOOL).randomTicks());
         this.registerDefaultState(this.stateDefinition.any().setValue(BITES, Integer.valueOf(0)));
     }
 
     @Override
     @SuppressWarnings("deprecated")
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return SHAPES[state.getValue(BITES)];
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (!worldIn.isClientSide) {
             ItemStack stack = player.getItemInHand(handIn);
             if(consumeCake() && isRefillItem(stack)) {
@@ -73,47 +73,47 @@ public class BlockCakeBase extends BlockPastryBase {
                 if(i > 0) {
                     worldIn.setBlock(pos, state.setValue(BITES, Integer.valueOf(i - 1)), 3);
                 }
-                if(!player.abilities.instabuild) {
+                if(!player.getAbilities().instabuild) {
                     stack.shrink(1);
                 }
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             } else {
                 if(canTeleportTo(worldIn.dimension().location(), getCakeWorld().location())) {
                     if(TeleConfig.SERVER.resetPastry.get() && isResetItem(stack)) {
-                        removeDimensionPosition((ServerPlayerEntity)player, getCakeWorld());
+                        removeDimensionPosition((ServerPlayer)player, getCakeWorld());
 
                         if(stack.getItem() == Items.MILK_BUCKET) {
-                            if(!player.abilities.instabuild) {
+                            if(!player.getAbilities().instabuild) {
                                 stack.shrink(1);
                                 player.setItemInHand(handIn, new ItemStack(Items.BUCKET));
                             }
                         }
-                        return ActionResultType.SUCCESS;
+                        return InteractionResult.SUCCESS;
                     } else {
                         //TelePastries.logger.debug("At onBlockActivated before eatCake");
                         if (this.eatSlice(worldIn, pos, state, player).consumesAction()) {
-                            return ActionResultType.SUCCESS;
+                            return InteractionResult.SUCCESS;
                         }
                         //TelePastries.logger.debug("At onBlockActivated after eatCake");
-                        return ActionResultType.FAIL;
+                        return InteractionResult.FAIL;
                     }
                 } else {
                     if(worldIn.dimension().location().equals(getCakeWorld().location())) {
-                        player.displayClientMessage(new TranslationTextComponent("telepastries.same_dimension"), true);
+                        player.displayClientMessage(new TranslatableComponent("telepastries.same_dimension"), true);
                     } else {
-                        player.displayClientMessage(new TranslationTextComponent("telepastries.teleport_restricted"), true);
+                        player.displayClientMessage(new TranslatableComponent("telepastries.teleport_restricted"), true);
                     }
-                    return ActionResultType.FAIL;
+                    return InteractionResult.FAIL;
                 }
             }
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     public boolean canTeleportTo(ResourceLocation location, ResourceLocation toLocation) {
         if(TeleConfig.SERVER.disableHopping.get()) {
-            ResourceLocation overworldLocation = World.OVERWORLD.location();
+            ResourceLocation overworldLocation = Level.OVERWORLD.location();
             if(location.equals(overworldLocation)) {
                 return !location.equals(toLocation);
             } else {
@@ -125,10 +125,10 @@ public class BlockCakeBase extends BlockPastryBase {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
         if(TeleConfig.SERVER.disableHopping.get()) {
-            ResourceLocation overworldLocation = World.OVERWORLD.location();
-            ResourceLocation worldLocation = ((World)worldIn).dimension().location();
+            ResourceLocation overworldLocation = Level.OVERWORLD.location();
+            ResourceLocation worldLocation = ((Level)worldIn).dimension().location();
             if(worldLocation.equals(overworldLocation)) {
                 return !getCakeWorld().location().equals(overworldLocation);
             } else {
@@ -138,14 +138,14 @@ public class BlockCakeBase extends BlockPastryBase {
         return super.canSurvive(state, worldIn, pos);
     }
 
-    private ActionResultType eatSlice(IWorld world, BlockPos pos, BlockState state, PlayerEntity player) {
+    private InteractionResult eatSlice(LevelAccessor world, BlockPos pos, BlockState state, Player player) {
         if (!player.canEat(TeleConfig.SERVER.ignoreHunger.get())) {
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         } else {
             player.awardStat(Stats.EAT_CAKE_SLICE);
             player.getFoodData().eat(2, 0.1F);
             if(consumeCake()) {
-                if(!player.abilities.instabuild) {
+                if(!player.getAbilities().instabuild) {
                     int i = state.getValue(BITES);
                     if (i < 6) {
                         world.setBlock(pos, state.setValue(BITES, Integer.valueOf(i + 1)), 3);
@@ -156,13 +156,13 @@ public class BlockCakeBase extends BlockPastryBase {
             }
 
             if (!ForgeHooks.onTravelToDimension(player, getCakeWorld()))
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
 
             //TelePastries.logger.debug("At eatCake before teleportToDimension");
             teleportToDimension(world, pos, player);
             //TelePastries.logger.debug("At eatCake after teleportToDimension");
 
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
     }
 
@@ -173,15 +173,15 @@ public class BlockCakeBase extends BlockPastryBase {
         return registryLocation != null && items.contains(registryLocation.toString());
     }
 
-    public void teleportToDimension(IWorld worldIn, BlockPos pos, PlayerEntity player) {
+    public void teleportToDimension(LevelAccessor worldIn, BlockPos pos, Player player) {
         if (player != null && !(player instanceof FakePlayer) && player.isAlive() && !worldIn.isClientSide()) {
-            World world = ((IServerWorld)worldIn).getLevel();
+            Level world = ((ServerLevelAccessor)worldIn).getLevel();
             if (!world.isClientSide && !player.isPassenger() && !player.isVehicle() && player.canChangeDimensions()) {
-                ServerPlayerEntity playerMP = (ServerPlayerEntity) player;
+                ServerPlayer playerMP = (ServerPlayer) player;
                 MinecraftServer server = player.getServer();
-                ServerWorld destinationWorld = server != null ? server.getLevel(getCakeWorld()) : null;
+                ServerLevel destinationWorld = server != null ? server.getLevel(getCakeWorld()) : null;
                 if(destinationWorld == null) {
-                    player.sendMessage(new TranslationTextComponent("telepastries.pastry.custom.invalid", getCakeWorld().location()).withStyle(TextFormatting.RED), Util.NIL_UUID);
+                    player.sendMessage(new TranslatableComponent("telepastries.pastry.custom.invalid", getCakeWorld().location()).withStyle(ChatFormatting.RED), Util.NIL_UUID);
                     TelePastries.LOGGER.error("Destination of cake invalid {} isn't known", getCakeWorld().location());
                     return;
                 }
@@ -197,15 +197,15 @@ public class BlockCakeBase extends BlockPastryBase {
         return false;
     }
 
-    public RegistryKey<World> getCakeWorld() {
-        return World.OVERWORLD;
+    public ResourceKey<Level> getCakeWorld() {
+        return Level.OVERWORLD;
     }
 
     public boolean consumeCake() {
         return true;
     }
 
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BITES);
     }
 
@@ -216,34 +216,34 @@ public class BlockCakeBase extends BlockPastryBase {
         return true;
     }
 
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
 
     @Override
     @SuppressWarnings("deprecated")
-    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
         return (7 - blockState.getValue(BITES)) * 2;
     }
 
-    protected void removeDimensionPosition(ServerPlayerEntity player, RegistryKey<World> dim) {
-        CompoundNBT playerData = player.getPersistentData();
-        CompoundNBT data = getTag(playerData);
+    protected void removeDimensionPosition(ServerPlayer player, ResourceKey<Level> dim) {
+        CompoundTag playerData = player.getPersistentData();
+        CompoundTag data = getTag(playerData);
 
         if(data.contains(Reference.MOD_PREFIX + dim.location())) {
             data.remove(Reference.MOD_PREFIX + dim.location());
-            player.sendMessage(new TranslationTextComponent("telepastries.pastry.reset.complete", dim.location()), Util.NIL_UUID);
+            player.sendMessage(new TranslatableComponent("telepastries.pastry.reset.complete", dim.location()), Util.NIL_UUID);
         } else {
-            player.sendMessage(new TranslationTextComponent("telepastries.pastry.reset.failed", dim.location()), Util.NIL_UUID);
+            player.sendMessage(new TranslatableComponent("telepastries.pastry.reset.failed", dim.location()), Util.NIL_UUID);
         }
 
-        playerData.put(PlayerEntity.PERSISTED_NBT_TAG, data);
+        playerData.put(Player.PERSISTED_NBT_TAG, data);
     }
 
-    protected CompoundNBT getTag(CompoundNBT tag) {
-        if(tag == null || !tag.contains(PlayerEntity.PERSISTED_NBT_TAG)) {
-            return new CompoundNBT();
+    protected CompoundTag getTag(CompoundTag tag) {
+        if(tag == null || !tag.contains(Player.PERSISTED_NBT_TAG)) {
+            return new CompoundTag();
         }
-        return tag.getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+        return tag.getCompound(Player.PERSISTED_NBT_TAG);
     }
 }

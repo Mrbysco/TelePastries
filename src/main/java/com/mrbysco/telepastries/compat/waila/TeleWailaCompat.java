@@ -2,19 +2,17 @@ package com.mrbysco.telepastries.compat.waila;
 
 import com.mrbysco.telepastries.Reference;
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
+import mcp.mobius.waila.api.BlockAccessor;
 import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.IDataAccessor;
-import mcp.mobius.waila.api.IPluginConfig;
 import mcp.mobius.waila.api.IRegistrar;
+import mcp.mobius.waila.api.ITooltip;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-
-import java.util.List;
+import mcp.mobius.waila.api.config.IPluginConfig;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 
 @WailaPlugin
 public class TeleWailaCompat implements IWailaPlugin {
@@ -31,8 +29,8 @@ public class TeleWailaCompat implements IWailaPlugin {
 		public static final PastryBodyHandler INSTANCE = new PastryBodyHandler();
 
 		@Override
-		public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
-			tooltip.add(new StringTextComponent("Bites: " + (6 - accessor.getBlockState().getValue(BlockCakeBase.BITES)) + " / 6").withStyle(TextFormatting.GRAY));
+		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig iPluginConfig) {
+			tooltip.add(new TextComponent("Bites: " + (6 - accessor.getBlockState().getValue(BlockCakeBase.BITES)) + " / 6").withStyle(ChatFormatting.GRAY));
 		}
 	}
 }
