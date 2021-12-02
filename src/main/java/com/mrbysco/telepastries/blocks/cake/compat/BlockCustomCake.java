@@ -26,11 +26,11 @@ public class BlockCustomCake extends BlockCakeBase {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if(!TeleConfig.SERVER.customCakeDimension.get().isEmpty()) {
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, level, pos, player, handIn, hit);
         } else {
-            if(player.getUsedItemHand() == handIn && !worldIn.isClientSide) {
+            if(player.getUsedItemHand() == handIn && !level.isClientSide) {
                 player.sendMessage(new TranslatableComponent("telepastries.pastry.custom.unbound").withStyle(ChatFormatting.RED), Util.NIL_UUID);
             }
             return InteractionResult.SUCCESS;

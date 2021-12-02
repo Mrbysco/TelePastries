@@ -15,7 +15,7 @@ version = "${version}"
 group = 'com.mrbysco.telepastries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TelePastries-${mc_version}"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16) // Mojang ships Java 8 to end users, so your mod should target Java 8.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17) // Mojang ships Java 8 to end users, so your mod should target Java 8.
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
@@ -69,11 +69,11 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    maven {
-        // location of the maven that hosts jei files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven"
-    }
+//    maven {
+//        // location of the maven that hosts jei files
+//        name = "Progwml6 maven"
+//        url = "https://dvs1.progwml6.com/files/maven"
+//    }
 //    maven {
 //        url "https://maven.blamejared.com"
 //    }
@@ -99,12 +99,12 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+//    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+//    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
-    implementation fg.deobf("curse.maven:jade-324717:3468298") //Jade (WAILA)
+    implementation fg.deobf("curse.maven:jade-324717:3544015") //Jade (WAILA)
 
-    implementation fg.deobf("curse.maven:TheOneProbe-245211:3430022")
+//    implementation fg.deobf("curse.maven:TheOneProbe-245211:3430022")
 
 //    runtimeOnly fg.deobf("curse.maven:placebo-283644:3437009")
 

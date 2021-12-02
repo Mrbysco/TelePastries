@@ -65,50 +65,45 @@ public class BlockCakeBase extends BlockPastryBase {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (!worldIn.isClientSide) {
-            ItemStack stack = player.getItemInHand(handIn);
-            if(consumeCake() && isRefillItem(stack)) {
-                int i = state.getValue(BITES);
-                if(i > 0) {
-                    worldIn.setBlock(pos, state.setValue(BITES, Integer.valueOf(i - 1)), 3);
-                }
-                if(!player.getAbilities().instabuild) {
-                    stack.shrink(1);
-                }
-                return InteractionResult.SUCCESS;
-            } else {
-                if(canTeleportTo(worldIn.dimension().location(), getCakeWorld().location())) {
-                    if(TeleConfig.SERVER.resetPastry.get() && isResetItem(stack)) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        ItemStack stack = player.getItemInHand(handIn);
+        if(consumeCake() && isRefillItem(stack)) {
+            int i = state.getValue(BITES);
+            if(i > 0) {
+                level.setBlock(pos, state.setValue(BITES, Integer.valueOf(i - 1)), 3);
+            }
+            if(!player.getAbilities().instabuild) {
+                stack.shrink(1);
+            }
+        } else {
+            if(canTeleportTo(level.dimension().location(), getCakeWorld().location())) {
+                if(TeleConfig.SERVER.resetPastry.get() && isResetItem(stack)) {
+                    if(level.isClientSide) {
                         removeDimensionPosition((ServerPlayer)player, getCakeWorld());
+                    }
 
-                        if(stack.getItem() == Items.MILK_BUCKET) {
-                            if(!player.getAbilities().instabuild) {
-                                stack.shrink(1);
-                                player.setItemInHand(handIn, new ItemStack(Items.BUCKET));
-                            }
+                    if(stack.getItem() == Items.MILK_BUCKET) {
+                        if(!player.getAbilities().instabuild) {
+                            stack.shrink(1);
+                            player.setItemInHand(handIn, new ItemStack(Items.BUCKET));
                         }
-                        return InteractionResult.SUCCESS;
-                    } else {
-                        //TelePastries.logger.debug("At onBlockActivated before eatCake");
-                        if (this.eatSlice(worldIn, pos, state, player).consumesAction()) {
-                            return InteractionResult.SUCCESS;
-                        }
-                        //TelePastries.logger.debug("At onBlockActivated after eatCake");
-                        return InteractionResult.FAIL;
                     }
                 } else {
-                    if(worldIn.dimension().location().equals(getCakeWorld().location())) {
-                        player.displayClientMessage(new TranslatableComponent("telepastries.same_dimension"), true);
-                    } else {
-                        player.displayClientMessage(new TranslatableComponent("telepastries.teleport_restricted"), true);
-                    }
-                    return InteractionResult.FAIL;
+                    //TelePastries.logger.debug("At onBlockActivated before eatCake");
+                    this.eatSlice(level, pos, state, player);
+                    //TelePastries.logger.debug("At onBlockActivated after eatCake");
                 }
+            } else {
+                if(level.dimension().location().equals(getCakeWorld().location())) {
+                    player.displayClientMessage(new TranslatableComponent("telepastries.same_dimension"), true);
+                } else {
+                    player.displayClientMessage(new TranslatableComponent("telepastries.teleport_restricted"), true);
+                }
+                return InteractionResult.PASS;
             }
         }
 
-        return InteractionResult.SUCCESS;
+        return InteractionResult.FAIL;
     }
 
     public boolean canTeleportTo(ResourceLocation location, ResourceLocation toLocation) {
@@ -138,7 +133,7 @@ public class BlockCakeBase extends BlockPastryBase {
         return super.canSurvive(state, worldIn, pos);
     }
 
-    private InteractionResult eatSlice(LevelAccessor world, BlockPos pos, BlockState state, Player player) {
+    private InteractionResult eatSlice(LevelAccessor levelAccessor, BlockPos pos, BlockState state, Player player) {
         if (!player.canEat(TeleConfig.SERVER.ignoreHunger.get())) {
             return InteractionResult.PASS;
         } else {
@@ -148,18 +143,18 @@ public class BlockCakeBase extends BlockPastryBase {
                 if(!player.getAbilities().instabuild) {
                     int i = state.getValue(BITES);
                     if (i < 6) {
-                        world.setBlock(pos, state.setValue(BITES, Integer.valueOf(i + 1)), 3);
+                        levelAccessor.setBlock(pos, state.setValue(BITES, Integer.valueOf(i + 1)), 3);
                     } else {
-                        world.removeBlock(pos, false);
+                        levelAccessor.removeBlock(pos, false);
                     }
                 }
             }
 
             if (!ForgeHooks.onTravelToDimension(player, getCakeWorld()))
-                return InteractionResult.SUCCESS;
+                return InteractionResult.FAIL;
 
             //TelePastries.logger.debug("At eatCake before teleportToDimension");
-            teleportToDimension(world, pos, player);
+            teleportToDimension(levelAccessor, pos, player);
             //TelePastries.logger.debug("At eatCake after teleportToDimension");
 
             return InteractionResult.SUCCESS;
@@ -186,9 +181,9 @@ public class BlockCakeBase extends BlockPastryBase {
                     return;
                 }
 
-                CakeTeleporter teleporter = new CakeTeleporter(destinationWorld);
+                CakeTeleporter cakeTeleporter = new CakeTeleporter(destinationWorld);
                 CakeTeleporter.addDimensionPosition(playerMP, playerMP.getLevel().dimension(), playerMP.blockPosition().offset(0,1,0));
-                playerMP.changeDimension(destinationWorld, teleporter);
+                playerMP.changeDimension(destinationWorld, cakeTeleporter);
             }
         }
     }
