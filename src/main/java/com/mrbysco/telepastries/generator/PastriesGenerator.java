@@ -17,6 +17,7 @@ import net.minecraft.loot.ValidationTracker;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,6 +27,7 @@ import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -44,8 +46,8 @@ public class PastriesGenerator {
             generator.addProvider(new Loots(generator));
         }
         if (event.includeClient()) {
-            generator.addProvider(new BlockStates(generator, helper));
-//            generator.addProvider(new ItemModels(generator, helper));
+            generator.addProvider(new PastryBlockStates(generator, helper));
+            generator.addProvider(new PastryItemModels(generator, helper));
         }
     }
 
@@ -84,9 +86,9 @@ public class PastriesGenerator {
         }
     }
 
-    private static class BlockStates extends BlockStateProvider {
+    private static class PastryBlockStates extends BlockStateProvider {
 
-        public BlockStates(DataGenerator gen, ExistingFileHelper helper) {
+        public PastryBlockStates(DataGenerator gen, ExistingFileHelper helper) {
             super(gen, Reference.MOD_ID, helper);
         }
 
@@ -157,6 +159,22 @@ public class PastriesGenerator {
                         boolean untouched = bites == 0;
                         return ConfiguredModel.builder()
                                 .modelFile(untouched ? model : models().getBuilder(block.getRegistryName().getPath() + "_slice" + bites)).build();
+                    });
+        }
+    }
+
+    private static class PastryItemModels extends ItemModelProvider {
+        public PastryItemModels(DataGenerator gen, ExistingFileHelper helper) {
+            super(gen, Reference.MOD_ID, helper);
+        }
+
+        @Override
+        protected void registerModels() {
+            ITEMS.getEntries().stream()
+                    .map(RegistryObject::get)
+                    .forEach(item -> {
+                        String path = Objects.requireNonNull(item.getRegistryName()).getPath();
+                        singleTexture(path, mcLoc("item/generated"), "layer0", modLoc("item/" + path));
                     });
         }
     }
