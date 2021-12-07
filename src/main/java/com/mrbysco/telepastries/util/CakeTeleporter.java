@@ -185,7 +185,7 @@ public class CakeTeleporter implements ITeleporter {
     private static PortalInfo customCompat(ServerLevel destWorld, BlockPos pos, Entity entity) {
         BlockPos blockpos = pos;
         if (ModList.get().isLoaded("twilightforest")) {
-            ResourceKey<Level> twilightKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("twilightforest", "twilightforest"));
+            ResourceKey<Level> twilightKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("twilightforest", "twilight_forest"));
             if (destWorld.dimension() == twilightKey) {
                 if (entity instanceof ServerPlayer playerMP) {
                     playerMP.setRespawnPosition(twilightKey, pos, playerMP.getYRot(), true, false);
