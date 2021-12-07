@@ -48,7 +48,7 @@ public class BlockTwilightCake extends BlockCakeBase {
 
     @Override
     public ResourceKey<Level> getCakeWorld() {
-        return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("twilightforest", "twilightforest"));
+        return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("twilightforest", "twilight_forest"));
     }
 
     @Override
