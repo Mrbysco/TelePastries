@@ -1,6 +1,7 @@
 package com.mrbysco.telepastries;
 
 import com.mrbysco.telepastries.client.ClientHandler;
+import com.mrbysco.telepastries.compat.top.TeleTOPCompat;
 import com.mrbysco.telepastries.config.TeleConfig;
 import com.mrbysco.telepastries.init.TeleRegistry;
 import net.minecraftforge.api.distmarker.Dist;
@@ -36,7 +37,7 @@ public class TelePastries {
 
     public void sendImc(InterModEnqueueEvent event) {
         if(ModList.get().isLoaded("theoneprobe")) {
-//            TeleTOPCompat.register();
+            TeleTOPCompat.register();
         }
     }
 }

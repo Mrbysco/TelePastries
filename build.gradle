@@ -69,25 +69,11 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-//    maven {
-//        // location of the maven that hosts jei files
-//        name = "Progwml6 maven"
-//        url = "https://dvs1.progwml6.com/files/maven"
-//    }
-//    maven {
-//        url "https://maven.blamejared.com"
-//    }
-//    maven {
-//        name = "thiakil"
-//        url = "https://maven.thiakil.com"
-//    }
-//    maven {
-//        name = "TOP Maven"
-//        url = "https://maven.tterrag.com"
-//    }
-//    maven {
-//        url = "https://maven.tehnut.info"
-//    }
+    maven {
+        // location of the maven that hosts jei files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven"
+    }
     maven {
         url = 'https://www.cursemaven.com'
         content {
@@ -99,12 +85,12 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-//    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
-//    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
     implementation fg.deobf("curse.maven:jade-324717:3544015") //Jade (WAILA)
 
-//    implementation fg.deobf("curse.maven:TheOneProbe-245211:3430022")
+    implementation fg.deobf("curse.maven:TheOneProbe-245211:3550084")
 
 //    runtimeOnly fg.deobf("curse.maven:placebo-283644:3437009")
 
