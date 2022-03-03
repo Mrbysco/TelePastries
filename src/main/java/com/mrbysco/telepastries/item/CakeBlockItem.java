@@ -20,11 +20,11 @@ public class CakeBlockItem extends BlockItem {
 		Player player = context.getPlayer();
 		CollisionContext collisionContext = player == null ? CollisionContext.empty() : CollisionContext.of(player);
 		boolean flag = (!this.mustSurvive() || state.canSurvive(context.getLevel(), context.getClickedPos())) && context.getLevel().isUnobstructed(state, context.getClickedPos(), collisionContext);
-		if(!flag) {
-			BlockCakeBase cakeBlock = (BlockCakeBase)getBlock();
+		if (!flag) {
+			BlockCakeBase cakeBlock = (BlockCakeBase) getBlock();
 			ResourceLocation cakeLocation = cakeBlock.getCakeWorld().location();
 			ResourceLocation currentLocation = player.level.dimension().location();
-			if(cakeLocation.equals(currentLocation)) {
+			if (cakeLocation.equals(currentLocation)) {
 				player.displayClientMessage(new TranslatableComponent("telepastries.same_dimension"), true);
 			} else {
 				player.displayClientMessage(new TranslatableComponent("telepastries.teleport_restricted"), true);

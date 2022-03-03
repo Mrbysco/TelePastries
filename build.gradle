@@ -88,9 +88,9 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
-    implementation fg.deobf("curse.maven:jade-324717:3544015") //Jade (WAILA)
+    implementation fg.deobf("curse.maven:jade-324717:3614180") //Jade (WAILA)
 
-    implementation fg.deobf("curse.maven:TheOneProbe-245211:3550084")
+    implementation fg.deobf("curse.maven:TheOneProbe-245211:3665852")
 
 //    runtimeOnly fg.deobf("curse.maven:placebo-283644:3437009")
 

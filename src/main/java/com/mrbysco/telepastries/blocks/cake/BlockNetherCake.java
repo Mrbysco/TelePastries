@@ -13,30 +13,30 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import java.util.List;
 
 public class BlockNetherCake extends BlockCakeBase {
-    public BlockNetherCake(BlockBehaviour.Properties properties) {
-        super(properties);
-    }
+	public BlockNetherCake(BlockBehaviour.Properties properties) {
+		super(properties);
+	}
 
-    @Override
-    public void teleportToDimension(LevelAccessor world, BlockPos pos, Player player) {
-        super.teleportToDimension(world, pos, player);
-    }
+	@Override
+	public void teleportToDimension(LevelAccessor world, BlockPos pos, Player player) {
+		super.teleportToDimension(world, pos, player);
+	}
 
-    @Override
-    public boolean isRefillItem(ItemStack stack) {
-        List<? extends String> items = TeleConfig.SERVER.netherCakeRefillItems.get();
-        if (items == null || items.isEmpty()) return false;
-        ResourceLocation registryLocation = stack.getItem().getRegistryName();
-        return registryLocation != null && items.contains(registryLocation.toString());
-    }
+	@Override
+	public boolean isRefillItem(ItemStack stack) {
+		List<? extends String> items = TeleConfig.SERVER.netherCakeRefillItems.get();
+		if (items == null || items.isEmpty()) return false;
+		ResourceLocation registryLocation = stack.getItem().getRegistryName();
+		return registryLocation != null && items.contains(registryLocation.toString());
+	}
 
-    @Override
-    public ResourceKey<Level> getCakeWorld() {
-        return Level.NETHER;
-    }
+	@Override
+	public ResourceKey<Level> getCakeWorld() {
+		return Level.NETHER;
+	}
 
-    @Override
-    public boolean consumeCake() {
-        return TeleConfig.SERVER.consumeNetherCake.get();
-    }
+	@Override
+	public boolean consumeCake() {
+		return TeleConfig.SERVER.consumeNetherCake.get();
+	}
 }

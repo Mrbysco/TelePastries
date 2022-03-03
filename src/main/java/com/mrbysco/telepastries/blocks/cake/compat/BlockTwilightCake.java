@@ -22,37 +22,37 @@ import net.minecraftforge.fml.ModList;
 import java.util.List;
 
 public class BlockTwilightCake extends BlockCakeBase {
-    public BlockTwilightCake(BlockBehaviour.Properties properties) {
-        super(properties);
-    }
+	public BlockTwilightCake(BlockBehaviour.Properties properties) {
+		super(properties);
+	}
 
-    @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(ModList.get().isLoaded("twilightforest")) {
-            return super.use(state, level, pos, player, handIn, hit);
-        } else {
-            if(player.getUsedItemHand() == handIn && !level.isClientSide) {
-                player.sendMessage(new TranslatableComponent("telepastries.pastry.support.disabled", "twilightforest").withStyle(ChatFormatting.RED), Util.NIL_UUID);
-            }
-            return InteractionResult.SUCCESS;
-        }
-    }
+	@Override
+	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+		if (ModList.get().isLoaded("twilightforest")) {
+			return super.use(state, level, pos, player, handIn, hit);
+		} else {
+			if (player.getUsedItemHand() == handIn && !level.isClientSide) {
+				player.sendMessage(new TranslatableComponent("telepastries.pastry.support.disabled", "twilightforest").withStyle(ChatFormatting.RED), Util.NIL_UUID);
+			}
+			return InteractionResult.SUCCESS;
+		}
+	}
 
-    @Override
-    public boolean isRefillItem(ItemStack stack) {
-        List<? extends String> items = TeleConfig.SERVER.twilightCakeRefillItems.get();
-        if (items == null || items.isEmpty()) return false;
-        ResourceLocation registryLocation = stack.getItem().getRegistryName();
-        return registryLocation != null && items.contains(registryLocation.toString());
-    }
+	@Override
+	public boolean isRefillItem(ItemStack stack) {
+		List<? extends String> items = TeleConfig.SERVER.twilightCakeRefillItems.get();
+		if (items == null || items.isEmpty()) return false;
+		ResourceLocation registryLocation = stack.getItem().getRegistryName();
+		return registryLocation != null && items.contains(registryLocation.toString());
+	}
 
-    @Override
-    public ResourceKey<Level> getCakeWorld() {
-        return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("twilightforest", "twilight_forest"));
-    }
+	@Override
+	public ResourceKey<Level> getCakeWorld() {
+		return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("twilightforest", "twilight_forest"));
+	}
 
-    @Override
-    public boolean consumeCake() {
-        return TeleConfig.SERVER.consumeTwilightCake.get();
-    }
+	@Override
+	public boolean consumeCake() {
+		return TeleConfig.SERVER.consumeTwilightCake.get();
+	}
 }

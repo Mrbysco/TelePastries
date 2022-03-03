@@ -1,5 +1,6 @@
 package com.mrbysco.telepastries;
 
+import com.mojang.logging.LogUtils;
 import com.mrbysco.telepastries.client.ClientHandler;
 import com.mrbysco.telepastries.compat.top.TeleTOPCompat;
 import com.mrbysco.telepastries.config.TeleConfig;
@@ -13,31 +14,30 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 @Mod(Reference.MOD_ID)
 public class TelePastries {
-    public static final Logger LOGGER = LogManager.getLogger();
+	public static final Logger LOGGER = LogUtils.getLogger();
 
-    public TelePastries() {
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModLoadingContext.get().registerConfig(Type.COMMON, TeleConfig.serverSpec);
-        FMLJavaModLoadingContext.get().getModEventBus().register(TeleConfig.class);
+	public TelePastries() {
+		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		ModLoadingContext.get().registerConfig(Type.COMMON, TeleConfig.serverSpec);
+		FMLJavaModLoadingContext.get().getModEventBus().register(TeleConfig.class);
 
-        eventBus.addListener(this::sendImc);
+		eventBus.addListener(this::sendImc);
 
-        TeleRegistry.BLOCKS.register(eventBus);
-        TeleRegistry.ITEMS.register(eventBus);
+		TeleRegistry.BLOCKS.register(eventBus);
+		TeleRegistry.ITEMS.register(eventBus);
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::doClientStuff);
-        });
-    }
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::doClientStuff);
+		});
+	}
 
-    public void sendImc(InterModEnqueueEvent event) {
-        if(ModList.get().isLoaded("theoneprobe")) {
-            TeleTOPCompat.register();
-        }
-    }
+	public void sendImc(InterModEnqueueEvent event) {
+		if (ModList.get().isLoaded("theoneprobe")) {
+			TeleTOPCompat.register();
+		}
+	}
 }
