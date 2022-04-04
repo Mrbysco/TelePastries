@@ -26,7 +26,6 @@ public class TeleTOPCompat {
 	}
 
 	public static final class GetTheOneProbe implements Function<ITheOneProbe, Void> {
-
 		@Override
 		public Void apply(ITheOneProbe input) {
 			input.registerProvider(new PastryInfo());

@@ -27,7 +27,7 @@ public class BlockCustomCake extends BlockCakeBase {
 
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-		if (!TeleConfig.SERVER.customCakeDimension.get().isEmpty()) {
+		if (!TeleConfig.COMMON.customCakeDimension.get().isEmpty()) {
 			return super.use(state, level, pos, player, handIn, hit);
 		} else {
 			if (player.getUsedItemHand() == handIn && !level.isClientSide) {
@@ -39,12 +39,12 @@ public class BlockCustomCake extends BlockCakeBase {
 
 	@Override
 	public MutableComponent getName() {
-		return new TranslatableComponent(this.getDescriptionId(), TeleConfig.SERVER.customCakeName.get());
+		return new TranslatableComponent(this.getDescriptionId(), TeleConfig.COMMON.customCakeName.get());
 	}
 
 	@Override
 	public boolean isRefillItem(ItemStack stack) {
-		List<? extends String> items = TeleConfig.SERVER.customCakeRefillItem.get();
+		List<? extends String> items = TeleConfig.COMMON.customCakeRefillItem.get();
 		if (items == null || items.isEmpty()) return false;
 		ResourceLocation registryLocation = stack.getItem().getRegistryName();
 		return registryLocation != null && items.contains(registryLocation.toString());
@@ -52,11 +52,11 @@ public class BlockCustomCake extends BlockCakeBase {
 
 	@Override
 	public ResourceKey<Level> getCakeWorld() {
-		return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(TeleConfig.SERVER.customCakeDimension.get()));
+		return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(TeleConfig.COMMON.customCakeDimension.get()));
 	}
 
 	@Override
 	public boolean consumeCake() {
-		return TeleConfig.SERVER.consumeCustomCake.get();
+		return TeleConfig.COMMON.consumeCustomCake.get();
 	}
 }

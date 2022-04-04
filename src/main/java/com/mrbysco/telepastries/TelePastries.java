@@ -4,8 +4,10 @@ import com.mojang.logging.LogUtils;
 import com.mrbysco.telepastries.client.ClientHandler;
 import com.mrbysco.telepastries.compat.top.TeleTOPCompat;
 import com.mrbysco.telepastries.config.TeleConfig;
+import com.mrbysco.telepastries.handler.ExplosionHandler;
 import com.mrbysco.telepastries.init.TeleRegistry;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
@@ -22,13 +24,15 @@ public class TelePastries {
 
 	public TelePastries() {
 		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-		ModLoadingContext.get().registerConfig(Type.COMMON, TeleConfig.serverSpec);
+		ModLoadingContext.get().registerConfig(Type.COMMON, TeleConfig.commonSpec);
 		FMLJavaModLoadingContext.get().getModEventBus().register(TeleConfig.class);
 
 		eventBus.addListener(this::sendImc);
 
 		TeleRegistry.BLOCKS.register(eventBus);
 		TeleRegistry.ITEMS.register(eventBus);
+
+		MinecraftForge.EVENT_BUS.addListener(ExplosionHandler::onExplosion);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::doClientStuff);

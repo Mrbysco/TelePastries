@@ -22,8 +22,8 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +32,15 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static com.mrbysco.telepastries.init.TeleRegistry.*;
+import static com.mrbysco.telepastries.init.TeleRegistry.CUSTOM_CAKE;
+import static com.mrbysco.telepastries.init.TeleRegistry.CUSTOM_CAKE2;
+import static com.mrbysco.telepastries.init.TeleRegistry.CUSTOM_CAKE3;
+import static com.mrbysco.telepastries.init.TeleRegistry.END_CAKE;
+import static com.mrbysco.telepastries.init.TeleRegistry.ITEMS;
+import static com.mrbysco.telepastries.init.TeleRegistry.LOST_CITY_CAKE;
+import static com.mrbysco.telepastries.init.TeleRegistry.NETHER_CAKE;
+import static com.mrbysco.telepastries.init.TeleRegistry.OVERWORLD_CAKE;
+import static com.mrbysco.telepastries.init.TeleRegistry.TWILIGHT_CAKE;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PastriesGenerator {
@@ -71,12 +79,9 @@ public class PastriesGenerator {
 		private static class TeleBlocks extends BlockLoot {
 			@Override
 			protected void addTables() {
-				this.add(OVERWORLD_CAKE.get(), noDrop());
-				this.add(NETHER_CAKE.get(), noDrop());
-				this.add(END_CAKE.get(), noDrop());
-				this.add(TWILIGHT_CAKE.get(), noDrop());
-				this.add(LOST_CITY_CAKE.get(), noDrop());
-				this.add(CUSTOM_CAKE.get(), noDrop());
+				for(RegistryObject<Block> blockObject : TeleRegistry.BLOCKS.getEntries()) {
+					this.add(blockObject.get(), noDrop());
+				}
 			}
 
 			@Override
@@ -100,6 +105,8 @@ public class PastriesGenerator {
 			makeCake(TWILIGHT_CAKE.get(), "twilight");
 			makeCake(LOST_CITY_CAKE.get(), "cities");
 			makeCake(CUSTOM_CAKE.get(), "custom");
+			makeCake(CUSTOM_CAKE2.get(), "custom");
+			makeCake(CUSTOM_CAKE3.get(), "custom");
 		}
 
 		private void makeCake(Block block, String dimension) {

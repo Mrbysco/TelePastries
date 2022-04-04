@@ -40,7 +40,7 @@ public class BlockLostCityCake extends BlockCakeBase {
 
 	@Override
 	public boolean isRefillItem(ItemStack stack) {
-		List<? extends String> items = TeleConfig.SERVER.lostCitiesCakeRefillItem.get();
+		List<? extends String> items = TeleConfig.COMMON.lostCitiesCakeRefillItem.get();
 		if (items == null || items.isEmpty()) return false;
 		ResourceLocation registryLocation = stack.getItem().getRegistryName();
 		return registryLocation != null && items.contains(registryLocation.toString());
@@ -53,6 +53,6 @@ public class BlockLostCityCake extends BlockCakeBase {
 
 	@Override
 	public boolean consumeCake() {
-		return TeleConfig.SERVER.consumeLostCitiesCake.get();
+		return TeleConfig.COMMON.consumeLostCitiesCake.get();
 	}
 }

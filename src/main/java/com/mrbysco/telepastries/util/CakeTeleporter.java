@@ -66,7 +66,6 @@ public class CakeTeleporter implements ITeleporter {
 				if (isFromEnd && isToOverworld) {
 					TelePastries.LOGGER.info("Couldn't locate a cake location, using spawn point instead");
 					blockpos = destWorld.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, destWorld.getSharedSpawnPos());
-					float angle = entity.getXRot();
 					if (isPlayer && entity instanceof ServerPlayer serverPlayer) {
 						BlockPos respawnPos = serverPlayer.getRespawnPosition();
 						float respawnAngle = serverPlayer.getRespawnAngle();
@@ -88,7 +87,7 @@ public class CakeTeleporter implements ITeleporter {
 								Vec3 vector3d1 = Vec3.atBottomCenterOf(respawnPos).subtract(vector3d).normalize();
 								f1 = (float) Mth.wrapDegrees(Mth.atan2(vector3d1.z, vector3d1.x) * (double) (180F / (float) Math.PI) - 90.0D);
 							}
-							angle = f1;
+							float angle = f1;
 							blockpos = new BlockPos(vector3d.x, vector3d.y, vector3d.z);
 							return new PortalInfo(new Vec3((double) blockpos.getX() + 0.5D, (double) blockpos.getY(), (double) blockpos.getZ() + 0.5D), entity.getDeltaMovement(), angle, entity.getXRot());
 						}
@@ -202,15 +201,15 @@ public class CakeTeleporter implements ITeleporter {
 			}
 		}
 
-		ResourceLocation customLocation = ResourceLocation.tryParse(TeleConfig.SERVER.customCakeDimension.get());
+		ResourceLocation customLocation = ResourceLocation.tryParse(TeleConfig.COMMON.customCakeDimension.get());
 		if (customLocation != null) {
 			ResourceKey<Level> customWorldKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, customLocation);
 			if (destWorld.dimension() == customWorldKey) {
-				int minY = TeleConfig.SERVER.customCakeMinY.get();
+				int minY = TeleConfig.COMMON.customCakeMinY.get();
 				if (blockpos.getY() < minY) {
 					blockpos = new BlockPos(blockpos.getX(), minY, blockpos.getZ());
 				}
-				int maxY = TeleConfig.SERVER.customCakeMaxY.get();
+				int maxY = TeleConfig.COMMON.customCakeMaxY.get();
 				if (blockpos.getY() > maxY) {
 					blockpos = new BlockPos(blockpos.getX(), maxY, blockpos.getZ());
 				}

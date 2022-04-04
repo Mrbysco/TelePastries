@@ -43,7 +43,7 @@ public class BlockEndCake extends BlockCakeBase {
 
 	@Override
 	public boolean isRefillItem(ItemStack stack) {
-		List<? extends String> items = TeleConfig.SERVER.endCakeRefillItems.get();
+		List<? extends String> items = TeleConfig.COMMON.endCakeRefillItems.get();
 		if (items == null || items.isEmpty()) return false;
 		ResourceLocation registryLocation = stack.getItem().getRegistryName();
 		return registryLocation != null && items.contains(registryLocation.toString());
@@ -56,6 +56,6 @@ public class BlockEndCake extends BlockCakeBase {
 
 	@Override
 	public boolean consumeCake() {
-		return TeleConfig.SERVER.consumeEndCake.get();
+		return TeleConfig.COMMON.consumeEndCake.get();
 	}
 }

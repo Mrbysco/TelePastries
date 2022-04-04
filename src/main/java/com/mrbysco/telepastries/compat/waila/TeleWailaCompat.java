@@ -4,8 +4,9 @@ import com.mrbysco.telepastries.Reference;
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import mcp.mobius.waila.api.BlockAccessor;
 import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.IRegistrar;
 import mcp.mobius.waila.api.ITooltip;
+import mcp.mobius.waila.api.IWailaClientRegistration;
+import mcp.mobius.waila.api.IWailaCommonRegistration;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
@@ -19,10 +20,13 @@ public class TeleWailaCompat implements IWailaPlugin {
 	private static final ResourceLocation CONFIG_TELEPASTRY_BITES = new ResourceLocation(Reference.MOD_ID, "telepastries.bites.name");
 
 	@Override
-	public void register(IRegistrar registrar) {
-		registrar.registerComponentProvider(PastryBodyHandler.INSTANCE, TooltipPosition.BODY, BlockCakeBase.class);
+	public void register(IWailaCommonRegistration registration) {
+		registration.addConfig(CONFIG_TELEPASTRY_BITES, true);
+	}
 
-		registrar.addConfig(CONFIG_TELEPASTRY_BITES, true);
+	@Override
+	public void registerClient(IWailaClientRegistration registration) {
+		registration.registerComponentProvider(PastryBodyHandler.INSTANCE, TooltipPosition.BODY, BlockCakeBase.class);
 	}
 
 	public static class PastryBodyHandler implements IComponentProvider {

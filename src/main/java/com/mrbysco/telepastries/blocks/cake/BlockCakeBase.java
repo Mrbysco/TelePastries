@@ -77,7 +77,7 @@ public class BlockCakeBase extends BlockPastryBase {
 			}
 		} else {
 			if (canTeleportTo(level.dimension().location(), getCakeWorld().location())) {
-				if (TeleConfig.SERVER.resetPastry.get() && isResetItem(stack)) {
+				if (TeleConfig.COMMON.resetPastry.get() && isResetItem(stack)) {
 					if (level.isClientSide) {
 						removeDimensionPosition((ServerPlayer) player, getCakeWorld());
 					}
@@ -107,7 +107,7 @@ public class BlockCakeBase extends BlockPastryBase {
 	}
 
 	public boolean canTeleportTo(ResourceLocation location, ResourceLocation toLocation) {
-		if (TeleConfig.SERVER.disableHopping.get()) {
+		if (TeleConfig.COMMON.disableHopping.get()) {
 			ResourceLocation overworldLocation = Level.OVERWORLD.location();
 			if (location.equals(overworldLocation)) {
 				return !location.equals(toLocation);
@@ -121,7 +121,7 @@ public class BlockCakeBase extends BlockPastryBase {
 
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-		if (TeleConfig.SERVER.disableHopping.get()) {
+		if (TeleConfig.COMMON.disableHopping.get()) {
 			ResourceLocation overworldLocation = Level.OVERWORLD.location();
 			ResourceLocation worldLocation = ((Level) worldIn).dimension().location();
 			if (worldLocation.equals(overworldLocation)) {
@@ -134,7 +134,7 @@ public class BlockCakeBase extends BlockPastryBase {
 	}
 
 	private InteractionResult eatSlice(LevelAccessor levelAccessor, BlockPos pos, BlockState state, Player player) {
-		if (!player.canEat(TeleConfig.SERVER.ignoreHunger.get())) {
+		if (!player.canEat(TeleConfig.COMMON.ignoreHunger.get())) {
 			return InteractionResult.PASS;
 		} else {
 			player.awardStat(Stats.EAT_CAKE_SLICE);
@@ -162,7 +162,7 @@ public class BlockCakeBase extends BlockPastryBase {
 	}
 
 	private boolean isResetItem(ItemStack stack) {
-		List<? extends String> items = TeleConfig.SERVER.resetItems.get();
+		List<? extends String> items = TeleConfig.COMMON.resetItems.get();
 		if (items == null || items.isEmpty()) return false;
 		ResourceLocation registryLocation = stack.getItem().getRegistryName();
 		return registryLocation != null && items.contains(registryLocation.toString());

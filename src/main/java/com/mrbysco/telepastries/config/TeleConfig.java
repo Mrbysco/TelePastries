@@ -14,7 +14,8 @@ import java.util.List;
 
 public class TeleConfig {
 
-	public static class Server {
+	public static class Common {
+		public final BooleanValue explosionImmune;
 		public final BooleanValue ignoreHunger;
 		public final BooleanValue disableHopping;
 
@@ -44,9 +45,27 @@ public class TeleConfig {
 		public final IntValue customCakeMinY;
 		public final IntValue customCakeMaxY;
 
-		Server(ForgeConfigSpec.Builder builder) {
+		public final BooleanValue consumeCustomCake2;
+		public final ConfigValue<? extends String> customCake2Name;
+		public final ConfigValue<? extends String> customCake2Dimension;
+		public final ConfigValue<List<? extends String>> customCake2RefillItem;
+		public final IntValue customCake2MinY;
+		public final IntValue customCake2MaxY;
+
+		public final BooleanValue consumeCustomCake3;
+		public final ConfigValue<? extends String> customCake3Name;
+		public final ConfigValue<? extends String> customCake3Dimension;
+		public final ConfigValue<List<? extends String>> customCake3RefillItem;
+		public final IntValue customCake3MinY;
+		public final IntValue customCake3MaxY;
+
+		Common(ForgeConfigSpec.Builder builder) {
 			builder.comment("General settings")
 					.push("General");
+
+			explosionImmune = builder
+					.comment("Defines if the pastries should be immune to explosions [default: false]")
+					.define("explosionImmune", false);
 
 			ignoreHunger = builder
 					.comment("Defines if the pastry usage requires hunger, when set to true it ignores hunger [default: false]")
@@ -159,6 +178,10 @@ public class TeleConfig {
 					.comment("Set the refill items used by the Lost Cities Cake (Only change if you know what you're doing) [modid:itemname]")
 					.defineList("lostCitiesCakeRefillItem", () -> Arrays.asList(lostcityItems), o -> (o instanceof String));
 
+			builder.pop();
+			builder.comment("Custom Cake settings");
+			builder.push("CustomCake");
+
 			consumeCustomCake = builder
 					.comment("Defines if the Custom Cake gets partly consumed when eaten [default: true]")
 					.define("consumeCustomCake", true);
@@ -189,16 +212,80 @@ public class TeleConfig {
 					.defineInRange("customCakeMaxY", 254, 1, 256);
 
 			builder.pop();
+			builder.push("CustomCake2");
+
+			consumeCustomCake2 = builder
+					.comment("Defines if the Custom Cake gets partly consumed when eaten [default: true]")
+					.define("consumeCustomCake2", true);
+
+			customCake2Name = builder
+					.comment("Defines the name of the cake [default: \"Another Custom\"]")
+					.define("customCake2Name", "Another Custom", o -> (o instanceof String));
+
+			customCake2Dimension = builder
+					.comment("Defines the dimension bound to the custom cake [default: \"minecraft:overworld\"]")
+					.define("customCake2Dimension", "minecraft:overworld", o -> (o instanceof String));
+
+			String[] customItems2 = new String[]
+					{
+							"minecraft:cobblestone"
+					};
+
+			customCake2RefillItem = builder
+					.comment("Set the refill items used by the Custom Cake (Only change if you know what you're doing) [modid:itemname]")
+					.defineList("customCake2RefillItem", () -> Arrays.asList(customItems2), o -> (o instanceof String));
+
+			customCake2MinY = builder
+					.comment("Set the minimum Y location that the cake can spawn you at [Default: 2]")
+					.defineInRange("customCake2MinY", 2, 1, 256);
+
+			customCake2MaxY = builder
+					.comment("Set the maximum Y location that the cake can spawn you at [Default: 2]")
+					.defineInRange("customCake2MaxY", 254, 1, 256);
+
+			builder.pop();
+			builder.push("CustomCake3");
+
+			consumeCustomCake3 = builder
+					.comment("Defines if the Custom Cake gets partly consumed when eaten [default: true]")
+					.define("consumeCustomCake3", true);
+
+			customCake3Name = builder
+					.comment("Defines the name of the cake [default: \"Yet Another Custom\"]")
+					.define("customCake3Name", "Yet Another Custom", o -> (o instanceof String));
+
+			customCake3Dimension = builder
+					.comment("Defines the dimension bound to the custom cake [default: \"minecraft:overworld\"]")
+					.define("customCake3Dimension", "minecraft:overworld", o -> (o instanceof String));
+
+			String[] customItems3 = new String[]
+					{
+							"minecraft:cobblestone"
+					};
+
+			customCake3RefillItem = builder
+					.comment("Set the refill items used by the Custom Cake (Only change if you know what you're doing) [modid:itemname]")
+					.defineList("customCake3RefillItem", () -> Arrays.asList(customItems3), o -> (o instanceof String));
+
+			customCake3MinY = builder
+					.comment("Set the minimum Y location that the cake can spawn you at [Default: 2]")
+					.defineInRange("customCake3MinY", 2, 1, 256);
+
+			customCake3MaxY = builder
+					.comment("Set the maximum Y location that the cake can spawn you at [Default: 2]")
+					.defineInRange("customCake3MaxY", 254, 1, 256);
+
+			builder.pop();
 		}
 	}
 
-	public static final ForgeConfigSpec serverSpec;
-	public static final Server SERVER;
+	public static final ForgeConfigSpec commonSpec;
+	public static final Common COMMON;
 
 	static {
-		final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Server::new);
-		serverSpec = specPair.getRight();
-		SERVER = specPair.getLeft();
+		final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
+		commonSpec = specPair.getRight();
+		COMMON = specPair.getLeft();
 	}
 
 	@SubscribeEvent

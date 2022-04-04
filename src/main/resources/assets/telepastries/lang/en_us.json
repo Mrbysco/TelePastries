@@ -14,6 +14,8 @@
     "block.telepastries.lost_city_cake": "Lost City Cake",
     "block.telepastries.hunting_dimension_cake": "Hunting Dimension Cake",
     "block.telepastries.custom_cake": "%s Cake",
+    "block.telepastries.custom_cake2": "%s Cake",
+    "block.telepastries.custom_cake3": "%s Cake",
 
     "_comment": "Message",
     "telepastries.pastry.reset.complete": "Dimension %s 's saved position has been reset.",

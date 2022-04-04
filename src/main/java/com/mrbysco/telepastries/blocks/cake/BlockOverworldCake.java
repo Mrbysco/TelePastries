@@ -24,7 +24,7 @@ public class BlockOverworldCake extends BlockCakeBase {
 
 	@Override
 	public boolean isRefillItem(ItemStack stack) {
-		List<? extends String> items = TeleConfig.SERVER.overworldCakeRefillItems.get();
+		List<? extends String> items = TeleConfig.COMMON.overworldCakeRefillItems.get();
 		if (items == null || items.isEmpty()) return false;
 		ResourceLocation registryLocation = stack.getItem().getRegistryName();
 		return registryLocation != null && items.contains(registryLocation.toString());
@@ -37,6 +37,6 @@ public class BlockOverworldCake extends BlockCakeBase {
 
 	@Override
 	public boolean consumeCake() {
-		return TeleConfig.SERVER.consumeOverworldCake.get();
+		return TeleConfig.COMMON.consumeOverworldCake.get();
 	}
 }

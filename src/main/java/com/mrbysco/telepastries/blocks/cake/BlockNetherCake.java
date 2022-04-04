@@ -24,7 +24,7 @@ public class BlockNetherCake extends BlockCakeBase {
 
 	@Override
 	public boolean isRefillItem(ItemStack stack) {
-		List<? extends String> items = TeleConfig.SERVER.netherCakeRefillItems.get();
+		List<? extends String> items = TeleConfig.COMMON.netherCakeRefillItems.get();
 		if (items == null || items.isEmpty()) return false;
 		ResourceLocation registryLocation = stack.getItem().getRegistryName();
 		return registryLocation != null && items.contains(registryLocation.toString());
@@ -37,6 +37,6 @@ public class BlockNetherCake extends BlockCakeBase {
 
 	@Override
 	public boolean consumeCake() {
-		return TeleConfig.SERVER.consumeNetherCake.get();
+		return TeleConfig.COMMON.consumeNetherCake.get();
 	}
 }

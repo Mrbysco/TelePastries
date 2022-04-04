@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cake",
+  "textures": {
+    "particle": "telepastries:block/custom/cake_side",
+    "bottom": "telepastries:block/custom/cake_bottom",
+    "top": "telepastries:block/custom/cake_top",
+    "side": "telepastries:block/custom/cake_side"
+  }
+}

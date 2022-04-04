@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
     }
@@ -7,9 +8,11 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+plugins {
+    id 'maven-publish'
+}
 apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'maven-publish'
 
 version = "${version}"
 group = 'com.mrbysco.telepastries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -85,21 +88,20 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+    implementation fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
-    implementation fg.deobf("curse.maven:jade-324717:3614180") //Jade (WAILA)
-
-    implementation fg.deobf("curse.maven:TheOneProbe-245211:3665852")
+    implementation fg.deobf("curse.maven:jade-324717:3681449") //Jade (WAILA)
+    implementation fg.deobf("curse.maven:TheOneProbe-245211:3671753")
 
 //    runtimeOnly fg.deobf("curse.maven:placebo-283644:3437009")
 
-	//deobfCompile 'the-lost-cities:lostcities:1.12:2.0.17'
+    runtimeOnly fg.deobf("curse.maven:LostCities-269024:3711555")
 	//deobfCompile 'bookshelf:Bookshelf:1.12.2:2.3.577'
 	//deobfCompile 'hunting-dimension:HuntingDimension:1.12.2:1.0.36'
 	//deobfCompile 'bnbgaminglib:BNBGamingLib:1.12.2:2.17.6'
 	//deobfCompile 'topography:Topography:1.12.2:1.5.1'
 	//deobfCompile 'compact-machines:compactmachines3-1.12.2:3.0.17:b267'
+    //runtimeOnly fg.deobf("curse.maven:CompactMachines-224218:3695916")
 }
 
 jar {
@@ -142,4 +144,8 @@ publishing {
             }
         }
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
