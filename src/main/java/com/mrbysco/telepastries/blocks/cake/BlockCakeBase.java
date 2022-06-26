@@ -6,10 +6,9 @@ import com.mrbysco.telepastries.blocks.BlockPastryBase;
 import com.mrbysco.telepastries.config.TeleConfig;
 import com.mrbysco.telepastries.util.CakeTeleporter;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -39,6 +38,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -95,9 +95,9 @@ public class BlockCakeBase extends BlockPastryBase {
 				}
 			} else {
 				if (level.dimension().location().equals(getCakeWorld().location())) {
-					player.displayClientMessage(new TranslatableComponent("telepastries.same_dimension"), true);
+					player.displayClientMessage(Component.translatable("telepastries.same_dimension"), true);
 				} else {
-					player.displayClientMessage(new TranslatableComponent("telepastries.teleport_restricted"), true);
+					player.displayClientMessage(Component.translatable("telepastries.teleport_restricted"), true);
 				}
 				return InteractionResult.PASS;
 			}
@@ -164,7 +164,7 @@ public class BlockCakeBase extends BlockPastryBase {
 	private boolean isResetItem(ItemStack stack) {
 		List<? extends String> items = TeleConfig.COMMON.resetItems.get();
 		if (items == null || items.isEmpty()) return false;
-		ResourceLocation registryLocation = stack.getItem().getRegistryName();
+		ResourceLocation registryLocation = ForgeRegistries.ITEMS.getKey(stack.getItem());
 		return registryLocation != null && items.contains(registryLocation.toString());
 	}
 
@@ -176,7 +176,7 @@ public class BlockCakeBase extends BlockPastryBase {
 				MinecraftServer server = player.getServer();
 				ServerLevel destinationWorld = server != null ? server.getLevel(getCakeWorld()) : null;
 				if (destinationWorld == null) {
-					player.sendMessage(new TranslatableComponent("telepastries.pastry.custom.invalid", getCakeWorld().location()).withStyle(ChatFormatting.RED), Util.NIL_UUID);
+					player.sendSystemMessage(Component.translatable("telepastries.pastry.custom.invalid", getCakeWorld().location()).withStyle(ChatFormatting.RED));
 					TelePastries.LOGGER.error("Destination of cake invalid {} isn't known", getCakeWorld().location());
 					return;
 				}
@@ -226,9 +226,9 @@ public class BlockCakeBase extends BlockPastryBase {
 
 		if (data.contains(Reference.MOD_PREFIX + dim.location())) {
 			data.remove(Reference.MOD_PREFIX + dim.location());
-			player.sendMessage(new TranslatableComponent("telepastries.pastry.reset.complete", dim.location()), Util.NIL_UUID);
+			player.sendSystemMessage(Component.translatable("telepastries.pastry.reset.complete", dim.location()));
 		} else {
-			player.sendMessage(new TranslatableComponent("telepastries.pastry.reset.failed", dim.location()), Util.NIL_UUID);
+			player.sendSystemMessage(Component.translatable("telepastries.pastry.reset.failed", dim.location()));
 		}
 
 		playerData.put(Player.PERSISTED_NBT_TAG, data);

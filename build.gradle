@@ -1,18 +1,7 @@
-buildscript {
-    repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-    }
-}
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 plugins {
     id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '5.+'
 }
-apply plugin: 'net.minecraftforge.gradle'
 
 version = "${version}"
 group = 'com.mrbysco.telepastries' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -88,14 +77,14 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    implementation fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+    implementation fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
-    implementation fg.deobf("curse.maven:jade-324717:3681449") //Jade (WAILA)
-    implementation fg.deobf("curse.maven:TheOneProbe-245211:3671753")
+    implementation fg.deobf("curse.maven:jade-324717:3834997") //Jade (WAILA)
+    implementation fg.deobf("curse.maven:TheOneProbe-245211:3838419")
 
 //    runtimeOnly fg.deobf("curse.maven:placebo-283644:3437009")
 
-    runtimeOnly fg.deobf("curse.maven:LostCities-269024:3711555")
+    //runtimeOnly fg.deobf("curse.maven:LostCities-269024:3711555")
 	//deobfCompile 'bookshelf:Bookshelf:1.12.2:2.3.577'
 	//deobfCompile 'hunting-dimension:HuntingDimension:1.12.2:1.0.36'
 	//deobfCompile 'bnbgaminglib:BNBGamingLib:1.12.2:2.17.6'

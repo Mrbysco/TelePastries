@@ -1,7 +1,7 @@
 package com.mrbysco.telepastries.item;
 
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -25,9 +25,9 @@ public class CakeBlockItem extends BlockItem {
 			ResourceLocation cakeLocation = cakeBlock.getCakeWorld().location();
 			ResourceLocation currentLocation = player.level.dimension().location();
 			if (cakeLocation.equals(currentLocation)) {
-				player.displayClientMessage(new TranslatableComponent("telepastries.same_dimension"), true);
+				player.displayClientMessage(Component.translatable("telepastries.same_dimension"), true);
 			} else {
-				player.displayClientMessage(new TranslatableComponent("telepastries.teleport_restricted"), true);
+				player.displayClientMessage(Component.translatable("telepastries.teleport_restricted"), true);
 			}
 		}
 		return flag;

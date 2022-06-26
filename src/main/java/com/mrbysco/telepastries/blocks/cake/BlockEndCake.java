@@ -15,6 +15,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class BlockEndCake extends BlockCakeBase {
 	public boolean isRefillItem(ItemStack stack) {
 		List<? extends String> items = TeleConfig.COMMON.endCakeRefillItems.get();
 		if (items == null || items.isEmpty()) return false;
-		ResourceLocation registryLocation = stack.getItem().getRegistryName();
+		ResourceLocation registryLocation = ForgeRegistries.ITEMS.getKey(stack.getItem());
 		return registryLocation != null && items.contains(registryLocation.toString());
 	}
 

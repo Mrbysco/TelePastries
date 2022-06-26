@@ -27,5 +27,5 @@
     "telepastries.teleport_restricted": "Can't teleport to a non-overworld dimension",
 
     "_comment": "Waila",
-    "telepastries.bites": "Cake bites"
+    "config.jade.plugin_telepastries.bites": "Cake bites"
 }

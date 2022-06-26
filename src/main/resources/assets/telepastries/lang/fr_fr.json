@@ -14,11 +14,18 @@
     "block.telepastries.lost_city_cake": "Gâteau des Cités perdues",
     "block.telepastries.hunting_dimension_cake": "Gâteau de la dimension de chasse",
     "block.telepastries.custom_cake": "Gâteau de %s",
+    "block.telepastries.custom_cake2": "%s Cake",
+    "block.telepastries.custom_cake3": "%s Cake",
 
     "_comment": "Message",
     "telepastries.pastry.reset.complete": "La position sauvegardée de la dimension %s a été réinitialisée.",
     "telepastries.pastry.reset.failed": "La dimension %s n'a pas de position sauvegardée.",
+    "telepastries.pastry.support.disabled": "Cake is disabled because %s isn't installed",
+    "telepastries.pastry.custom.unbound": "Custom Cake has no dimension bound in config ",
+    "telepastries.pastry.custom.invalid": "Destination of cake invalid %s",
+    "telepastries.same_dimension": "Can't teleport to the same dimension",
+    "telepastries.teleport_restricted": "Can't teleport to a non-overworld dimension",
 
     "_comment": "Waila",
-    "telepastries.bites": "Parts de gâteau"
+    "config.jade.plugin_telepastries.bites": "Parts de gâteau"
 }

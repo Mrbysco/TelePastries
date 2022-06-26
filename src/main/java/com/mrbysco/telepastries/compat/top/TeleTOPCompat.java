@@ -9,7 +9,7 @@ import mcjty.theoneprobe.api.IProbeInfoProvider;
 import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +46,7 @@ public class TeleTOPCompat {
 			if (block instanceof BlockCakeBase) {
 				probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER))
 						.item(new ItemStack(block))
-						.text(new TextComponent("Bites: ").withStyle(ChatFormatting.GREEN))
+						.text(Component.literal("Bites: ").withStyle(ChatFormatting.GREEN))
 						.progress(6 - blockState.getValue(BlockCakeBase.BITES), 6);
 			}
 		}

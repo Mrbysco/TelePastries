@@ -23,6 +23,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
@@ -51,11 +52,11 @@ public class PastriesGenerator {
 		ExistingFileHelper helper = event.getExistingFileHelper();
 
 		if (event.includeServer()) {
-			generator.addProvider(new Loots(generator));
+			generator.addProvider(event.includeServer(), new Loots(generator));
 		}
 		if (event.includeClient()) {
-			generator.addProvider(new PastryBlockStates(generator, helper));
-			generator.addProvider(new PastryItemModels(generator, helper));
+			generator.addProvider(event.includeClient(), new PastryBlockStates(generator, helper));
+			generator.addProvider(event.includeClient(), new PastryItemModels(generator, helper));
 		}
 	}
 
@@ -79,7 +80,7 @@ public class PastriesGenerator {
 		private static class TeleBlocks extends BlockLoot {
 			@Override
 			protected void addTables() {
-				for(RegistryObject<Block> blockObject : TeleRegistry.BLOCKS.getEntries()) {
+				for (RegistryObject<Block> blockObject : TeleRegistry.BLOCKS.getEntries()) {
 					this.add(blockObject.get(), noDrop());
 				}
 			}
@@ -110,49 +111,49 @@ public class PastriesGenerator {
 		}
 
 		private void makeCake(Block block, String dimension) {
-			ModelFile model = models().getBuilder(block.getRegistryName().getPath())
+			ModelFile model = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath())
 					.parent(models().getExistingFile(mcLoc("block/cake")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side");
 
-			ModelFile modelSlice1 = models().getBuilder(block.getRegistryName().getPath() + "_slice1")
+			ModelFile modelSlice1 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice1")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice1")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side")
 					.texture("inside", "block/" + dimension + "/cake_inner");
-			ModelFile modelSlice2 = models().getBuilder(block.getRegistryName().getPath() + "_slice2")
+			ModelFile modelSlice2 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice2")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice2")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side")
 					.texture("inside", "block/" + dimension + "/cake_inner");
-			ModelFile modelSlice36 = models().getBuilder(block.getRegistryName().getPath() + "_slice3")
+			ModelFile modelSlice36 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice3")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice3")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side")
 					.texture("inside", "block/" + dimension + "/cake_inner");
-			ModelFile modelSlice4 = models().getBuilder(block.getRegistryName().getPath() + "_slice4")
+			ModelFile modelSlice4 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice4")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice4")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side")
 					.texture("inside", "block/" + dimension + "/cake_inner");
-			ModelFile modelSlice5 = models().getBuilder(block.getRegistryName().getPath() + "_slice5")
+			ModelFile modelSlice5 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice5")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice5")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side")
 					.texture("inside", "block/" + dimension + "/cake_inner");
-			ModelFile modelSlice6 = models().getBuilder(block.getRegistryName().getPath() + "_slice6")
+			ModelFile modelSlice6 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice6")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice6")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
@@ -165,7 +166,7 @@ public class PastriesGenerator {
 						int bites = state.getValue(BlockCakeBase.BITES);
 						boolean untouched = bites == 0;
 						return ConfiguredModel.builder()
-								.modelFile(untouched ? model : models().getBuilder(block.getRegistryName().getPath() + "_slice" + bites)).build();
+								.modelFile(untouched ? model : models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice" + bites)).build();
 					});
 		}
 	}
@@ -180,7 +181,7 @@ public class PastriesGenerator {
 			ITEMS.getEntries().stream()
 					.map(RegistryObject::get)
 					.forEach(item -> {
-						String path = Objects.requireNonNull(item.getRegistryName()).getPath();
+						String path = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
 						singleTexture(path, mcLoc("item/generated"), "layer0", modLoc("item/" + path));
 					});
 		}

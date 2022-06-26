@@ -1,9 +1,9 @@
 {
   "parent": "minecraft:block/cake",
   "textures": {
-    "particle": "telepastries:block/end/cake_side",
     "bottom": "telepastries:block/end/cake_bottom",
-    "top": "telepastries:block/end/cake_top",
-    "side": "telepastries:block/end/cake_side"
+    "particle": "telepastries:block/end/cake_side",
+    "side": "telepastries:block/end/cake_side",
+    "top": "telepastries:block/end/cake_top"
   }
 }

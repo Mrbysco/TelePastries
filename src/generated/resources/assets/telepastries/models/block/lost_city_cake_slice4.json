@@ -1,10 +1,10 @@
 {
   "parent": "minecraft:block/cake_slice4",
   "textures": {
-    "particle": "telepastries:block/cities/cake_side",
     "bottom": "telepastries:block/cities/cake_bottom",
-    "top": "telepastries:block/cities/cake_top",
+    "inside": "telepastries:block/cities/cake_inner",
+    "particle": "telepastries:block/cities/cake_side",
     "side": "telepastries:block/cities/cake_side",
-    "inside": "telepastries:block/cities/cake_inner"
+    "top": "telepastries:block/cities/cake_top"
   }
 }

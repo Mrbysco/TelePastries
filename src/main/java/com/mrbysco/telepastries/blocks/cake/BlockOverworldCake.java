@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class BlockOverworldCake extends BlockCakeBase {
 	public boolean isRefillItem(ItemStack stack) {
 		List<? extends String> items = TeleConfig.COMMON.overworldCakeRefillItems.get();
 		if (items == null || items.isEmpty()) return false;
-		ResourceLocation registryLocation = stack.getItem().getRegistryName();
+		ResourceLocation registryLocation = ForgeRegistries.ITEMS.getKey(stack.getItem());
 		return registryLocation != null && items.contains(registryLocation.toString());
 	}
 
