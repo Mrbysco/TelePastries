@@ -20,9 +20,9 @@ import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -32,16 +32,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
-import static com.mrbysco.telepastries.init.TeleRegistry.CUSTOM_CAKE;
-import static com.mrbysco.telepastries.init.TeleRegistry.CUSTOM_CAKE2;
-import static com.mrbysco.telepastries.init.TeleRegistry.CUSTOM_CAKE3;
-import static com.mrbysco.telepastries.init.TeleRegistry.END_CAKE;
-import static com.mrbysco.telepastries.init.TeleRegistry.ITEMS;
-import static com.mrbysco.telepastries.init.TeleRegistry.LOST_CITY_CAKE;
-import static com.mrbysco.telepastries.init.TeleRegistry.NETHER_CAKE;
-import static com.mrbysco.telepastries.init.TeleRegistry.OVERWORLD_CAKE;
-import static com.mrbysco.telepastries.init.TeleRegistry.TWILIGHT_CAKE;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PastriesGenerator {
@@ -100,14 +90,14 @@ public class PastriesGenerator {
 
 		@Override
 		protected void registerStatesAndModels() {
-			makeCake(OVERWORLD_CAKE.get(), "overworld");
-			makeCake(NETHER_CAKE.get(), "nether");
-			makeCake(END_CAKE.get(), "end");
-			makeCake(TWILIGHT_CAKE.get(), "twilight");
-			makeCake(LOST_CITY_CAKE.get(), "cities");
-			makeCake(CUSTOM_CAKE.get(), "custom");
-			makeCake(CUSTOM_CAKE2.get(), "custom");
-			makeCake(CUSTOM_CAKE3.get(), "custom");
+			makeCake(TeleRegistry.OVERWORLD_CAKE.get(), "overworld");
+			makeCake(TeleRegistry.NETHER_CAKE.get(), "nether");
+			makeCake(TeleRegistry.END_CAKE.get(), "end");
+			makeCake(TeleRegistry.TWILIGHT_CAKE.get(), "twilight");
+			makeCake(TeleRegistry.LOST_CITY_CAKE.get(), "cities");
+			makeCake(TeleRegistry.CUSTOM_CAKE.get(), "custom");
+			makeCake(TeleRegistry.CUSTOM_CAKE2.get(), "custom");
+			makeCake(TeleRegistry.CUSTOM_CAKE3.get(), "custom");
 		}
 
 		private void makeCake(Block block, String dimension) {
@@ -178,7 +168,7 @@ public class PastriesGenerator {
 
 		@Override
 		protected void registerModels() {
-			ITEMS.getEntries().stream()
+			TeleRegistry.ITEMS.getEntries().stream()
 					.map(RegistryObject::get)
 					.forEach(item -> {
 						String path = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
