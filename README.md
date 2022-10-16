@@ -1,4 +1,4 @@
-[![build](https://github.com/Mrbysco/TelePastries/actions/workflows/build.yml/badge.svg)](https://github.com/Mrbysco/TelePastries/actions/workflows/build.yml) [![](http://cf.way2muchnoise.eu/versions/319466_latest.svg)](https://minecraft.curseforge.com/projects/telepastries)
+[![build](https://github.com/Mrbysco/TelePastries/actions/workflows/build.yml/badge.svg)](https://github.com/Mrbysco/TelePastries/actions/workflows/build.yml) [![](http://cf.way2muchnoise.eu/versions/319466.svg)](https://minecraft.curseforge.com/projects/telepastries)
 
 # TelePastries #
 
