@@ -217,6 +217,38 @@ public class CakeTeleporter implements ITeleporter {
 			}
 		}
 
+		ResourceLocation customLocation2 = ResourceLocation.tryParse(TeleConfig.COMMON.customCake2Dimension.get());
+		if (customLocation2 != null) {
+			ResourceKey<Level> customWorldKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, customLocation2);
+			if (destWorld.dimension() == customWorldKey) {
+				int minY = TeleConfig.COMMON.customCake2MinY.get();
+				if (blockpos.getY() < minY) {
+					blockpos = new BlockPos(blockpos.getX(), minY, blockpos.getZ());
+				}
+				int maxY = TeleConfig.COMMON.customCake2MaxY.get();
+				if (blockpos.getY() > maxY) {
+					blockpos = new BlockPos(blockpos.getX(), maxY, blockpos.getZ());
+				}
+				return makePortalInfo(entity, blockpos.getX(), blockpos.getY(), blockpos.getZ());
+			}
+		}
+
+		ResourceLocation customLocation3 = ResourceLocation.tryParse(TeleConfig.COMMON.customCake3Dimension.get());
+		if (customLocation3 != null) {
+			ResourceKey<Level> customWorldKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, customLocation3);
+			if (destWorld.dimension() == customWorldKey) {
+				int minY = TeleConfig.COMMON.customCake3MinY.get();
+				if (blockpos.getY() < minY) {
+					blockpos = new BlockPos(blockpos.getX(), minY, blockpos.getZ());
+				}
+				int maxY = TeleConfig.COMMON.customCake3MaxY.get();
+				if (blockpos.getY() > maxY) {
+					blockpos = new BlockPos(blockpos.getX(), maxY, blockpos.getZ());
+				}
+				return makePortalInfo(entity, blockpos.getX(), blockpos.getY(), blockpos.getZ());
+			}
+		}
+
 		return makePortalInfo(entity, blockpos.getX(), blockpos.getY(), blockpos.getZ());
 	}
 
@@ -224,14 +256,15 @@ public class CakeTeleporter implements ITeleporter {
 	private static PortalInfo moveToSafeCoords(ServerLevel world, Entity entity, BlockPos pos) {
 		if (world.isEmptyBlock(pos.below())) {
 			int distance;
-			for (distance = 1; world.getBlockState(pos.below(distance)).getBlock().isPossibleToRespawnInThis(); ++distance) {
+			for (distance = 1; world.getBlockState(pos.below(distance)).getBlock().isPossibleToRespawnInThis() && distance < 32; ++distance) {
 			}
 
 			if (distance > 4) {
 				makePlatform(world, pos);
 			}
 		} else {
-			if (world.getBlockState(pos.above()).getBlock().isPossibleToRespawnInThis() && world.getBlockState(pos.above(1)).getBlock().isPossibleToRespawnInThis()) {
+			if (world.getBlockState(pos.above()).getBlock().isPossibleToRespawnInThis() &&
+					world.getBlockState(pos.above(1)).getBlock().isPossibleToRespawnInThis()) {
 				BlockPos abovePos = pos.above(1);
 				return makePortalInfo(entity, abovePos.getX() + 0.5D, abovePos.getY(), abovePos.getZ() + 0.5D);
 			}
