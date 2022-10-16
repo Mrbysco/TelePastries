@@ -1,6 +1,5 @@
 package com.mrbysco.telepastries.blocks.cake.compat;
 
-import com.mrbysco.telepastries.TelePastries;
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import com.mrbysco.telepastries.config.TeleConfig;
 import net.minecraft.ChatFormatting;

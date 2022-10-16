@@ -79,7 +79,7 @@ public class PastriesGenerator {
 		private static class TeleBlocks extends BlockLoot {
 			@Override
 			protected void addTables() {
-				for(RegistryObject<Block> blockObject : TeleRegistry.BLOCKS.getEntries()) {
+				for (RegistryObject<Block> blockObject : TeleRegistry.BLOCKS.getEntries()) {
 					this.add(blockObject.get(), noDrop());
 				}
 			}

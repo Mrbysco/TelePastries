@@ -27,6 +27,8 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -40,6 +42,8 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -53,6 +57,8 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
@@ -90,12 +96,15 @@ dependencies {
 
     implementation fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
-    implementation fg.deobf("curse.maven:jade-324717:3681449") //Jade (WAILA)
-    implementation fg.deobf("curse.maven:TheOneProbe-245211:3671753")
+    implementation fg.deobf("curse.maven:jade-324717:3970956") //Jade (WAILA)
+    implementation fg.deobf("curse.maven:TheOneProbe-245211:3965688")
+
+    implementation fg.deobf("curse.maven:SkyblockBuilder-446691:3932317")
+    implementation fg.deobf("curse.maven:LibX-412525:3829113") //Dependency for Skyblock Builder
 
 //    runtimeOnly fg.deobf("curse.maven:placebo-283644:3437009")
 
-    runtimeOnly fg.deobf("curse.maven:LostCities-269024:3711555")
+    //runtimeOnly fg.deobf("curse.maven:LostCities-269024:4027498")
 	//deobfCompile 'bookshelf:Bookshelf:1.12.2:2.3.577'
 	//deobfCompile 'hunting-dimension:HuntingDimension:1.12.2:1.0.36'
 	//deobfCompile 'bnbgaminglib:BNBGamingLib:1.12.2:2.17.6'
