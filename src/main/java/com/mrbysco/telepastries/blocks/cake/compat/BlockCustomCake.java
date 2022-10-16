@@ -21,42 +21,42 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class BlockCustomCake extends BlockCakeBase {
-    public BlockCustomCake(Properties properties) {
-        super(properties);
-    }
+	public BlockCustomCake(Properties properties) {
+		super(properties);
+	}
 
-    @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(!TeleConfig.SERVER.customCakeDimension.get().isEmpty()) {
-            return super.use(state, worldIn, pos, player, handIn, hit);
-        } else {
-            if(player.getUsedItemHand() == handIn && !worldIn.isClientSide) {
-                player.sendMessage(new TranslationTextComponent("telepastries.pastry.custom.unbound").withStyle(TextFormatting.RED), Util.NIL_UUID);
-            }
-            return ActionResultType.SUCCESS;
-        }
-    }
+	@Override
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+		if (!TeleConfig.SERVER.customCakeDimension.get().isEmpty()) {
+			return super.use(state, worldIn, pos, player, handIn, hit);
+		} else {
+			if (player.getUsedItemHand() == handIn && !worldIn.isClientSide) {
+				player.sendMessage(new TranslationTextComponent("telepastries.pastry.custom.unbound").withStyle(TextFormatting.RED), Util.NIL_UUID);
+			}
+			return ActionResultType.SUCCESS;
+		}
+	}
 
-    @Override
-    public IFormattableTextComponent getName() {
-        return new TranslationTextComponent(this.getDescriptionId(), TeleConfig.SERVER.customCakeName.get());
-    }
+	@Override
+	public IFormattableTextComponent getName() {
+		return new TranslationTextComponent(this.getDescriptionId(), TeleConfig.SERVER.customCakeName.get());
+	}
 
-    @Override
-    public boolean isRefillItem(ItemStack stack) {
-        List<? extends String> items = TeleConfig.SERVER.customCakeRefillItem.get();
-        if (items == null || items.isEmpty()) return false;
-        ResourceLocation registryLocation = stack.getItem().getRegistryName();
-        return registryLocation != null && items.contains(registryLocation.toString());
-    }
+	@Override
+	public boolean isRefillItem(ItemStack stack) {
+		List<? extends String> items = TeleConfig.SERVER.customCakeRefillItem.get();
+		if (items == null || items.isEmpty()) return false;
+		ResourceLocation registryLocation = stack.getItem().getRegistryName();
+		return registryLocation != null && items.contains(registryLocation.toString());
+	}
 
-    @Override
-    public RegistryKey<World> getCakeWorld() {
-        return RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(TeleConfig.SERVER.customCakeDimension.get()));
-    }
+	@Override
+	public RegistryKey<World> getCakeWorld() {
+		return RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(TeleConfig.SERVER.customCakeDimension.get()));
+	}
 
-    @Override
-    public boolean consumeCake() {
-        return TeleConfig.SERVER.consumeCustomCake.get();
-    }
+	@Override
+	public boolean consumeCake() {
+		return TeleConfig.SERVER.consumeCustomCake.get();
+	}
 }

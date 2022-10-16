@@ -8,12 +8,12 @@ import net.minecraft.world.IWorldReader;
 
 public class BlockPastryBase extends Block {
 
-    public BlockPastryBase(AbstractBlock.Properties builder) {
-        super(builder);
-    }
+	public BlockPastryBase(AbstractBlock.Properties builder) {
+		super(builder);
+	}
 
-    @Override
-    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.below()).getMaterial().isSolid();
-    }
+	@Override
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		return worldIn.getBlockState(pos.below()).getMaterial().isSolid();
+	}
 }

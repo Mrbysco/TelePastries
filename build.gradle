@@ -75,7 +75,7 @@ repositories {
         url = "https://dvs1.progwml6.com/files/maven"
     }
     maven {
-        url "https://maven.blamejared.com"
+        url = "https://maven.blamejared.com"
     }
     maven {
         name = "thiakil"
@@ -84,9 +84,6 @@ repositories {
     maven {
         name = "TOP Maven"
         url = "https://maven.tterrag.com"
-    }
-    maven {
-        url = "https://maven.tehnut.info"
     }
     maven {
         url = 'https://www.cursemaven.com'
@@ -102,14 +99,13 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}")
 
-    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
-    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+    implementation fg.deobf("curse.maven:hwyla-253449:3033593")
 
     compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.16:${top_version}:api")
     runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.16:${top_version}")
 
-    runtimeOnly fg.deobf("curse.maven:clickmachine-298275:3352162")
-    runtimeOnly fg.deobf("curse.maven:placebo-283644:3437009")
+    runtimeOnly fg.deobf("curse.maven:clickmachine-298275:3490353")
+    runtimeOnly fg.deobf("curse.maven:placebo-283644:3750838")
 
 	//deobfCompile 'the-lost-cities:lostcities:1.12:2.0.17'
 	//deobfCompile 'bookshelf:Bookshelf:1.12.2:2.3.577'

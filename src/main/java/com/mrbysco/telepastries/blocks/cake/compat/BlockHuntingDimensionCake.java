@@ -4,9 +4,9 @@ import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import net.minecraft.block.AbstractBlock;
 
 public class BlockHuntingDimensionCake extends BlockCakeBase {
-    public BlockHuntingDimensionCake(AbstractBlock.Properties properties) {
-        super(properties);
-    }
+	public BlockHuntingDimensionCake(AbstractBlock.Properties properties) {
+		super(properties);
+	}
 //
 //    @Override
 //    public void teleportToDimension(IWorld world, BlockPos pos, PlayerEntity player) {

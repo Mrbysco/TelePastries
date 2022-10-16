@@ -24,21 +24,21 @@ public class TeleTOPCompat {
 		InterModComms.sendTo("theoneprobe", "getTheOneProbe", GetTheOneProbe::new);
 	}
 
-    public static final class GetTheOneProbe implements Function<ITheOneProbe, Void> {
+	public static final class GetTheOneProbe implements Function<ITheOneProbe, Void> {
 
-        @Override
-        public Void apply(ITheOneProbe input) {
-            input.registerProvider(new PastryInfo());
-            return null;
-        }
-    }
+		@Override
+		public Void apply(ITheOneProbe input) {
+			input.registerProvider(new PastryInfo());
+			return null;
+		}
+	}
 
-    public static final class PastryInfo implements IProbeInfoProvider {
+	public static final class PastryInfo implements IProbeInfoProvider {
 
-        @Override
-        public String getID() {
-            return Reference.MOD_ID;
-        }
+		@Override
+		public String getID() {
+			return Reference.MOD_ID;
+		}
 
 		@Override
 		public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data) {
@@ -50,5 +50,5 @@ public class TeleTOPCompat {
 						.progress(6 - blockState.getValue(BlockCakeBase.BITES), 6);
 			}
 		}
-    }
+	}
 }

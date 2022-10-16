@@ -22,37 +22,37 @@ import net.minecraftforge.fml.ModList;
 import java.util.List;
 
 public class BlockLostCityCake extends BlockCakeBase {
-    public BlockLostCityCake(AbstractBlock.Properties properties) {
-        super(properties);
-    }
+	public BlockLostCityCake(AbstractBlock.Properties properties) {
+		super(properties);
+	}
 
-    @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(ModList.get().isLoaded("lostcities")) {
-            return super.use(state, worldIn, pos, player, handIn, hit);
-        } else {
-            if(player.getUsedItemHand() == handIn && !worldIn.isClientSide) {
-                player.sendMessage(new TranslationTextComponent("telepastries.pastry.support.disabled", "lostcities").withStyle(TextFormatting.RED), Util.NIL_UUID);
-            }
-            return ActionResultType.SUCCESS;
-        }
-    }
+	@Override
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+		if (ModList.get().isLoaded("lostcities")) {
+			return super.use(state, worldIn, pos, player, handIn, hit);
+		} else {
+			if (player.getUsedItemHand() == handIn && !worldIn.isClientSide) {
+				player.sendMessage(new TranslationTextComponent("telepastries.pastry.support.disabled", "lostcities").withStyle(TextFormatting.RED), Util.NIL_UUID);
+			}
+			return ActionResultType.SUCCESS;
+		}
+	}
 
-    @Override
-    public boolean isRefillItem(ItemStack stack) {
-        List<? extends String> items = TeleConfig.SERVER.lostCitiesCakeRefillItem.get();
-        if (items == null || items.isEmpty()) return false;
-        ResourceLocation registryLocation = stack.getItem().getRegistryName();
-        return registryLocation != null && items.contains(registryLocation.toString());
-    }
+	@Override
+	public boolean isRefillItem(ItemStack stack) {
+		List<? extends String> items = TeleConfig.SERVER.lostCitiesCakeRefillItem.get();
+		if (items == null || items.isEmpty()) return false;
+		ResourceLocation registryLocation = stack.getItem().getRegistryName();
+		return registryLocation != null && items.contains(registryLocation.toString());
+	}
 
-    @Override
-    public RegistryKey<World> getCakeWorld() {
-        return RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("lostcities", "lostcity"));
-    }
+	@Override
+	public RegistryKey<World> getCakeWorld() {
+		return RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("lostcities", "lostcity"));
+	}
 
-    @Override
-    public boolean consumeCake() {
-        return TeleConfig.SERVER.consumeLostCitiesCake.get();
-    }
+	@Override
+	public boolean consumeCake() {
+		return TeleConfig.SERVER.consumeLostCitiesCake.get();
+	}
 }

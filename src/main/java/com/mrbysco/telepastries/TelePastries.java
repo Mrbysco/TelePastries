@@ -18,26 +18,26 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(Reference.MOD_ID)
 public class TelePastries {
-    public static final Logger LOGGER = LogManager.getLogger();
+	public static final Logger LOGGER = LogManager.getLogger();
 
-    public TelePastries() {
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModLoadingContext.get().registerConfig(Type.COMMON, TeleConfig.serverSpec);
-        FMLJavaModLoadingContext.get().getModEventBus().register(TeleConfig.class);
+	public TelePastries() {
+		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		ModLoadingContext.get().registerConfig(Type.COMMON, TeleConfig.serverSpec);
+		FMLJavaModLoadingContext.get().getModEventBus().register(TeleConfig.class);
 
-        eventBus.addListener(this::sendImc);
+		eventBus.addListener(this::sendImc);
 
-        TeleRegistry.BLOCKS.register(eventBus);
-        TeleRegistry.ITEMS.register(eventBus);
+		TeleRegistry.BLOCKS.register(eventBus);
+		TeleRegistry.ITEMS.register(eventBus);
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::doClientStuff);
-        });
-    }
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::doClientStuff);
+		});
+	}
 
-    public void sendImc(InterModEnqueueEvent event) {
-        if(ModList.get().isLoaded("theoneprobe")) {
-            TeleTOPCompat.register();
-        }
-    }
+	public void sendImc(InterModEnqueueEvent event) {
+		if (ModList.get().isLoaded("theoneprobe")) {
+			TeleTOPCompat.register();
+		}
+	}
 }
