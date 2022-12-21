@@ -4,7 +4,7 @@ import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import com.mrbysco.telepastries.config.TeleConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
@@ -52,7 +52,7 @@ public class BlockCustomCake2 extends BlockCakeBase {
 
 	@Override
 	public ResourceKey<Level> getCakeWorld() {
-		return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(TeleConfig.COMMON.customCake2Dimension.get()));
+		return ResourceKey.create(Registries.DIMENSION, new ResourceLocation(TeleConfig.COMMON.customCake2Dimension.get()));
 	}
 
 	@Override

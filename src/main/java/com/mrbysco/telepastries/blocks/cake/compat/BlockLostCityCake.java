@@ -4,7 +4,7 @@ import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import com.mrbysco.telepastries.config.TeleConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -48,7 +48,7 @@ public class BlockLostCityCake extends BlockCakeBase {
 
 	@Override
 	public ResourceKey<Level> getCakeWorld() {
-		return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("lostcities", "lostcity"));
+		return ResourceKey.create(Registries.DIMENSION, new ResourceLocation("lostcities", "lostcity"));
 	}
 
 	@Override

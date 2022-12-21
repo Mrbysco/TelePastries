@@ -2,7 +2,7 @@ package com.mrbysco.telepastries.blocks.cake;
 
 import com.mrbysco.telepastries.config.TeleConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -34,7 +34,7 @@ public class BlockNetherCake extends BlockCakeBase {
 
 	@Override
 	public ResourceKey<Level> getCakeWorld() {
-		return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("the_nether"));
+		return ResourceKey.create(Registries.DIMENSION, new ResourceLocation("the_nether"));
 	}
 
 	@Override

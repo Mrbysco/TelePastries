@@ -1,15 +1,13 @@
 package com.mrbysco.telepastries;
 
 import com.mojang.logging.LogUtils;
-import com.mrbysco.telepastries.client.ClientHandler;
 import com.mrbysco.telepastries.compat.top.TeleTOPCompat;
 import com.mrbysco.telepastries.config.TeleConfig;
 import com.mrbysco.telepastries.handler.ExplosionHandler;
 import com.mrbysco.telepastries.init.TeleRegistry;
-import net.minecraftforge.api.distmarker.Dist;
+import com.mrbysco.telepastries.init.TeleTab;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -28,15 +26,12 @@ public class TelePastries {
 		FMLJavaModLoadingContext.get().getModEventBus().register(TeleConfig.class);
 
 		eventBus.addListener(this::sendImc);
+		eventBus.register(new TeleTab());
 
 		TeleRegistry.BLOCKS.register(eventBus);
 		TeleRegistry.ITEMS.register(eventBus);
 
 		MinecraftForge.EVENT_BUS.addListener(ExplosionHandler::onExplosion);
-
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-			FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::doClientStuff);
-		});
 	}
 
 	public void sendImc(InterModEnqueueEvent event) {

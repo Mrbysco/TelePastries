@@ -5,7 +5,7 @@ import com.mrbysco.telepastries.TelePastries;
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import com.mrbysco.telepastries.config.TeleConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -184,7 +184,7 @@ public class CakeTeleporter implements ITeleporter {
 	private static PortalInfo customCompat(ServerLevel destWorld, BlockPos pos, Entity entity) {
 		BlockPos blockpos = pos;
 		if (ModList.get().isLoaded("twilightforest")) {
-			ResourceKey<Level> twilightKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("twilightforest", "twilight_forest"));
+			ResourceKey<Level> twilightKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation("twilightforest", "twilight_forest"));
 			if (destWorld.dimension() == twilightKey) {
 				if (entity instanceof ServerPlayer playerMP) {
 					playerMP.setRespawnPosition(twilightKey, pos, playerMP.getYRot(), true, false);
@@ -193,7 +193,7 @@ public class CakeTeleporter implements ITeleporter {
 		}
 
 		if (ModList.get().isLoaded("lostcities")) {
-			ResourceKey<Level> lostCityKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("lostcities", "lostcity"));
+			ResourceKey<Level> lostCityKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation("lostcities", "lostcity"));
 			if (destWorld.dimension() == lostCityKey) {
 				if (entity instanceof ServerPlayer playerMP) {
 					playerMP.setRespawnPosition(lostCityKey, pos, playerMP.getYRot(), true, false);
@@ -203,7 +203,7 @@ public class CakeTeleporter implements ITeleporter {
 
 		ResourceLocation customLocation = ResourceLocation.tryParse(TeleConfig.COMMON.customCakeDimension.get());
 		if (customLocation != null) {
-			ResourceKey<Level> customWorldKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, customLocation);
+			ResourceKey<Level> customWorldKey = ResourceKey.create(Registries.DIMENSION, customLocation);
 			if (destWorld.dimension() == customWorldKey) {
 				int minY = TeleConfig.COMMON.customCakeMinY.get();
 				if (blockpos.getY() < minY) {
@@ -219,7 +219,7 @@ public class CakeTeleporter implements ITeleporter {
 
 		ResourceLocation customLocation2 = ResourceLocation.tryParse(TeleConfig.COMMON.customCake2Dimension.get());
 		if (customLocation2 != null) {
-			ResourceKey<Level> customWorldKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, customLocation2);
+			ResourceKey<Level> customWorldKey = ResourceKey.create(Registries.DIMENSION, customLocation2);
 			if (destWorld.dimension() == customWorldKey) {
 				int minY = TeleConfig.COMMON.customCake2MinY.get();
 				if (blockpos.getY() < minY) {
@@ -235,7 +235,7 @@ public class CakeTeleporter implements ITeleporter {
 
 		ResourceLocation customLocation3 = ResourceLocation.tryParse(TeleConfig.COMMON.customCake3Dimension.get());
 		if (customLocation3 != null) {
-			ResourceKey<Level> customWorldKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, customLocation3);
+			ResourceKey<Level> customWorldKey = ResourceKey.create(Registries.DIMENSION, customLocation3);
 			if (destWorld.dimension() == customWorldKey) {
 				int minY = TeleConfig.COMMON.customCake3MinY.get();
 				if (blockpos.getY() < minY) {

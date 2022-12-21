@@ -1,19 +1,19 @@
 package com.mrbysco.telepastries.generator;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
 import com.mrbysco.telepastries.Reference;
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import com.mrbysco.telepastries.init.TeleRegistry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.ValidationContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
@@ -29,9 +29,8 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PastriesGenerator {
@@ -39,27 +38,23 @@ public class PastriesGenerator {
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
+		PackOutput packOutput = generator.getPackOutput();
+		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 		ExistingFileHelper helper = event.getExistingFileHelper();
 
 		if (event.includeServer()) {
-			generator.addProvider(event.includeServer(), new Loots(generator));
+			generator.addProvider(event.includeServer(), new Loots(packOutput));
 		}
 		if (event.includeClient()) {
-			generator.addProvider(event.includeClient(), new PastryBlockStates(generator, helper));
-			generator.addProvider(event.includeClient(), new PastryItemModels(generator, helper));
+			generator.addProvider(event.includeClient(), new PastryBlockStates(packOutput, helper));
+			generator.addProvider(event.includeClient(), new PastryItemModels(packOutput, helper));
 		}
 	}
 
 	private static class Loots extends LootTableProvider {
-		public Loots(DataGenerator gen) {
-			super(gen);
-		}
-
-		@Override
-		protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
-			return ImmutableList.of(
-					Pair.of(TeleBlocks::new, LootContextParamSets.BLOCK)
-			);
+		public Loots(PackOutput packOutput) {
+			super(packOutput, Set.of(), List.of(
+					new SubProviderEntry(TeleBlocks::new, LootContextParamSets.BLOCK)));
 		}
 
 		@Override
@@ -67,9 +62,14 @@ public class PastriesGenerator {
 			map.forEach((name, table) -> LootTables.validate(validationresults, name, table));
 		}
 
-		private static class TeleBlocks extends BlockLoot {
+		private static class TeleBlocks extends BlockLootSubProvider {
+
+			protected TeleBlocks() {
+				super(Set.of(), FeatureFlags.REGISTRY.allFlags());
+			}
+
 			@Override
-			protected void addTables() {
+			protected void generate() {
 				for (RegistryObject<Block> blockObject : TeleRegistry.BLOCKS.getEntries()) {
 					this.add(blockObject.get(), noDrop());
 				}
@@ -84,8 +84,8 @@ public class PastriesGenerator {
 
 	private static class PastryBlockStates extends BlockStateProvider {
 
-		public PastryBlockStates(DataGenerator gen, ExistingFileHelper helper) {
-			super(gen, Reference.MOD_ID, helper);
+		public PastryBlockStates(PackOutput packOutput, ExistingFileHelper helper) {
+			super(packOutput, Reference.MOD_ID, helper);
 		}
 
 		@Override
@@ -101,49 +101,49 @@ public class PastriesGenerator {
 		}
 
 		private void makeCake(Block block, String dimension) {
-			ModelFile model = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath())
+			ModelFile model = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath()).renderType("cutout")
 					.parent(models().getExistingFile(mcLoc("block/cake")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side");
 
-			ModelFile modelSlice1 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice1")
+			ModelFile modelSlice1 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice1").renderType("cutout")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice1")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side")
 					.texture("inside", "block/" + dimension + "/cake_inner");
-			ModelFile modelSlice2 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice2")
+			ModelFile modelSlice2 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice2").renderType("cutout")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice2")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side")
 					.texture("inside", "block/" + dimension + "/cake_inner");
-			ModelFile modelSlice36 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice3")
+			ModelFile modelSlice36 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice3").renderType("cutout")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice3")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side")
 					.texture("inside", "block/" + dimension + "/cake_inner");
-			ModelFile modelSlice4 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice4")
+			ModelFile modelSlice4 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice4").renderType("cutout")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice4")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side")
 					.texture("inside", "block/" + dimension + "/cake_inner");
-			ModelFile modelSlice5 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice5")
+			ModelFile modelSlice5 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice5").renderType("cutout")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice5")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
 					.texture("top", "block/" + dimension + "/cake_top")
 					.texture("side", "block/" + dimension + "/cake_side")
 					.texture("inside", "block/" + dimension + "/cake_inner");
-			ModelFile modelSlice6 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice6")
+			ModelFile modelSlice6 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice6").renderType("cutout")
 					.parent(models().getExistingFile(mcLoc("block/cake_slice6")))
 					.texture("particle", "block/" + dimension + "/cake_side")
 					.texture("bottom", "block/" + dimension + "/cake_bottom")
@@ -156,14 +156,15 @@ public class PastriesGenerator {
 						int bites = state.getValue(BlockCakeBase.BITES);
 						boolean untouched = bites == 0;
 						return ConfiguredModel.builder()
-								.modelFile(untouched ? model : models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice" + bites)).build();
+								.modelFile(untouched ? model : models()
+										.getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice" + bites)).build();
 					});
 		}
 	}
 
 	private static class PastryItemModels extends ItemModelProvider {
-		public PastryItemModels(DataGenerator gen, ExistingFileHelper helper) {
-			super(gen, Reference.MOD_ID, helper);
+		public PastryItemModels(PackOutput packOutput, ExistingFileHelper helper) {
+			super(packOutput, Reference.MOD_ID, helper);
 		}
 
 		@Override

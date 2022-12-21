@@ -37,13 +37,13 @@ public class TeleRegistry {
 	public static final RegistryObject<Block> CUSTOM_CAKE3 = BLOCKS.register("custom_cake3", () -> new BlockCustomCake3(BlockBehaviour.Properties.of(Material.CAKE).strength(0.5F).sound(SoundType.WOOL)));
 //   public static final RegistryObject<Block> HUNTING_DIMENSION_CAKE = BLOCKS.register("hunting_dimension_cake", () -> new BlockHuntingDimensionCake("hunting_dimension_cake"));
 
-	public static final RegistryObject<Item> NETHER_CAKE_ITEM = ITEMS.register("nether_cake", () -> new CakeBlockItem(NETHER_CAKE.get(), new Item.Properties().tab(TeleTab.TELE_TAB)));
-	public static final RegistryObject<Item> END_CAKE_ITEM = ITEMS.register("end_cake", () -> new CakeBlockItem(END_CAKE.get(), new Item.Properties().tab(TeleTab.TELE_TAB)));
-	public static final RegistryObject<Item> OVERWORLD_CAKE_ITEM = ITEMS.register("overworld_cake", () -> new CakeBlockItem(OVERWORLD_CAKE.get(), new Item.Properties().tab(TeleTab.TELE_TAB)));
+	public static final RegistryObject<Item> NETHER_CAKE_ITEM = ITEMS.register("nether_cake", () -> new CakeBlockItem(NETHER_CAKE.get(), new Item.Properties()));
+	public static final RegistryObject<Item> END_CAKE_ITEM = ITEMS.register("end_cake", () -> new CakeBlockItem(END_CAKE.get(), new Item.Properties()));
+	public static final RegistryObject<Item> OVERWORLD_CAKE_ITEM = ITEMS.register("overworld_cake", () -> new CakeBlockItem(OVERWORLD_CAKE.get(), new Item.Properties()));
 
-	public static final RegistryObject<Item> TWILIGHT_CAKE_ITEM = ITEMS.register("twilight_cake", () -> new CakeBlockItem(TWILIGHT_CAKE.get(), new Item.Properties().tab(TeleTab.TELE_TAB)));
-	public static final RegistryObject<Item> LOST_CITY_CAKE_ITEM = ITEMS.register("lost_city_cake", () -> new CakeBlockItem(LOST_CITY_CAKE.get(), new Item.Properties().tab(TeleTab.TELE_TAB)));
-	public static final RegistryObject<Item> CUSTOM_CAKE_ITEM = ITEMS.register("custom_cake", () -> new CustomCakeBlockItem(CUSTOM_CAKE.get(), new Item.Properties().tab(TeleTab.TELE_TAB)));
-	public static final RegistryObject<Item> CUSTOM_CAKE2_ITEM = ITEMS.register("custom_cake2", () -> new CustomCake2BlockItem(CUSTOM_CAKE2.get(), new Item.Properties().tab(TeleTab.TELE_TAB)));
-	public static final RegistryObject<Item> CUSTOM_CAKE3_ITEM = ITEMS.register("custom_cake3", () -> new CustomCake3BlockItem(CUSTOM_CAKE3.get(), new Item.Properties().tab(TeleTab.TELE_TAB)));
+	public static final RegistryObject<Item> TWILIGHT_CAKE_ITEM = ITEMS.register("twilight_cake", () -> new CakeBlockItem(TWILIGHT_CAKE.get(), new Item.Properties()));
+	public static final RegistryObject<Item> LOST_CITY_CAKE_ITEM = ITEMS.register("lost_city_cake", () -> new CakeBlockItem(LOST_CITY_CAKE.get(), new Item.Properties()));
+	public static final RegistryObject<Item> CUSTOM_CAKE_ITEM = ITEMS.register("custom_cake", () -> new CustomCakeBlockItem(CUSTOM_CAKE.get(), new Item.Properties()));
+	public static final RegistryObject<Item> CUSTOM_CAKE2_ITEM = ITEMS.register("custom_cake2", () -> new CustomCake2BlockItem(CUSTOM_CAKE2.get(), new Item.Properties()));
+	public static final RegistryObject<Item> CUSTOM_CAKE3_ITEM = ITEMS.register("custom_cake3", () -> new CustomCake3BlockItem(CUSTOM_CAKE3.get(), new Item.Properties()));
 }

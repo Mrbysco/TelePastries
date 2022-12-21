@@ -1,5 +1,6 @@
 {
   "parent": "minecraft:block/cake_slice1",
+  "render_type": "minecraft:cutout",
   "textures": {
     "bottom": "telepastries:block/end/cake_bottom",
     "inside": "telepastries:block/end/cake_inner",

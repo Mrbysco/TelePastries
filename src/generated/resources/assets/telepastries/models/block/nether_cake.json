@@ -1,5 +1,6 @@
 {
   "parent": "minecraft:block/cake",
+  "render_type": "minecraft:cutout",
   "textures": {
     "bottom": "telepastries:block/nether/cake_bottom",
     "particle": "telepastries:block/nether/cake_side",

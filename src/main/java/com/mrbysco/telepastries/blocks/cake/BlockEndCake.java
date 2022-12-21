@@ -3,7 +3,7 @@ package com.mrbysco.telepastries.blocks.cake;
 import com.mrbysco.telepastries.config.TeleConfig;
 import com.mrbysco.telepastries.util.CakeTeleporter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -53,7 +53,7 @@ public class BlockEndCake extends BlockCakeBase {
 
 	@Override
 	public ResourceKey<Level> getCakeWorld() {
-		return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation("the_end"));
+		return ResourceKey.create(Registries.DIMENSION, new ResourceLocation("the_end"));
 	}
 
 	@Override
