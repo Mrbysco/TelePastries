@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[41,)"
+loaderVersion="[44,)"
 license="MIT"
 
 [[mods]]
@@ -14,12 +14,6 @@ credits="My friend 8138763 for the name"
 [[dependencies.telepastries]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.19,1.20)"
-ordering="NONE"
-side="BOTH"
-[[dependencies.telepastries]]
-modId="forge"
-mandatory=true
-versionRange="[41.0.94,)"
+versionRange="[1.19.3,1.20)"
 ordering="NONE"
 side="BOTH"
