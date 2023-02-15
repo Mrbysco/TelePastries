@@ -9,27 +9,27 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BlockTwilightCake extends BlockCakeBase {
-    public BlockTwilightCake(String registry) {
-        super(registry);
-    }
+	public BlockTwilightCake(String registry) {
+		super(registry);
+	}
 
-    @Override
-    public void teleportToDimension(World world, BlockPos pos, EntityPlayer player) {
-        super.teleportToDimension(world, pos, player);
-    }
+	@Override
+	public void teleportToDimension(World world, BlockPos pos, EntityPlayer player) {
+		super.teleportToDimension(world, pos, player);
+	}
 
-    @Override
-    public Item getRefillItem() {
-        return Item.REGISTRY.getObject(new ResourceLocation(TeleConfig.pastriesCompat.twilightForest.twilightForestCakeRefillItem));
-    }
+	@Override
+	public Item getRefillItem() {
+		return Item.REGISTRY.getObject(new ResourceLocation(TeleConfig.pastriesCompat.twilightForest.twilightForestCakeRefillItem));
+	}
 
-    @Override
-    public int getCakeDimension() {
-        return twilightforest.TFConfig.dimension.dimensionID;
-    }
+	@Override
+	public int getCakeDimension() {
+		return twilightforest.TFConfig.dimension.dimensionID;
+	}
 
-    @Override
-    public boolean consumeCake() {
-        return TeleConfig.pastriesCompat.twilightForest.consumeTwilightForestCake;
-    }
+	@Override
+	public boolean consumeCake() {
+		return TeleConfig.pastriesCompat.twilightForest.consumeTwilightForestCake;
+	}
 }

@@ -6,12 +6,12 @@ import net.minecraft.item.ItemStack;
 
 public class TeleTab extends CreativeTabs {
 
-    public TeleTab() {
-        super(Reference.MOD_ID);
-    }
+	public TeleTab() {
+		super(Reference.MOD_ID);
+	}
 
-    @Override
-    public ItemStack createIcon() {
-        return new ItemStack(TeleBlocks.overworld_cake);
-    }
+	@Override
+	public ItemStack createIcon() {
+		return new ItemStack(TeleBlocks.overworld_cake);
+	}
 }

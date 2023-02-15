@@ -5,7 +5,7 @@
         "description": "Pastries that teleport players.",
         "version": "${version}",
         "mcversion": "${mcversion}",
-        "url": "",
+        "url": "https://www.curseforge.com/minecraft/mc-mods/telepastries",
         "updateUrl": "",
         "authorList": ["Mrbysco"],
         "credits": "My friend 8138763 for the name",

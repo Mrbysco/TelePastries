@@ -1,19 +1,13 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'wtf.gofancy.fancygradle' version '1.1.+'
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-
-version = "0.3.4"
+version = "${version}"
 group = "com.mrbysco.telepastries" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "TelePastries"
+archivesBaseName = "TelePastries-${mc_version}"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
@@ -21,72 +15,138 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2835"
-    runDir = "run"
-    mappings = "stable_39"
+    mappings channel: "${mcp_channel}", version: "${mcp_mappings}"
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                EXAMPLE {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                EXAMPLE {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
 repositories {
     maven {
-        // location of the maven that hosts jei files
+        // location of the maven that hosts JEI files
         name = "Progwml6 maven"
-        url = "http://dvs1.progwml6.com/files/maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
     }
     maven {
-        // location of a maven mirror for jei files, as a fallback
-        name = "ModMaven"
-        url = "modmaven.k-4u.nl"
-    }
-    maven {
-        url "http://maven.blamejared.com"
-    }
-    maven {
-        url "http://tehnut.info/maven"
-    }
-    maven {
-        name = "thiakil"
-        url = "http://maven.thiakil.com"
+        url = "https://maven.blamejared.com"
     }
     maven {
         name = "TOP Maven"
-        url = "http://maven.tterrag.com"
+        url = "https://maven.tterrag.com"
     }
     maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
+        url = "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.15.0.+"
-    deobfCompile "mcp.mobius.waila:Hwyla:1.8.26-B41_1.12.2"
-    deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-1.4.28-17"
-	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.5.+"
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+    compileOnly "mezz.jei:jei_1.12.2:${jei_version}"
 
-	deobfCompile "the-twilight-forest:twilightforest-1.12.2:3.8.689:universal"
-	deobfCompile 'the-lost-cities:lostcities:1.12:2.0.17'
-	deobfCompile 'bookshelf:Bookshelf:1.12.2:2.3.577'
-	deobfCompile 'hunting-dimension:HuntingDimension:1.12.2:1.0.36'
-	deobfCompile 'bnbgaminglib:BNBGamingLib:1.12.2:2.17.6'
-	deobfCompile 'topography:Topography:1.12.2:1.5.1'
-	//deobfCompile 'compact-machines:compactmachines3-1.12.2:3.0.17:b267'
+    compileOnly "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}"
+    compileOnly "CraftTweaker2:CraftTweaker2-MC1120-Main:${crafttweaker_version}"
+
+    compileOnly "curse.maven:hwyla-253449:2568751" //hwyla
+    compileOnly "curse.maven:twilightforest-227639:3051450" //Twilight Forest
+    compileOnly "curse.maven:lostcities-269024:2861574" //lost cities
+    compileOnly "curse.maven:hunting-283235:2827888" //hunting dimension
+//    implementation fg.deobf('bnbgaminglib:BNBGamingLib:1.12.2:2.17.6')
+//    implementation fg.deobf('topography:Topography:1.12.2:1.5.1')
+    //implementation fg.deobf('compact-machines:compactmachines3-1.12.2:3.0.17:b267')
+}
+
+fancyGradle {
+    patches {
+        resources
+        coremods
+        asm
+    }
 }
 
 processResources {
+    // required to allow file expansion later
+    duplicatesStrategy = 'include'
+
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "version", "${version}"
+    inputs.property "mcversion", "${mc_version}"
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version':"${version}", 'mcversion':"${mc_version}"
     }
-        
+
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+def reobfFile = file("$buildDir/reobfJar/output.jar")
+def reobfArtifact = artifacts.add('default', reobfFile) {
+    type 'jar'
+    builtBy 'reobfJar'
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact(reobfArtifact) {
+                builtBy reobfArtifact
+                artifactId = archivesBaseName
+                classifier null
+            }
+        }
+    }
+    repositories {
+        if (System.getenv().SAP_SECRET) {
+            maven {
+                url "https://maven.saps.dev/releases"
+                credentials {
+                    username = "mrbysco"
+                    password = "${System.getenv().SAP_SECRET}"
+                }
+            }
+        }
     }
 }

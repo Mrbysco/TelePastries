@@ -8,8 +8,8 @@ import net.minecraftforge.fml.common.Loader;
 import java.util.function.BooleanSupplier;
 
 public class HuntingDimensionInstalled implements IConditionFactory {
-    @Override
-    public BooleanSupplier parse(JsonContext context, JsonObject json) {
-        return () -> Loader.isModLoaded("huntingdim");
-    }
+	@Override
+	public BooleanSupplier parse(JsonContext context, JsonObject json) {
+		return () -> Loader.isModLoaded("huntingdim");
+	}
 }

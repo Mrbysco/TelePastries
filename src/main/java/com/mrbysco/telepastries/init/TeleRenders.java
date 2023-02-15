@@ -12,18 +12,15 @@ import net.minecraftforge.fml.relauncher.Side;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = Reference.MOD_ID)
 public class TeleRenders {
-    @SubscribeEvent
-    public static void registerRenders(ModelRegistryEvent event)
-    {
-        for(Item item : TeleItems.ITEMS)
-        {
-            ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-        }
+	@SubscribeEvent
+	public static void registerRenders(ModelRegistryEvent event) {
+		for (Item item : TeleItems.ITEMS) {
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+		}
 
-        for(Block block : TeleBlocks.BLOCKS)
-        {
-            Item item = Item.getItemFromBlock(block);
-            ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-        }
-    }
+		for (Block block : TeleBlocks.BLOCKS) {
+			Item item = Item.getItemFromBlock(block);
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+		}
+	}
 }

@@ -8,8 +8,8 @@ import net.minecraftforge.fml.common.Loader;
 import java.util.function.BooleanSupplier;
 
 public class TwilightForestInstalled implements IConditionFactory {
-    @Override
-    public BooleanSupplier parse(JsonContext context, JsonObject json) {
-        return () -> Loader.isModLoaded("twilightforest");
-    }
+	@Override
+	public BooleanSupplier parse(JsonContext context, JsonObject json) {
+		return () -> Loader.isModLoaded("twilightforest");
+	}
 }

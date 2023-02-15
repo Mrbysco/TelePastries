@@ -9,26 +9,27 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BlockLostCityCake extends BlockCakeBase {
-    public BlockLostCityCake(String registry) {
-        super(registry);
-    }
+	public BlockLostCityCake(String registry) {
+		super(registry);
+	}
 
-    @Override
-    public void teleportToDimension(World world, BlockPos pos, EntityPlayer player) {
-        super.teleportToDimension(world, pos, player);
-    }
-    @Override
-    public Item getRefillItem() {
-        return Item.REGISTRY.getObject(new ResourceLocation(TeleConfig.pastriesCompat.lostCities.lostCitiesCakeRefillItem));
-    }
+	@Override
+	public void teleportToDimension(World world, BlockPos pos, EntityPlayer player) {
+		super.teleportToDimension(world, pos, player);
+	}
 
-    @Override
-    public int getCakeDimension() {
-        return mcjty.lostcities.config.LostCityConfiguration.DIMENSION_ID;
-    }
+	@Override
+	public Item getRefillItem() {
+		return Item.REGISTRY.getObject(new ResourceLocation(TeleConfig.pastriesCompat.lostCities.lostCitiesCakeRefillItem));
+	}
 
-    @Override
-    public boolean consumeCake() {
-        return TeleConfig.pastriesCompat.lostCities.consumeLostCitiesCake;
-    }
+	@Override
+	public int getCakeDimension() {
+		return mcjty.lostcities.config.LostCityConfiguration.DIMENSION_ID;
+	}
+
+	@Override
+	public boolean consumeCake() {
+		return TeleConfig.pastriesCompat.lostCities.consumeLostCitiesCake;
+	}
 }

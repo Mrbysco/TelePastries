@@ -8,27 +8,27 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BlockNetherCake extends BlockCakeBase {
-    public BlockNetherCake(String registry) {
-        super(registry);
-    }
+	public BlockNetherCake(String registry) {
+		super(registry);
+	}
 
-    @Override
-    public void teleportToDimension(World world, BlockPos pos, EntityPlayer player) {
-        super.teleportToDimension(world, pos, player);
-    }
+	@Override
+	public void teleportToDimension(World world, BlockPos pos, EntityPlayer player) {
+		super.teleportToDimension(world, pos, player);
+	}
 
-    @Override
-    public Item getRefillItem() {
-        return Item.REGISTRY.getObject(new ResourceLocation(TeleConfig.pastries.nether.netherCakeRefillItem));
-    }
+	@Override
+	public Item getRefillItem() {
+		return Item.REGISTRY.getObject(new ResourceLocation(TeleConfig.pastries.nether.netherCakeRefillItem));
+	}
 
-    @Override
-    public int getCakeDimension() {
-        return -1;
-    }
+	@Override
+	public int getCakeDimension() {
+		return -1;
+	}
 
-    @Override
-    public boolean consumeCake() {
-        return TeleConfig.pastries.nether.consumeNetherCake;
-    }
+	@Override
+	public boolean consumeCake() {
+		return TeleConfig.pastries.nether.consumeNetherCake;
+	}
 }

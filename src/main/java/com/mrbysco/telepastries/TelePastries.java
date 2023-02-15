@@ -16,44 +16,41 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Reference.MOD_ID,
-    name = Reference.MOD_NAME,
-    version = Reference.VERSION,
-    acceptedMinecraftVersions = Reference.ACCEPTED_VERSIONS,
-    dependencies = Reference.DEPENDENCIES)
+		name = Reference.MOD_NAME,
+		version = Reference.VERSION,
+		acceptedMinecraftVersions = Reference.ACCEPTED_VERSIONS,
+		dependencies = Reference.DEPENDENCIES)
 
 public class TelePastries {
-    @Instance(Reference.MOD_ID)
-    public static TelePastries instance;
+	@Instance(Reference.MOD_ID)
+	public static TelePastries instance;
 
-    @SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
-    public static CommonProxy proxy;
+	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
+	public static CommonProxy proxy;
 
-    public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
+	public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
 
-    public static TeleTab teleTab = new TeleTab();
+	public static TeleTab teleTab = new TeleTab();
 
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
-        logger.info("Registering config");
-        MinecraftForge.EVENT_BUS.register(new TeleConfig());
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		logger.info("Registering config");
+		MinecraftForge.EVENT_BUS.register(new TeleConfig());
 
-        proxy.Preinit();
-    }
+		proxy.Preinit();
+	}
 
-    @EventHandler
-    public void init(FMLInitializationEvent event)
-    {
-        if (Loader.isModLoaded("theoneprobe")) {
-            TeleTOPCompat.register();
-        }
+	@EventHandler
+	public void init(FMLInitializationEvent event) {
+		if (Loader.isModLoaded("theoneprobe")) {
+			TeleTOPCompat.register();
+		}
 
-        proxy.Init();
-    }
+		proxy.Init();
+	}
 
-    @EventHandler
-    public void postInit(FMLPreInitializationEvent event)
-    {
-        proxy.PostInit();
-    }
+	@EventHandler
+	public void postInit(FMLPreInitializationEvent event) {
+		proxy.PostInit();
+	}
 }

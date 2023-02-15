@@ -19,68 +19,58 @@ import java.util.Random;
 
 public class BlockPastryBase extends Block {
 
-    public BlockPastryBase(Material material) {
-        super(material);
-        this.setCreativeTab(TelePastries.teleTab);
-    }
+	public BlockPastryBase(Material material) {
+		super(material);
+		this.setCreativeTab(TelePastries.teleTab);
+	}
 
-    @Override
-    @SuppressWarnings("deprecated")
-    public boolean isFullCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	@SuppressWarnings("deprecated")
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    @SuppressWarnings("deprecated")
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	@SuppressWarnings("deprecated")
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-    {
-        return super.canPlaceBlockAt(worldIn, pos) ? this.canBlockStay(worldIn, pos) : false;
-    }
+	@Override
+	public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+		return super.canPlaceBlockAt(worldIn, pos) && this.canBlockStay(worldIn, pos);
+	}
 
-    @Override
-    @SuppressWarnings("deprecated")
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-    {
-        if (!this.canBlockStay(worldIn, pos))
-        {
-            worldIn.setBlockToAir(pos);
-        }
-    }
+	@Override
+	@SuppressWarnings("deprecated")
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+		if (!this.canBlockStay(worldIn, pos)) {
+			worldIn.setBlockToAir(pos);
+		}
+	}
 
-    private boolean canBlockStay(World worldIn, BlockPos pos)
-    {
-        return worldIn.getBlockState(pos.down()).getMaterial().isSolid();
-    }
+	private boolean canBlockStay(World worldIn, BlockPos pos) {
+		return worldIn.getBlockState(pos.down()).getMaterial().isSolid();
+	}
 
-    @Override
-    public int quantityDropped(Random random)
-    {
-        return 0;
-    }
+	@Override
+	public int quantityDropped(Random random) {
+		return 0;
+	}
 
-    @Override
-    public Item getItemDropped(IBlockState state, Random rand, int fortune)
-    {
-        return Items.AIR;
-    }
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+		return Items.AIR;
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getRenderLayer()
-    {
-        return BlockRenderLayer.CUTOUT;
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getRenderLayer() {
+		return BlockRenderLayer.CUTOUT;
+	}
 
-    @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
-        return BlockFaceShape.UNDEFINED;
-    }
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+		return BlockFaceShape.UNDEFINED;
+	}
 }

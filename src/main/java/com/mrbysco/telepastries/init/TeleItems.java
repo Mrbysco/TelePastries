@@ -11,19 +11,17 @@ import java.util.ArrayList;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID)
 public class TeleItems {
-    public static ArrayList<Item> ITEMS = new ArrayList<>();
+	public static ArrayList<Item> ITEMS = new ArrayList<>();
 
-    @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event)
-    {
-        IForgeRegistry<Item> registry = event.getRegistry();
+	@SubscribeEvent
+	public static void registerItems(RegistryEvent.Register<Item> event) {
+		IForgeRegistry<Item> registry = event.getRegistry();
 
-        registry.registerAll(ITEMS.toArray(new Item[0]));
-    }
+		registry.registerAll(ITEMS.toArray(new Item[0]));
+	}
 
-    public static <T extends Item> T registerItem(T item)
-    {
-        ITEMS.add(item);
-        return item;
-    }
+	public static <T extends Item> T registerItem(T item) {
+		ITEMS.add(item);
+		return item;
+	}
 }
