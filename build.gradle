@@ -64,9 +64,10 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven {
-        // location of the maven that hosts jei files
-        name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        url = "https://maven.blamejared.com"
     }
     maven {
         url = 'https://www.cursemaven.com'
@@ -82,7 +83,7 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
 
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
     implementation fg.deobf("curse.maven:jade-324717:3872400") //Jade (WAILA)
     implementation fg.deobf("curse.maven:TheOneProbe-245211:3871444")
