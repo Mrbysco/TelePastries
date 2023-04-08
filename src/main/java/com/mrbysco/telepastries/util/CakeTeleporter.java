@@ -41,8 +41,8 @@ public class CakeTeleporter implements ITeleporter {
 		PortalInfo pos;
 
 		pos = placeNearExistingCake(destWorld, entity, dimensionPosition(entity, destWorld), entity instanceof Player);
-		pos = customCompat(destWorld, new BlockPos(pos.pos), entity);
-		pos = moveToSafeCoords(destWorld, entity, pos != null ? new BlockPos(pos.pos) : dimensionPosition(entity, destWorld));
+		pos = customCompat(destWorld, BlockPos.containing(pos.pos), entity);
+		pos = moveToSafeCoords(destWorld, entity, pos != null ? BlockPos.containing(pos.pos) : dimensionPosition(entity, destWorld));
 
 		return pos;
 	}
@@ -88,7 +88,7 @@ public class CakeTeleporter implements ITeleporter {
 								f1 = (float) Mth.wrapDegrees(Mth.atan2(vector3d1.z, vector3d1.x) * (double) (180F / (float) Math.PI) - 90.0D);
 							}
 							float angle = f1;
-							blockpos = new BlockPos(vector3d.x, vector3d.y, vector3d.z);
+							blockpos = BlockPos.containing(vector3d.x, vector3d.y, vector3d.z);
 							return new PortalInfo(new Vec3((double) blockpos.getX() + 0.5D, (double) blockpos.getY(), (double) blockpos.getZ() + 0.5D), entity.getDeltaMovement(), angle, entity.getXRot());
 						}
 					}
@@ -116,7 +116,7 @@ public class CakeTeleporter implements ITeleporter {
 			double d2 = Math.min(2.9999872E7D, worldborder.getMaxX() - 16.0D);
 			double d3 = Math.min(2.9999872E7D, worldborder.getMaxZ() - 16.0D);
 			double d4 = DimensionType.getTeleportationScale(entity.level.dimensionType(), destWorld.dimensionType());
-			BlockPos blockpos1 = new BlockPos(Mth.clamp(entity.getX() * d4, d0, d2), entity.getY(), Mth.clamp(entity.getZ() * d4, d1, d3));
+			BlockPos blockpos1 = BlockPos.containing(Mth.clamp(entity.getX() * d4, d0, d2), entity.getY(), Mth.clamp(entity.getZ() * d4, d1, d3));
 
 			return blockpos1;
 		}
