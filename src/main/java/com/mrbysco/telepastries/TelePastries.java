@@ -5,7 +5,6 @@ import com.mrbysco.telepastries.compat.top.TeleTOPCompat;
 import com.mrbysco.telepastries.config.TeleConfig;
 import com.mrbysco.telepastries.handler.ExplosionHandler;
 import com.mrbysco.telepastries.init.TeleRegistry;
-import com.mrbysco.telepastries.init.TeleTab;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
@@ -26,10 +25,10 @@ public class TelePastries {
 		FMLJavaModLoadingContext.get().getModEventBus().register(TeleConfig.class);
 
 		eventBus.addListener(this::sendImc);
-		eventBus.register(new TeleTab());
 
 		TeleRegistry.BLOCKS.register(eventBus);
 		TeleRegistry.ITEMS.register(eventBus);
+		TeleRegistry.CREATIVE_MODE_TABS.register(eventBus);
 
 		MinecraftForge.EVENT_BUS.addListener(ExplosionHandler::onExplosion);
 	}

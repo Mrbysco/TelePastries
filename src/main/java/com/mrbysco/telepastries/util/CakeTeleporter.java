@@ -53,7 +53,7 @@ public class CakeTeleporter implements ITeleporter {
 		BlockPos blockpos = pos;
 		boolean isToEnd = destWorld.dimension() == Level.END;
 		boolean isToOverworld = destWorld.dimension() == Level.OVERWORLD;
-		boolean isFromEnd = entity.level.dimension() == Level.END && isToOverworld;
+		boolean isFromEnd = entity.level().dimension() == Level.END && isToOverworld;
 
 		if (isToEnd) {
 			ServerLevel.makeObsidianPlatform(destWorld);
@@ -107,7 +107,7 @@ public class CakeTeleporter implements ITeleporter {
 
 	private BlockPos dimensionPosition(Entity entity, Level destWorld) {
 		boolean flag2 = destWorld.dimension() == Level.NETHER;
-		if (entity.level.dimension() != Level.NETHER && !flag2) {
+		if (entity.level().dimension() != Level.NETHER && !flag2) {
 			return entity.blockPosition();
 		} else {
 			WorldBorder worldborder = destWorld.getWorldBorder();
@@ -115,7 +115,7 @@ public class CakeTeleporter implements ITeleporter {
 			double d1 = Math.max(-2.9999872E7D, worldborder.getMinZ() + 16.0D);
 			double d2 = Math.min(2.9999872E7D, worldborder.getMaxX() - 16.0D);
 			double d3 = Math.min(2.9999872E7D, worldborder.getMaxZ() - 16.0D);
-			double d4 = DimensionType.getTeleportationScale(entity.level.dimensionType(), destWorld.dimensionType());
+			double d4 = DimensionType.getTeleportationScale(entity.level().dimensionType(), destWorld.dimensionType());
 			BlockPos blockpos1 = BlockPos.containing(Mth.clamp(entity.getX() * d4, d0, d2), entity.getY(), Mth.clamp(entity.getZ() * d4, d1, d3));
 
 			return blockpos1;
@@ -186,8 +186,8 @@ public class CakeTeleporter implements ITeleporter {
 		if (ModList.get().isLoaded("twilightforest")) {
 			ResourceKey<Level> twilightKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation("twilightforest", "twilight_forest"));
 			if (destWorld.dimension() == twilightKey) {
-				if (entity instanceof ServerPlayer playerMP) {
-					playerMP.setRespawnPosition(twilightKey, pos, playerMP.getYRot(), true, false);
+				if (entity instanceof ServerPlayer serverPlayer) {
+					serverPlayer.setRespawnPosition(twilightKey, pos, serverPlayer.getYRot(), true, false);
 				}
 			}
 		}
@@ -195,8 +195,8 @@ public class CakeTeleporter implements ITeleporter {
 		if (ModList.get().isLoaded("lostcities")) {
 			ResourceKey<Level> lostCityKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation("lostcities", "lostcity"));
 			if (destWorld.dimension() == lostCityKey) {
-				if (entity instanceof ServerPlayer playerMP) {
-					playerMP.setRespawnPosition(lostCityKey, pos, playerMP.getYRot(), true, false);
+				if (entity instanceof ServerPlayer serverPlayer) {
+					serverPlayer.setRespawnPosition(lostCityKey, pos, serverPlayer.getYRot(), true, false);
 				}
 			}
 		}
@@ -253,23 +253,30 @@ public class CakeTeleporter implements ITeleporter {
 	}
 
 	//Safety stuff
-	private static PortalInfo moveToSafeCoords(ServerLevel world, Entity entity, BlockPos pos) {
-		if (world.isEmptyBlock(pos.below())) {
+	private static PortalInfo moveToSafeCoords(ServerLevel serverLevel, Entity entity, BlockPos pos) {
+		if (serverLevel.isEmptyBlock(pos.below())) {
 			int distance;
-			for (distance = 1; world.getBlockState(pos.below(distance)).getBlock().isPossibleToRespawnInThis() && distance < 32; ++distance) {
+			for (distance = 1; distance < 32; ++distance) {
+				BlockState belowState = serverLevel.getBlockState(pos.below(distance));
+				if (belowState.getBlock().isPossibleToRespawnInThis(belowState)) {
+					break;
+				}
 			}
 
 			if (distance > 4) {
-				makePlatform(world, pos);
+				makePlatform(serverLevel, pos);
 			}
 		} else {
-			if (world.getBlockState(pos.above()).getBlock().isPossibleToRespawnInThis() &&
-					world.getBlockState(pos.above(1)).getBlock().isPossibleToRespawnInThis()) {
-				BlockPos abovePos = pos.above(1);
+			BlockPos abovePos = pos.above(1);
+			BlockState aboveState = serverLevel.getBlockState(pos.above());
+			BlockState aboveState2 = serverLevel.getBlockState(abovePos);
+			if (aboveState.getBlock().isPossibleToRespawnInThis(aboveState) &&
+					aboveState2.getBlock().isPossibleToRespawnInThis(aboveState2)) {
 				return makePortalInfo(entity, abovePos.getX() + 0.5D, abovePos.getY(), abovePos.getZ() + 0.5D);
 			}
-			if (!world.isEmptyBlock(pos.below()) || !world.isEmptyBlock(pos)) {
-				makePlatform(world, pos);
+			if (!serverLevel.isEmptyBlock(pos.below()) || !serverLevel.isEmptyBlock(pos)) {
+				makePlatform(serverLevel, abovePos);
+				return makePortalInfo(entity, abovePos.getX(), abovePos.getY(), abovePos.getZ());
 			}
 		}
 

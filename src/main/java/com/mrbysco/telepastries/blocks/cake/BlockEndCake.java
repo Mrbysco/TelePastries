@@ -30,15 +30,15 @@ public class BlockEndCake extends BlockCakeBase {
 		if (player != null && !(player instanceof FakePlayer) && player.isAlive() && !worldIn.isClientSide()) {
 			Level world = ((ServerLevelAccessor) worldIn).getLevel();
 			if (!world.isClientSide && !player.isPassenger() && !player.isVehicle() && player.canChangeDimensions()) {
-				ServerPlayer playerMP = (ServerPlayer) player;
+				ServerPlayer serverPlayer = (ServerPlayer) player;
 				MinecraftServer server = player.getServer();
 				ServerLevel destinationWorld = server != null ? server.getLevel(getCakeWorld()) : null;
 				if (destinationWorld == null)
 					return;
 
 				CakeTeleporter teleporter = new CakeTeleporter(destinationWorld);
-				CakeTeleporter.addDimensionPosition(playerMP, playerMP.getLevel().dimension(), playerMP.blockPosition().offset(0, 1, 0));
-				playerMP.changeDimension(destinationWorld, teleporter);
+				CakeTeleporter.addDimensionPosition(serverPlayer, serverPlayer.level().dimension(), serverPlayer.blockPosition().offset(0, 1, 0));
+				serverPlayer.changeDimension(destinationWorld, teleporter);
 			}
 		}
 	}

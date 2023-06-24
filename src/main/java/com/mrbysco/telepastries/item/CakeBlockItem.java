@@ -23,7 +23,7 @@ public class CakeBlockItem extends BlockItem {
 		if (!flag) {
 			BlockCakeBase cakeBlock = (BlockCakeBase) getBlock();
 			ResourceLocation cakeLocation = cakeBlock.getCakeWorld().location();
-			ResourceLocation currentLocation = player.level.dimension().location();
+			ResourceLocation currentLocation = player.level().dimension().location();
 			if (cakeLocation.equals(currentLocation)) {
 				player.displayClientMessage(Component.translatable("telepastries.same_dimension"), true);
 			} else {
