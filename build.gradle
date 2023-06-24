@@ -101,6 +101,12 @@ repositories {
         url = "https://maven.blamejared.com"
     }
     maven {
+        url = "https://modmaven.dev/"
+        content {
+            includeGroup "teamtwilight"
+        }
+    }
+    maven {
         url = 'https://www.cursemaven.com'
         content {
             includeGroup "curse.maven"
@@ -118,6 +124,8 @@ dependencies {
 
     implementation fg.deobf("curse.maven:jade-324717:4573193") //Jade (WAILA)
     implementation fg.deobf("curse.maven:TheOneProbe-245211:4579432") //The One Probe (TOP)
+
+    runtimeOnly fg.deobf("teamtwilight:twilightforest:${twilight_forest_version}:universal")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
