@@ -1,1 +1,1 @@
-* Fix creative tab ordering
+* Rework Teleportation logic (Thanks to [ChampionAsh5357](https://github.com/Mrbysco/TelePastries/pull/16))
