@@ -36,9 +36,8 @@ public class BlockEndCake extends BlockCakeBase {
 				if (destinationWorld == null)
 					return;
 
-				CakeTeleporter teleporter = new CakeTeleporter(destinationWorld);
-				CakeTeleporter.addDimensionPosition(serverPlayer, serverPlayer.level().dimension(), serverPlayer.blockPosition().offset(0, 1, 0));
-				serverPlayer.changeDimension(destinationWorld, teleporter);
+				CakeTeleporter.addDimensionPosition(serverPlayer, serverPlayer.level().dimension(), serverPlayer.blockPosition());
+				serverPlayer.changeDimension(destinationWorld, TELEPORTER);
 			}
 		}
 	}

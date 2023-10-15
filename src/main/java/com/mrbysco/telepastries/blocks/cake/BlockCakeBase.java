@@ -53,6 +53,8 @@ public class BlockCakeBase extends BlockPastryBase {
 			Block.box(11.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D),
 			Block.box(13.0D, 0.0D, 1.0D, 15.0D, 8.0D, 15.0D)};
 
+	protected static final CakeTeleporter TELEPORTER = new CakeTeleporter();
+
 	public BlockCakeBase(BlockBehaviour.Properties properties) {
 		super(properties.strength(0.5F).sound(SoundType.WOOL).randomTicks());
 		this.registerDefaultState(this.stateDefinition.any().setValue(BITES, Integer.valueOf(0)));
@@ -181,9 +183,8 @@ public class BlockCakeBase extends BlockPastryBase {
 					return;
 				}
 
-				CakeTeleporter cakeTeleporter = new CakeTeleporter(destinationWorld);
-				CakeTeleporter.addDimensionPosition(serverPlayer, serverPlayer.level().dimension(), serverPlayer.blockPosition().offset(0, 1, 0));
-				serverPlayer.changeDimension(destinationWorld, cakeTeleporter);
+				CakeTeleporter.addDimensionPosition(serverPlayer, serverPlayer.level().dimension(), serverPlayer.blockPosition());
+				serverPlayer.changeDimension(destinationWorld, TELEPORTER);
 			}
 		}
 	}
