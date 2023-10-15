@@ -6,6 +6,9 @@ import com.mrbysco.telepastries.TelePastries;
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import com.mrbysco.telepastries.config.TeleConfig;
 import it.unimi.dsi.fastutil.longs.Long2BooleanArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -34,6 +37,10 @@ import java.util.function.Function;
 
 public class CakeTeleporter implements ITeleporter {
 
+	private static final Object2ObjectMap<ResourceKey<Level>, LevelTeleportFinder> LEVEL_TELEPORTERS = Util.make(new Object2ObjectOpenHashMap<>(), map ->
+			map.put(ServerLevel.END, (entity, destWorld, minMaxBounds, cacheMap) -> toEnd(entity, destWorld))
+	);
+
 	@Nullable
 	@Override
 	public PortalInfo getPortalInfo(Entity entity, ServerLevel destWorld, Function<ServerLevel, PortalInfo> defaultPortalInfo) {
@@ -52,28 +59,13 @@ public class CakeTeleporter implements ITeleporter {
 			return postProcessAndMake(destWorld, spawnPos, entity);
 		}
 
-		// Set y position to max possible
-		spawnPos = entity.blockPosition().atY(Math.min(minMaxBounds.getSecond(), destWorld.getMinBuildHeight() + destWorld.getLogicalHeight()) - 1);
-
-		// No spawn position or isn't valid, so loop around location
-		for (var checkPos: BlockPos.spiralAround(spawnPos, 16, Direction.EAST, Direction.SOUTH)) {
-			// Load chunk to actually check the location
-			destWorld.getChunk(checkPos);
-
-			// Cycle through positions from top to bottom
-			for (int heightY = Math.min(spawnPos.getY(), destWorld.getHeight(Heightmap.Types.MOTION_BLOCKING, checkPos.getX(), checkPos.getZ())); heightY > minMaxBounds.getFirst(); --heightY) {
-				checkPos.setY(heightY);
-
-				// Since we are checking going down, we want to verify the player is on the floor
-				// Check the player position afterward
-				if (!destWorld.getBlockState(checkPos.immutable().relative(Direction.DOWN)).isSolid()
-						|| !isPositionSafe(entity, destWorld, checkPos, safeLocation, minMaxBounds)
-				) continue;
-
-				// All positions the entity is in is safe, so spawn in that location
-				return postProcessAndMake(destWorld, checkPos, entity);
-			}
+		// Check level teleporter to determine portal info
+		@Nullable
+		PortalInfo levelInfo = LEVEL_TELEPORTERS.getOrDefault(destWorld.dimension(), CakeTeleporter::searchAroundAndDown).determineTeleportLocation(entity, destWorld, minMaxBounds, safeLocation);
+		if (levelInfo != null) {
+			return levelInfo;
 		}
+
 
 		// If none of these positions work, use the entity's current position and spawn and safety ring around them
 		// If the entity's position isn't within the world bounds, use default coordinates instead (0, 70, 0)
@@ -108,6 +100,86 @@ public class CakeTeleporter implements ITeleporter {
 		}
 
 		// Create info
+		return postProcessAndMake(destWorld, teleportPos, entity);
+	}
+
+	/**
+	 * Search eight blocks around the current block and check down to determine where to teleport.
+	 *
+	 * @param entity the entity attempting to spawn at the location
+	 * @param destWorld the level the entity is teleporting to
+	 * @param cacheMap a cache to prevent additional lookups to the position
+	 * @param minMaxBounds the bounds of the y position the entity can spawn within
+	 * @return the portal information to teleport to, or {@code null} if there is none
+	 */
+	@Nullable
+	private static PortalInfo searchAroundAndDown(Entity entity, ServerLevel destWorld, Pair<Integer, Integer> minMaxBounds, Long2BooleanArrayMap cacheMap) {
+		// Set y position to max possible
+		BlockPos spawnPos = entity.blockPosition().atY(Math.min(minMaxBounds.getSecond(), destWorld.getMinBuildHeight() + destWorld.getLogicalHeight()) - 1);
+
+		// No spawn position or isn't valid, so loop around location
+		for (var checkPos: BlockPos.spiralAround(spawnPos, 16, Direction.EAST, Direction.SOUTH)) {
+			// Load chunk to actually check the location
+			destWorld.getChunk(checkPos);
+
+			// Cycle through positions from top to bottom
+			for (int heightY = Math.min(spawnPos.getY(), destWorld.getHeight(Heightmap.Types.MOTION_BLOCKING, checkPos.getX(), checkPos.getZ())); heightY > minMaxBounds.getFirst(); --heightY) {
+				checkPos.setY(heightY);
+
+				// Since we are checking going down, we want to verify the player is on the floor
+				// Check the player position afterward
+				if (!destWorld.getBlockState(checkPos.immutable().relative(Direction.DOWN)).isSolid()
+						|| !isPositionSafe(entity, destWorld, checkPos, cacheMap, minMaxBounds)
+				) continue;
+
+				// All positions the entity is in is safe, so spawn in that location
+				return postProcessAndMake(destWorld, checkPos, entity);
+			}
+		}
+
+		// If it fails, return null
+		return null;
+	}
+
+	/**
+	 * Set the portal information to the end's spawn point.
+	 *
+	 * @param entity the entity attempting to spawn at the location
+	 * @param destWorld the level the entity is teleporting to
+	 * @return the portal information to teleport to, or {@code null} if there is none
+	 *
+	 * @deprecated this should be removed in favor of a datagen solution
+	 */
+	@Deprecated
+	private static PortalInfo toEnd(Entity entity, ServerLevel destWorld) {
+		// Get teleport position
+		BlockPos teleportPos = ServerLevel.END_SPAWN_POINT;
+
+		// Get space around entity and below
+		var halfWidth = entity.getBbWidth() / 2;
+		int minY = teleportPos.getY() - 1;
+
+		// Spawn platform
+		for (var pedestalPos : BlockPos.betweenClosed(
+				Mth.floor(teleportPos.getX() - halfWidth),
+				minY,
+				Mth.floor(teleportPos.getZ() - halfWidth),
+				Mth.ceil(teleportPos.getX() + halfWidth),
+				Mth.ceil(teleportPos.getY() + entity.getBbHeight() + 1),
+				Mth.ceil(teleportPos.getZ() + halfWidth)
+		)) {
+			// Get the block position to check
+			BlockState pedestalState = destWorld.getBlockState(pedestalPos);
+
+			// Don't do anything if the block is a cake
+			if (pedestalState.getBlock() instanceof BlockCakeBase) continue;
+
+			// If the position is beneath the entity and isn't solid, set to obsidian
+			if(pedestalPos.getY() == minY && !pedestalState.isSolid()) destWorld.setBlockAndUpdate(pedestalPos, Blocks.OBSIDIAN.defaultBlockState());
+			// Otherwise, just set to air if the entity can't spawn in it
+			else if (!pedestalState.getBlock().isPossibleToRespawnInThis(pedestalState)) destWorld.setBlockAndUpdate(pedestalPos, Blocks.AIR.defaultBlockState());
+		}
+
 		return postProcessAndMake(destWorld, teleportPos, entity);
 	}
 
@@ -286,5 +358,24 @@ public class CakeTeleporter implements ITeleporter {
 	 */
 	private static PortalInfo makePortalInfo(Entity entity, BlockPos pos) {
 		return new PortalInfo(new Vec3(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5), Vec3.ZERO, entity.getYRot(), entity.getXRot());
+	}
+
+	/**
+	 * A location finder for determining where to teleport the entity in a given level.
+	 */
+	@FunctionalInterface
+	interface LevelTeleportFinder {
+
+		/**
+		 * Determine where to teleport the entity for the given level.
+		 *
+		 * @param entity the entity attempting to spawn at the location
+		 * @param destWorld the level the entity is teleporting to
+		 * @param cacheMap a cache to prevent additional lookups to the position
+		 * @param minMaxBounds the bounds of the y position the entity can spawn within
+		 * @return the portal information to teleport to, or {@code null} if there is none
+		 */
+		@Nullable
+		PortalInfo determineTeleportLocation(Entity entity, ServerLevel destWorld, Pair<Integer, Integer> minMaxBounds, Long2BooleanArrayMap cacheMap);
 	}
 }
