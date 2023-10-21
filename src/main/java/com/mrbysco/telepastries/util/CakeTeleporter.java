@@ -26,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.Vec3;
@@ -115,7 +116,9 @@ public class CakeTeleporter implements ITeleporter {
 	@Nullable
 	private static PortalInfo searchAroundAndDown(Entity entity, ServerLevel destWorld, Pair<Integer, Integer> minMaxBounds, Long2BooleanArrayMap cacheMap) {
 		// Set y position to max possible
-		BlockPos spawnPos = entity.blockPosition().atY(Math.min(minMaxBounds.getSecond(), destWorld.getMinBuildHeight() + destWorld.getLogicalHeight()) - 1);
+		double dimensionScale = DimensionType.getTeleportationScale(entity.level().dimensionType(), destWorld.dimensionType());
+		BlockPos spawnPos = destWorld.getWorldBorder().clampToBounds(entity.blockPosition().getX() * dimensionScale, entity.blockPosition().getY(), entity.blockPosition().getZ() * dimensionScale)
+				.atY(Math.min(minMaxBounds.getSecond(), destWorld.getMinBuildHeight() + destWorld.getLogicalHeight()) - 1);
 
 		// No spawn position or isn't valid, so loop around location
 		for (var checkPos: BlockPos.spiralAround(spawnPos, 16, Direction.EAST, Direction.SOUTH)) {
