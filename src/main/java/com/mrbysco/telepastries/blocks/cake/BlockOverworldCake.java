@@ -2,6 +2,7 @@ package com.mrbysco.telepastries.blocks.cake;
 
 import com.mrbysco.telepastries.config.TeleConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class BlockOverworldCake extends BlockCakeBase {
 	public boolean isRefillItem(ItemStack stack) {
 		List<? extends String> items = TeleConfig.COMMON.overworldCakeRefillItems.get();
 		if (items == null || items.isEmpty()) return false;
-		ResourceLocation registryLocation = ForgeRegistries.ITEMS.getKey(stack.getItem());
+		ResourceLocation registryLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
 		return registryLocation != null && items.contains(registryLocation.toString());
 	}
 

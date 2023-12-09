@@ -1,1 +1,1 @@
-* Rework Teleportation logic (Thanks to [ChampionAsh5357](https://github.com/Mrbysco/TelePastries/pull/16))
+* Initial update to 1.20.2

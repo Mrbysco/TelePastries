@@ -1,12 +1,11 @@
 package com.mrbysco.telepastries.config;
 
 import com.mrbysco.telepastries.TelePastries;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
+import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
@@ -15,50 +14,50 @@ import java.util.List;
 public class TeleConfig {
 
 	public static class Common {
-		public final BooleanValue explosionImmune;
-		public final BooleanValue ignoreHunger;
-		public final BooleanValue disableHopping;
+		public final ModConfigSpec.BooleanValue explosionImmune;
+		public final ModConfigSpec.BooleanValue ignoreHunger;
+		public final ModConfigSpec.BooleanValue disableHopping;
 
-		public final BooleanValue resetPastry;
+		public final ModConfigSpec.BooleanValue resetPastry;
 		public final ConfigValue<List<? extends String>> resetItems;
 
-		public final BooleanValue consumeNetherCake;
+		public final ModConfigSpec.BooleanValue consumeNetherCake;
 		public final ConfigValue<List<? extends String>> netherCakeRefillItems;
 
-		public final BooleanValue consumeEndCake;
+		public final ModConfigSpec.BooleanValue consumeEndCake;
 		public final ConfigValue<List<? extends String>> endCakeRefillItems;
 
-		public final BooleanValue consumeOverworldCake;
+		public final ModConfigSpec.BooleanValue consumeOverworldCake;
 		public final ConfigValue<List<? extends String>> overworldCakeRefillItems;
 
-		public final BooleanValue consumeTwilightCake;
+		public final ModConfigSpec.BooleanValue consumeTwilightCake;
 		public final ConfigValue<List<? extends String>> twilightCakeRefillItems;
 
-		public final BooleanValue consumeLostCitiesCake;
+		public final ModConfigSpec.BooleanValue consumeLostCitiesCake;
 		public final ConfigValue<List<? extends String>> lostCitiesCakeRefillItem;
 
-		public final BooleanValue consumeCustomCake;
+		public final ModConfigSpec.BooleanValue consumeCustomCake;
 		public final ConfigValue<? extends String> customCakeName;
 		public final ConfigValue<? extends String> customCakeDimension;
 		public final ConfigValue<List<? extends String>> customCakeRefillItem;
 		public final IntValue customCakeMinY;
 		public final IntValue customCakeMaxY;
 
-		public final BooleanValue consumeCustomCake2;
+		public final ModConfigSpec.BooleanValue consumeCustomCake2;
 		public final ConfigValue<? extends String> customCake2Name;
 		public final ConfigValue<? extends String> customCake2Dimension;
 		public final ConfigValue<List<? extends String>> customCake2RefillItem;
 		public final IntValue customCake2MinY;
 		public final IntValue customCake2MaxY;
 
-		public final BooleanValue consumeCustomCake3;
+		public final ModConfigSpec.BooleanValue consumeCustomCake3;
 		public final ConfigValue<? extends String> customCake3Name;
 		public final ConfigValue<? extends String> customCake3Dimension;
 		public final ConfigValue<List<? extends String>> customCake3RefillItem;
 		public final IntValue customCake3MinY;
 		public final IntValue customCake3MaxY;
 
-		Common(ForgeConfigSpec.Builder builder) {
+		Common(ModConfigSpec.Builder builder) {
 			builder.comment("General settings")
 					.push("General");
 
@@ -274,11 +273,11 @@ public class TeleConfig {
 		}
 	}
 
-	public static final ForgeConfigSpec commonSpec;
+	public static final ModConfigSpec commonSpec;
 	public static final Common COMMON;
 
 	static {
-		final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
+		final Pair<Common, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Common::new);
 		commonSpec = specPair.getRight();
 		COMMON = specPair.getLeft();
 	}

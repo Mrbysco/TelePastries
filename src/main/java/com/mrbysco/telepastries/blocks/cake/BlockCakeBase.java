@@ -7,6 +7,7 @@ import com.mrbysco.telepastries.config.TeleConfig;
 import com.mrbysco.telepastries.util.CakeTeleporter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -36,9 +37,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.util.List;
 
@@ -152,7 +152,7 @@ public class BlockCakeBase extends BlockPastryBase {
 				}
 			}
 
-			if (!ForgeHooks.onTravelToDimension(player, getCakeWorld()))
+			if (!CommonHooks.onTravelToDimension(player, getCakeWorld()))
 				return InteractionResult.FAIL;
 
 			//TelePastries.logger.debug("At eatCake before teleportToDimension");
@@ -166,7 +166,7 @@ public class BlockCakeBase extends BlockPastryBase {
 	private boolean isResetItem(ItemStack stack) {
 		List<? extends String> items = TeleConfig.COMMON.resetItems.get();
 		if (items == null || items.isEmpty()) return false;
-		ResourceLocation registryLocation = ForgeRegistries.ITEMS.getKey(stack.getItem());
+		ResourceLocation registryLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
 		return registryLocation != null && items.contains(registryLocation.toString());
 	}
 

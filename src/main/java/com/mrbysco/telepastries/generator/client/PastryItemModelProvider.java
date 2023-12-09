@@ -3,12 +3,9 @@ package com.mrbysco.telepastries.generator.client;
 import com.mrbysco.telepastries.Reference;
 import com.mrbysco.telepastries.init.TeleRegistry;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-
-import java.util.Objects;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class PastryItemModelProvider extends ItemModelProvider {
 	public PastryItemModelProvider(PackOutput packOutput, ExistingFileHelper helper) {
@@ -18,9 +15,9 @@ public class PastryItemModelProvider extends ItemModelProvider {
 	@Override
 	protected void registerModels() {
 		TeleRegistry.ITEMS.getEntries().stream()
-				.map(RegistryObject::get)
-				.forEach(item -> {
-					String path = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
+				.map(DeferredHolder::getId)
+				.forEach(itemLocation -> {
+					String path = itemLocation.getPath();
 					singleTexture(path, mcLoc("item/generated"), "layer0", modLoc("item/" + path));
 				});
 	}

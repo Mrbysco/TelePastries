@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "twilightforest"
+    }
+  ],
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_cake": {
@@ -13,11 +19,25 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_sapling": {
+    "has_dandelion": {
       "conditions": {
         "items": [
           {
-            "tag": "minecraft:saplings"
+            "items": [
+              "minecraft:dandelion"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_poppy": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:poppy"
+            ]
           }
         ]
       },
@@ -25,7 +45,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "telepastries:overworld_cake"
+        "recipe": "telepastries:twilight_cake"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -34,12 +54,13 @@
     [
       "has_the_recipe",
       "has_cake",
-      "has_sapling"
+      "has_poppy",
+      "has_dandelion"
     ]
   ],
   "rewards": {
     "recipes": [
-      "telepastries:overworld_cake"
+      "telepastries:twilight_cake"
     ]
   },
   "sends_telemetry_event": false

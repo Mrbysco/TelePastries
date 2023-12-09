@@ -3,7 +3,7 @@ package com.mrbysco.telepastries.handler;
 import com.mrbysco.telepastries.blocks.BlockPastryBase;
 import com.mrbysco.telepastries.config.TeleConfig;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.ExplosionEvent;
+import net.neoforged.neoforge.event.level.ExplosionEvent;
 
 public class ExplosionHandler {
 	public static void onExplosion(ExplosionEvent.Detonate event) {

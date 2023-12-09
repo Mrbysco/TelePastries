@@ -32,9 +32,9 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_cake",
-      "has_obsidian",
-      "has_the_recipe"
+      "has_obsidian"
     ]
   ],
   "rewards": {

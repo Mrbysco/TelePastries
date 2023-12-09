@@ -6,10 +6,10 @@ import com.mrbysco.telepastries.generator.server.PastryLootProvider;
 import com.mrbysco.telepastries.generator.server.PastryRecipeProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PastriesGenerator {
@@ -22,7 +22,7 @@ public class PastriesGenerator {
 
 		if (event.includeServer()) {
 			generator.addProvider(event.includeServer(), new PastryLootProvider(packOutput));
-			generator.addProvider(event.includeServer(), new PastryRecipeProvider(packOutput));
+			generator.addProvider(event.includeServer(), new PastryRecipeProvider(packOutput, event.getLookupProvider()));
 		}
 		if (event.includeClient()) {
 			generator.addProvider(event.includeClient(), new PastryBlockStateProvider(packOutput, helper));

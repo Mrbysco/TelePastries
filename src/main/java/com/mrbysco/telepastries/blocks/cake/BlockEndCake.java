@@ -3,6 +3,7 @@ package com.mrbysco.telepastries.blocks.cake;
 import com.mrbysco.telepastries.config.TeleConfig;
 import com.mrbysco.telepastries.util.CakeTeleporter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -15,8 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class BlockEndCake extends BlockCakeBase {
 	public boolean isRefillItem(ItemStack stack) {
 		List<? extends String> items = TeleConfig.COMMON.endCakeRefillItems.get();
 		if (items == null || items.isEmpty()) return false;
-		ResourceLocation registryLocation = ForgeRegistries.ITEMS.getKey(stack.getItem());
+		ResourceLocation registryLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
 		return registryLocation != null && items.contains(registryLocation.toString());
 	}
 

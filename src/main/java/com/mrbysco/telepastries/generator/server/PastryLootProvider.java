@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.List;
 import java.util.Map;
@@ -35,14 +35,14 @@ public class PastryLootProvider extends LootTableProvider {
 
 		@Override
 		protected void generate() {
-			for (RegistryObject<Block> blockObject : TeleRegistry.BLOCKS.getEntries()) {
+			for (DeferredHolder<Block, ? extends Block> blockObject : TeleRegistry.BLOCKS.getEntries()) {
 				this.add(blockObject.get(), noDrop());
 			}
 		}
 
 		@Override
 		protected Iterable<Block> getKnownBlocks() {
-			return TeleRegistry.BLOCKS.getEntries().stream().map(RegistryObject::get)::iterator;
+			return TeleRegistry.BLOCKS.getEntries().stream().map(holder -> (Block) holder.get())::iterator;
 		}
 	}
 }
