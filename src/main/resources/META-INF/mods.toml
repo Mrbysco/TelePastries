@@ -7,9 +7,8 @@ modId="telepastries"
 version="${file.jarVersion}"
 displayName="TelePastries"
 displayURL="https://github.com/Mrbysco/TelePastries"
-authors="Mrbysco"
+authors="Mrbysco, ShyNieke"
 description='''Pastries that teleport players.'''
-credits="My friend 8138763 for the name"
 
 [[dependencies.telepastries]]
 modId="minecraft"
