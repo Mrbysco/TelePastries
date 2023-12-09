@@ -24,7 +24,6 @@ public class TeleConfig {
 
 		public final BooleanValue consumeNetherCake;
 		public final ConfigValue<List<? extends String>> netherCakeRefillItems;
-		public final BooleanValue netherCake1x1Logic;
 
 		public final BooleanValue consumeEndCake;
 		public final ConfigValue<List<? extends String>> endCakeRefillItems;
@@ -104,10 +103,6 @@ public class TeleConfig {
 			netherCakeRefillItems = builder
 					.comment("Set the refill items used by Nether Cake (Only change if you know what you're doing) [modid:itemname].")
 					.defineList("netherCakeRefillItems", () -> Arrays.asList(netherItems), o -> (o instanceof String));
-
-			netherCake1x1Logic = builder
-					.comment("Defines if the Nether Cake should teleport the player 1x1 (Use this if you're replacing the Nether dimension with one that is 1x1) [default: false].")
-					.define("netherCake1x1Logic", false);
 
 			builder.pop();
 			builder.comment("End settings")
