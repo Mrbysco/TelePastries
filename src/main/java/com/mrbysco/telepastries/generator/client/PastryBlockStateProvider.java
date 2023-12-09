@@ -37,56 +37,13 @@ public class PastryBlockStateProvider extends BlockStateProvider {
 				.texture("top", "block/" + dimension + "/cake_top")
 				.texture("side", "block/" + dimension + "/cake_side");
 
-		ModelFile modelSlice1 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice1").renderType("cutout")
-				.parent(models().getExistingFile(mcLoc("block/cake_slice1")))
-				.texture("particle", "block/" + dimension + "/cake_side")
-				.texture("bottom", "block/" + dimension + "/cake_bottom")
-				.texture("top", "block/" + dimension + "/cake_top")
-				.texture("side", "block/" + dimension + "/cake_side")
-				.texture("inside", "block/" + dimension + "/cake_inner");
-		ModelFile modelSlice2 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice2").renderType("cutout")
-				.parent(models().getExistingFile(mcLoc("block/cake_slice2")))
-				.texture("particle", "block/" + dimension + "/cake_side")
-				.texture("bottom", "block/" + dimension + "/cake_bottom")
-				.texture("top", "block/" + dimension + "/cake_top")
-				.texture("side", "block/" + dimension + "/cake_side")
-				.texture("inside", "block/" + dimension + "/cake_inner");
-		ModelFile modelSlice36 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice3").renderType("cutout")
-				.parent(models().getExistingFile(mcLoc("block/cake_slice3")))
-				.texture("particle", "block/" + dimension + "/cake_side")
-				.texture("bottom", "block/" + dimension + "/cake_bottom")
-				.texture("top", "block/" + dimension + "/cake_top")
-				.texture("side", "block/" + dimension + "/cake_side")
-				.texture("inside", "block/" + dimension + "/cake_inner");
-		ModelFile modelSlice4 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice4").renderType("cutout")
-				.parent(models().getExistingFile(mcLoc("block/cake_slice4")))
-				.texture("particle", "block/" + dimension + "/cake_side")
-				.texture("bottom", "block/" + dimension + "/cake_bottom")
-				.texture("top", "block/" + dimension + "/cake_top")
-				.texture("side", "block/" + dimension + "/cake_side")
-				.texture("inside", "block/" + dimension + "/cake_inner");
-		ModelFile modelSlice5 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice5").renderType("cutout")
-				.parent(models().getExistingFile(mcLoc("block/cake_slice5")))
-				.texture("particle", "block/" + dimension + "/cake_side")
-				.texture("bottom", "block/" + dimension + "/cake_bottom")
-				.texture("top", "block/" + dimension + "/cake_top")
-				.texture("side", "block/" + dimension + "/cake_side")
-				.texture("inside", "block/" + dimension + "/cake_inner");
-		ModelFile modelSlice6 = models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice6").renderType("cutout")
-				.parent(models().getExistingFile(mcLoc("block/cake_slice6")))
-				.texture("particle", "block/" + dimension + "/cake_side")
-				.texture("bottom", "block/" + dimension + "/cake_bottom")
-				.texture("top", "block/" + dimension + "/cake_top")
-				.texture("side", "block/" + dimension + "/cake_side")
-				.texture("inside", "block/" + dimension + "/cake_inner");
-
 		getVariantBuilder(block)
 				.forAllStates(state -> {
 					int bites = state.getValue(BlockCakeBase.BITES);
 					boolean untouched = bites == 0;
 					return ConfiguredModel.builder()
-							.modelFile(untouched ? model : models()
-									.getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice" + bites)).build();
+							.modelFile(untouched ? model : models().getBuilder(ForgeRegistries.BLOCKS.getKey(block).getPath() + "_slice" + bites))
+							.build();
 				});
 	}
 }
