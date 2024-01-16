@@ -9,7 +9,6 @@ import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
@@ -17,10 +16,9 @@ import org.slf4j.Logger;
 public class TelePastries {
 	public static final Logger LOGGER = LogUtils.getLogger();
 
-	public TelePastries() {
-		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public TelePastries(IEventBus eventBus) {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, TeleConfig.commonSpec);
-		FMLJavaModLoadingContext.get().getModEventBus().register(TeleConfig.class);
+		eventBus.register(TeleConfig.class);
 
 		eventBus.addListener(this::sendImc);
 

@@ -84,10 +84,10 @@ dependencies {
 //
 //    runtimeOnly "mezz.jei:jei-${mc_version}-forge:${jei_version}"
 
-    implementation "curse.maven:jade-324717:4845321" //Jade (WAILA)
+//    implementation "curse.maven:jade-324717:4980188" //Jade (WAILA)
 //    implementation "curse.maven:TheOneProbe-245211:4579432" //The One Probe (TOP)
 
-    runtimeOnly "teamtwilight:twilightforest:${twilight_forest_version}:universal"
+//    runtimeOnly "teamtwilight:twilightforest:${twilight_forest_version}:universal"
 }
 
 jar {
@@ -139,7 +139,7 @@ if (System.getenv().CURSEFORGE_KEY) {
         mainFile.changelog = file("$project.rootDir/changelog.md")
         mainFile.changelogType = 'markdown'
 
-        mainFile.addOptional("jade")
+//        mainFile.addOptional("jade")
     }
 }
 
@@ -155,9 +155,9 @@ if (System.getenv().MODRINTH_KEY) {
         gameVersions = ["${mc_version}"]
         loaders = ["neoforge"]
 
-        dependencies {
-            optional.project "jade"
-        }
+//        dependencies {
+//            optional.project "jade"
+//        }
     }
 }
 

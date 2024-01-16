@@ -43,6 +43,5 @@
     "recipes": [
       "telepastries:end_cake"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

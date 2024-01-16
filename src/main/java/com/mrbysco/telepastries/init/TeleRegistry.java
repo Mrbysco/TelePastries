@@ -34,15 +34,15 @@ public class TeleRegistry {
 	public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Reference.MOD_ID);
 	public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Reference.MOD_ID);
 
-	public static final DeferredBlock<BlockNetherCake> NETHER_CAKE = BLOCKS.register("nether_cake", () -> new BlockNetherCake(BlockBehaviour.Properties.copy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
-	public static final DeferredBlock<BlockEndCake> END_CAKE = BLOCKS.register("end_cake", () -> new BlockEndCake(BlockBehaviour.Properties.copy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
-	public static final DeferredBlock<BlockOverworldCake> OVERWORLD_CAKE = BLOCKS.register("overworld_cake", () -> new BlockOverworldCake(BlockBehaviour.Properties.copy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
+	public static final DeferredBlock<BlockNetherCake> NETHER_CAKE = BLOCKS.register("nether_cake", () -> new BlockNetherCake(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
+	public static final DeferredBlock<BlockEndCake> END_CAKE = BLOCKS.register("end_cake", () -> new BlockEndCake(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
+	public static final DeferredBlock<BlockOverworldCake> OVERWORLD_CAKE = BLOCKS.register("overworld_cake", () -> new BlockOverworldCake(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
 
-	public static final DeferredBlock<BlockTwilightCake> TWILIGHT_CAKE = BLOCKS.register("twilight_cake", () -> new BlockTwilightCake(BlockBehaviour.Properties.copy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
-	public static final DeferredBlock<BlockLostCityCake> LOST_CITY_CAKE = BLOCKS.register("lost_city_cake", () -> new BlockLostCityCake(BlockBehaviour.Properties.copy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
-	public static final DeferredBlock<BlockCustomCake> CUSTOM_CAKE = BLOCKS.register("custom_cake", () -> new BlockCustomCake(BlockBehaviour.Properties.copy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
-	public static final DeferredBlock<BlockCustomCake2> CUSTOM_CAKE2 = BLOCKS.register("custom_cake2", () -> new BlockCustomCake2(BlockBehaviour.Properties.copy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
-	public static final DeferredBlock<BlockCustomCake3> CUSTOM_CAKE3 = BLOCKS.register("custom_cake3", () -> new BlockCustomCake3(BlockBehaviour.Properties.copy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
+	public static final DeferredBlock<BlockTwilightCake> TWILIGHT_CAKE = BLOCKS.register("twilight_cake", () -> new BlockTwilightCake(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
+	public static final DeferredBlock<BlockLostCityCake> LOST_CITY_CAKE = BLOCKS.register("lost_city_cake", () -> new BlockLostCityCake(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
+	public static final DeferredBlock<BlockCustomCake> CUSTOM_CAKE = BLOCKS.register("custom_cake", () -> new BlockCustomCake(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
+	public static final DeferredBlock<BlockCustomCake2> CUSTOM_CAKE2 = BLOCKS.register("custom_cake2", () -> new BlockCustomCake2(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
+	public static final DeferredBlock<BlockCustomCake3> CUSTOM_CAKE3 = BLOCKS.register("custom_cake3", () -> new BlockCustomCake3(BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL)));
 //   public static final DeferredBlock<BlockHuntingDimensionCake> HUNTING_DIMENSION_CAKE = BLOCKS.register("hunting_dimension_cake", () -> new BlockHuntingDimensionCake("hunting_dimension_cake"));
 
 	public static final DeferredItem<CakeBlockItem> NETHER_CAKE_ITEM = ITEMS.register("nether_cake", () -> new CakeBlockItem(NETHER_CAKE.get(), new Item.Properties()));

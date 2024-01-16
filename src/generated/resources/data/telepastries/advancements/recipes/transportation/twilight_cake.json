@@ -62,6 +62,5 @@
     "recipes": [
       "telepastries:twilight_cake"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }
