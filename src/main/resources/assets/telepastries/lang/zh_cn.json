@@ -1,0 +1,31 @@
+{
+    "_comment": "Config",
+    "telepastries.config.title": "传送蛋糕配置",
+
+    "_comment": "Creative Tab",
+    "itemGroup.tele_tab": "传送蛋糕",
+
+    "_comment": "Block",
+    "block.telepastries.nether_cake": "下界蛋糕",
+    "block.telepastries.end_cake": "末地蛋糕",
+    "block.telepastries.overworld_cake": "主世界蛋糕",
+
+    "block.telepastries.twilight_cake": "暮色森林蛋糕",
+    "block.telepastries.lost_city_cake": "失落的城市蛋糕",
+    "block.telepastries.hunting_dimension_cake": "狩猎维度蛋糕",
+    "block.telepastries.custom_cake": "%s蛋糕",
+    "block.telepastries.custom_cake2": "%s蛋糕",
+    "block.telepastries.custom_cake3": "%s蛋糕",
+
+    "_comment": "Message",
+    "telepastries.pastry.reset.complete": "%s维度的保存位置已重置",
+    "telepastries.pastry.reset.failed": "%s维度没有保存的位置",
+    "telepastries.pastry.support.disabled": "没有安装%s你无法吃下这个蛋糕",
+    "telepastries.pastry.custom.unbound": "自定义蛋糕在配置中没有维度约束",
+    "telepastries.pastry.custom.invalid": "蛋糕的目的地无效%s",
+    "telepastries.same_dimension": "无法传送到同一个维度",
+    "telepastries.teleport_restricted": "无法传送到非主世界维度",
+
+    "_comment": "Waila",
+    "config.jade.plugin_telepastries.bites": "咬蛋糕的数量"
+}
