@@ -19,6 +19,6 @@ side="BOTH"
 [[dependencies.telepastries]]
 modId="neoforge"
 type="REQUIRED"
-versionRange="[20.4.70-beta,)"
+versionRange="[20.4.131-beta,)"
 ordering="NONE"
 side="BOTH"

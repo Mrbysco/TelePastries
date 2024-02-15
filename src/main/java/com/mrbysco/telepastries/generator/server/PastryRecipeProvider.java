@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class PastryRecipeProvider extends RecipeProvider {
 	public PastryRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-		super(packOutput, lookupProvider);
+		super(packOutput);
 	}
 
 	@Override
