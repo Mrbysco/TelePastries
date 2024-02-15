@@ -139,7 +139,7 @@ if (System.getenv().CURSEFORGE_KEY) {
         mainFile.changelog = file("$project.rootDir/changelog.md")
         mainFile.changelogType = 'markdown'
 
-//        mainFile.addOptional("jade")
+        mainFile.addOptional("jade","the-one-probe")
     }
 }
 
@@ -155,9 +155,10 @@ if (System.getenv().MODRINTH_KEY) {
         gameVersions = ["${mc_version}"]
         loaders = ["neoforge"]
 
-//        dependencies {
-//            optional.project "jade"
-//        }
+        dependencies {
+            optional.project "jade"
+            optional.project "the-one-probe"
+        }
     }
 }
 
