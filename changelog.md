@@ -1,1 +1,1 @@
-* Initial update to 1.20.4
+* Re-enable The One Probe and Jade support
