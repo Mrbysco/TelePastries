@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -144,6 +145,7 @@ public class BlockCakeBase extends BlockPastryBase {
 			if (consumeCake()) {
 				if (!player.getAbilities().instabuild) {
 					int i = state.getValue(BITES);
+					levelAccessor.gameEvent(player, GameEvent.EAT, pos);
 					if (i < 6) {
 						levelAccessor.setBlock(pos, state.setValue(BITES, Integer.valueOf(i + 1)), 3);
 					} else {
@@ -152,12 +154,14 @@ public class BlockCakeBase extends BlockPastryBase {
 				}
 			}
 
-			if (!ForgeHooks.onTravelToDimension(player, getCakeWorld()))
-				return InteractionResult.FAIL;
+			if(!levelAccessor.isClientSide()) {
+				if (!ForgeHooks.onTravelToDimension(player, getCakeWorld()))
+					return InteractionResult.FAIL;
 
-			//TelePastries.logger.debug("At eatCake before teleportToDimension");
-			teleportToDimension(levelAccessor, pos, player);
-			//TelePastries.logger.debug("At eatCake after teleportToDimension");
+				//TelePastries.logger.debug("At eatCake before teleportToDimension");
+				teleportToDimension(levelAccessor, pos, player);
+				//TelePastries.logger.debug("At eatCake after teleportToDimension");
+			}
 
 			return InteractionResult.SUCCESS;
 		}
