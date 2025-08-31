@@ -1,1 +1,1 @@
-* Add missing translations for the built-in config screen
+* Update to 1.21.4
