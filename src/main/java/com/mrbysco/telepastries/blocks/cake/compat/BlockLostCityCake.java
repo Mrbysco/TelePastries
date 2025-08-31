@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -27,16 +27,16 @@ public class BlockLostCityCake extends BlockCakeBase {
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(
+	protected InteractionResult useItemOn(
 			ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result
 	) {
 		if (ModList.get().isLoaded("lostcities")) {
 			return super.useItemOn(stack, state, level, pos, player, hand, result);
 		} else {
 			if (player.getUsedItemHand() == hand && !level.isClientSide) {
-				player.sendSystemMessage(Component.translatable("telepastries.pastry.support.disabled", "lostcities").withStyle(ChatFormatting.RED));
+				player.displayClientMessage(Component.translatable("telepastries.pastry.support.disabled", "lostcities").withStyle(ChatFormatting.RED), false);
 			}
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 	}
 

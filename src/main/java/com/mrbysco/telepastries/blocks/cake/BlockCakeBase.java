@@ -18,7 +18,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -35,7 +34,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -67,7 +66,7 @@ public class BlockCakeBase extends BlockPastryBase {
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(
+	protected InteractionResult useItemOn(
 			ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result
 	) {
 		if (consumeCake() && isRefillItem(stack)) {
@@ -102,11 +101,11 @@ public class BlockCakeBase extends BlockPastryBase {
 				} else {
 					player.displayClientMessage(Component.translatable("telepastries.teleport_restricted"), true);
 				}
-				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+				return InteractionResult.PASS;
 			}
 		}
 
-		return ItemInteractionResult.FAIL;
+		return InteractionResult.FAIL;
 	}
 
 	public boolean canTeleportTo(ResourceLocation location, ResourceLocation toLocation) {
@@ -154,7 +153,7 @@ public class BlockCakeBase extends BlockPastryBase {
 				}
 			}
 
-			if(!levelAccessor.isClientSide()) {
+			if (!levelAccessor.isClientSide()) {
 				if (!CommonHooks.onTravelToDimension(player, getCakeWorld()))
 					return InteractionResult.FAIL;
 
@@ -177,19 +176,22 @@ public class BlockCakeBase extends BlockPastryBase {
 	public void teleportToDimension(LevelAccessor levelAccessor, BlockPos pos, Player player) {
 		if (player != null && !(player instanceof FakePlayer) && player.isAlive() && !levelAccessor.isClientSide()) {
 			if (levelAccessor instanceof ServerLevel serverLevel && !player.isPassenger() && !player.isVehicle() &&
-					player.canChangeDimensions(player.level(), serverLevel)) {
+					player.canTeleport(player.level(), serverLevel)) {
 				ServerPlayer serverPlayer = (ServerPlayer) player;
 				MinecraftServer server = player.getServer();
 				ServerLevel destinationWorld = server != null ? server.getLevel(getCakeWorld()) : null;
 				if (destinationWorld == null) {
-					player.sendSystemMessage(Component.translatable("telepastries.pastry.custom.invalid", getCakeWorld().location()).withStyle(ChatFormatting.RED));
+					player.displayClientMessage(
+							Component.translatable("telepastries.pastry.custom.invalid", getCakeWorld().location()).withStyle(ChatFormatting.RED),
+							false);
 					TelePastries.LOGGER.error("Destination of cake invalid {} isn't known", getCakeWorld().location());
 					return;
 				}
 
 				CakeTeleportHelper.addDimensionPosition(serverPlayer, serverPlayer.level().dimension(), serverPlayer.blockPosition());
-				DimensionTransition transition = CakeTeleportHelper.getCakeTeleportData(destinationWorld, serverPlayer);
-				serverPlayer.changeDimension(transition);
+				TeleportTransition transition = CakeTeleportHelper.getCakeTeleportData(destinationWorld, serverPlayer);
+				if (transition == null) return;
+				serverPlayer.teleport(transition);
 			}
 		}
 	}

@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.EndPlatformFeature;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +42,7 @@ public class CakeTeleportHelper {
 	);
 
 	@Nullable
-	public static DimensionTransition getCakeTeleportData(ServerLevel destWorld, Entity entity) {
+	public static TeleportTransition getCakeTeleportData(ServerLevel destWorld, Entity entity) {
 		entity.fallDistance = 0;
 		if (entity instanceof LivingEntity livingEntity) { //Give resistance
 			livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 200, false, false));
@@ -56,7 +56,7 @@ public class CakeTeleportHelper {
 		Long2BooleanArrayMap safeLocation = new Long2BooleanArrayMap();
 
 		// Add compatibility bounds for checking the y-positions the entity can spawn
-		var minMaxBounds = customCompatBounds(destWorld).mapFirst(min -> Math.max(min, destWorld.getMinBuildHeight())).mapSecond(max -> Math.min(max, destWorld.getMaxBuildHeight()));
+		var minMaxBounds = customCompatBounds(destWorld).mapFirst(min -> Math.max(min, destWorld.getMinY())).mapSecond(max -> Math.min(max, destWorld.getMaxY()));
 
 		// If spawn position exists, verify position is safe
 		if (spawnPos != null && destWorld.getBlockState(spawnPos.relative(Direction.DOWN)).isSolid() && isPositionSafe(entity, destWorld, spawnPos, safeLocation, minMaxBounds)) {
@@ -65,7 +65,7 @@ public class CakeTeleportHelper {
 
 		// Check level teleporter to determine portal info
 		@Nullable
-		DimensionTransition levelInfo = LEVEL_TELEPORTERS.getOrDefault(destWorld.dimension(), CakeTeleportHelper::searchAroundAndDown).determineTeleportLocation(entity, destWorld, minMaxBounds, safeLocation);
+		TeleportTransition levelInfo = LEVEL_TELEPORTERS.getOrDefault(destWorld.dimension(), CakeTeleportHelper::searchAroundAndDown).determineTeleportLocation(entity, destWorld, minMaxBounds, safeLocation);
 		if (levelInfo != null) {
 			return levelInfo;
 		}
@@ -119,11 +119,11 @@ public class CakeTeleportHelper {
 	 * @return the portal information to teleport to, or {@code null} if there is none
 	 */
 	@Nullable
-	private static DimensionTransition searchAroundAndDown(Entity entity, ServerLevel destWorld, Pair<Integer, Integer> minMaxBounds, Long2BooleanArrayMap cacheMap) {
+	private static TeleportTransition searchAroundAndDown(Entity entity, ServerLevel destWorld, Pair<Integer, Integer> minMaxBounds, Long2BooleanArrayMap cacheMap) {
 		// Set y position to max possible
 		double dimensionScale = DimensionType.getTeleportationScale(entity.level().dimensionType(), destWorld.dimensionType());
 		BlockPos spawnPos = destWorld.getWorldBorder().clampToBounds(entity.blockPosition().getX() * dimensionScale, entity.blockPosition().getY(), entity.blockPosition().getZ() * dimensionScale)
-				.atY(Math.min(minMaxBounds.getSecond(), destWorld.getMinBuildHeight() + destWorld.getLogicalHeight()) - 1);
+				.atY(Math.min(minMaxBounds.getSecond(), destWorld.getMinY() + destWorld.getLogicalHeight()) - 1);
 
 		// No spawn position or isn't valid, so loop around location
 		for (var checkPos : BlockPos.spiralAround(spawnPos, 16, Direction.EAST, Direction.SOUTH)) {
@@ -158,7 +158,7 @@ public class CakeTeleportHelper {
 	 * @deprecated this should be removed in favor of a datagen solution
 	 */
 	@Deprecated
-	private static DimensionTransition toEnd(Entity entity, ServerLevel destWorld) {
+	private static TeleportTransition toEnd(Entity entity, ServerLevel destWorld) {
 		// Get teleport position
 		BlockPos teleportPos = ServerLevel.END_SPAWN_POINT;
 		Vec3 vec3 = teleportPos.getBottomCenter();
@@ -308,7 +308,7 @@ public class CakeTeleportHelper {
 	 * @param pos       the position the entity is trying to be spawned at
 	 * @param entity    the entity attempting to spawn at the location
 	 */
-	private static DimensionTransition postProcessAndMake(ServerLevel destWorld, BlockPos pos, Entity entity) {
+	private static TeleportTransition postProcessAndMake(ServerLevel destWorld, BlockPos pos, Entity entity) {
 		// Set overworld back to respawn position when using cake.
 		if (destWorld.dimension() == Level.OVERWORLD) {
 			if (entity instanceof ServerPlayer serverPlayer) {
@@ -337,12 +337,12 @@ public class CakeTeleportHelper {
 		return makePortalInfo(destWorld, entity, pos.getX(), pos.getY(), pos.getZ());
 	}
 
-	private static DimensionTransition makePortalInfo(ServerLevel destination, Entity entity, double x, double y, double z) {
+	private static TeleportTransition makePortalInfo(ServerLevel destination, Entity entity, double x, double y, double z) {
 		return makePortalInfo(destination, entity, new Vec3(x, y, z));
 	}
 
-	private static DimensionTransition makePortalInfo(ServerLevel destination, Entity entity, Vec3 pos) {
-		return new DimensionTransition(destination, pos, Vec3.ZERO, entity.getYRot(), entity.getXRot(), DimensionTransition.DO_NOTHING);
+	private static TeleportTransition makePortalInfo(ServerLevel destination, Entity entity, Vec3 pos) {
+		return new TeleportTransition(destination, pos, Vec3.ZERO, entity.getYRot(), entity.getXRot(), TeleportTransition.DO_NOTHING);
 	}
 
 	/**
@@ -361,6 +361,6 @@ public class CakeTeleportHelper {
 		 * @return the portal information to teleport to, or {@code null} if there is none
 		 */
 		@Nullable
-		DimensionTransition determineTeleportLocation(Entity entity, ServerLevel destWorld, Pair<Integer, Integer> minMaxBounds, Long2BooleanArrayMap cacheMap);
+		TeleportTransition determineTeleportLocation(Entity entity, ServerLevel destWorld, Pair<Integer, Integer> minMaxBounds, Long2BooleanArrayMap cacheMap);
 	}
 }

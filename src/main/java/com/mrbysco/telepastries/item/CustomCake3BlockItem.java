@@ -12,6 +12,6 @@ public class CustomCake3BlockItem extends CakeBlockItem {
 
 	@Override
 	public Component getName(ItemStack stack) {
-		return Component.translatable(this.getDescriptionId(stack), TeleConfig.COMMON.customCake3Name.get());
+		return Component.translatable(this.getDescriptionId(), TeleConfig.COMMON.customCake3Name.get());
 	}
 }

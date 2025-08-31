@@ -7,7 +7,6 @@ import com.mrbysco.telepastries.init.TeleRegistry;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
@@ -38,8 +37,8 @@ public class TelePastries {
 	}
 
 	public void sendImc(InterModEnqueueEvent event) {
-		if (ModList.get().isLoaded("theoneprobe")) {
-			com.mrbysco.telepastries.compat.top.TeleTOPCompat.register();
-		}
+//		if (ModList.get().isLoaded("theoneprobe")) {
+//			com.mrbysco.telepastries.compat.top.TeleTOPCompat.register();
+//		}
 	}
 }

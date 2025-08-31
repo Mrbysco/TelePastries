@@ -1,4 +1,4 @@
-// 1.21.1	2025-08-31T15:08:02.9988077	Block States: telepastries
+// 1.21.4	2025-08-31T16:28:02.0481372	Model Definitions - telepastries
 e4ae4e78c657e28e3bf3f0af5ffa9395d0bd6582 assets/telepastries/blockstates/custom_cake.json
 24c6c3c07ac7f6c8875f3b29a3a4642a2241f0c2 assets/telepastries/blockstates/custom_cake2.json
 f4fa9a8dd20cb9901e76454597006d79cf526f0a assets/telepastries/blockstates/custom_cake3.json
@@ -7,6 +7,14 @@ ae585bbd8bae48286df891448ab4fc69bd54bd2f assets/telepastries/blockstates/lost_ci
 2bc2920b64a44517c764865f23a3127e00407b3d assets/telepastries/blockstates/nether_cake.json
 8cfa52d9be4fe64faed4a770eaf3768b8757c5fe assets/telepastries/blockstates/overworld_cake.json
 3701bed6709d9f383533ed4751a0047525988473 assets/telepastries/blockstates/twilight_cake.json
+81395f7fb69d73020bc80044e2dbbdd4cbe331e6 assets/telepastries/items/custom_cake.json
+8511119f17604afa058a377bb2bdd96e0defdb66 assets/telepastries/items/custom_cake2.json
+842c1725f32339dedb34a5c099cfc8b10e64c14a assets/telepastries/items/custom_cake3.json
+41c445013ec7198dcc4831f71e363ff6a5b042f1 assets/telepastries/items/end_cake.json
+72191af061e3b3dc0fd7151c02d063c7a324c6b5 assets/telepastries/items/lost_city_cake.json
+5a7a081a1eddac6a99c6576f5eb31c5ebb731e51 assets/telepastries/items/nether_cake.json
+fd8bdaed97dae03a3566c8ba4676452cf541bc93 assets/telepastries/items/overworld_cake.json
+7fdd325eeee3a452e0834bec2d21305473fa3201 assets/telepastries/items/twilight_cake.json
 f18b4eb2c8ef5c1b95c3ee15ce3e53e84cd91fb4 assets/telepastries/models/block/custom_cake.json
 f18b4eb2c8ef5c1b95c3ee15ce3e53e84cd91fb4 assets/telepastries/models/block/custom_cake2.json
 7cf1f47274dbd470f868fd298ee023d1e14e9aca assets/telepastries/models/block/custom_cake2_slice1.json
@@ -63,3 +71,11 @@ fc26c8f5aee5bb54109ef3a6a853a87231eaa002 assets/telepastries/models/block/twilig
 3b4d4706578d75c5841a96be7bc3e54fa0c091b9 assets/telepastries/models/block/twilight_cake_slice4.json
 308ca755e8b5a6ac6e893b5e9f82f1d10637b3e6 assets/telepastries/models/block/twilight_cake_slice5.json
 cfc751afa617d17c6b0015ac9af033b1390cf86a assets/telepastries/models/block/twilight_cake_slice6.json
+b6e497293761ab59f31c5c34d83ddacec295bb00 assets/telepastries/models/item/custom_cake.json
+02a46cd1791553fa53d8d6f6a07dd5aac596211b assets/telepastries/models/item/custom_cake2.json
+4ce73c18f2afd1f36f0f31bc07df8a36ea74e10c assets/telepastries/models/item/custom_cake3.json
+daa38fbb40f7297a868a55a2b2845e644db02408 assets/telepastries/models/item/end_cake.json
+6c0188779fd5726db37b83430d7653853739e187 assets/telepastries/models/item/lost_city_cake.json
+9b7e229058802fc444797d5923fa0e074ae99c6b assets/telepastries/models/item/nether_cake.json
+97dca15c979fae6479b73c5576e1380f5f1acc7b assets/telepastries/models/item/overworld_cake.json
+d7323a01aa87fe8a3788a5f9d809487334a0a084 assets/telepastries/models/item/twilight_cake.json

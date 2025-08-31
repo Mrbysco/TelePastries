@@ -8,15 +8,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "minecraft:cake"
-    },
-    "R": {
-      "item": "minecraft:poppy"
-    },
-    "Y": {
-      "item": "minecraft:dandelion"
-    }
+    "C": "minecraft:cake",
+    "R": "minecraft:poppy",
+    "Y": "minecraft:dandelion"
   },
   "pattern": [
     "YRY",

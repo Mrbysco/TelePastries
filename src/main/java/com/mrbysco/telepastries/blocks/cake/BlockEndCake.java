@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class BlockEndCake extends BlockCakeBase {
 	public void teleportToDimension(LevelAccessor levelAccessor, BlockPos pos, Player player) {
 		if (player != null && !(player instanceof FakePlayer) && player.isAlive() && !levelAccessor.isClientSide()) {
 			if (levelAccessor instanceof ServerLevel serverLevel && !player.isPassenger() && !player.isVehicle() &&
-					player.canChangeDimensions(player.level(), serverLevel)) {
+					player.canTeleport(player.level(), serverLevel)) {
 				ServerPlayer serverPlayer = (ServerPlayer) player;
 				MinecraftServer server = player.getServer();
 				ServerLevel destinationWorld = server != null ? server.getLevel(getCakeWorld()) : null;
@@ -37,8 +37,9 @@ public class BlockEndCake extends BlockCakeBase {
 					return;
 
 				CakeTeleportHelper.addDimensionPosition(serverPlayer, serverPlayer.level().dimension(), serverPlayer.blockPosition());
-				DimensionTransition transition = CakeTeleportHelper.getCakeTeleportData(destinationWorld, serverPlayer);
-				serverPlayer.changeDimension(transition);
+				TeleportTransition transition = CakeTeleportHelper.getCakeTeleportData(destinationWorld, serverPlayer);
+				if (transition == null) return;
+				serverPlayer.teleport(transition);
 			}
 		}
 	}

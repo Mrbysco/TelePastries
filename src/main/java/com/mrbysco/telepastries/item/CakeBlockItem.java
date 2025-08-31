@@ -12,7 +12,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 
 public class CakeBlockItem extends BlockItem {
 	public CakeBlockItem(Block block, Properties properties) {
-		super(block, properties);
+		super(block, properties.useBlockDescriptionPrefix());
 	}
 
 	@Override

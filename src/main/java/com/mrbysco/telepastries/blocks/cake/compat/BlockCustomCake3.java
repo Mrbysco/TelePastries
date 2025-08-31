@@ -11,7 +11,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,16 +26,16 @@ public class BlockCustomCake3 extends BlockCakeBase {
 	}
 
 	@Override
-	protected ItemInteractionResult useItemOn(
+	protected InteractionResult useItemOn(
 			ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result
 	) {
-		if (!TeleConfig.COMMON.customCake3Dimension.get().isEmpty()) {
+		if (!TeleConfig.COMMON.customCakeDimension.get().isEmpty()) {
 			return super.useItemOn(stack, state, level, pos, player, hand, result);
 		} else {
 			if (player.getUsedItemHand() == hand && !level.isClientSide) {
-				player.sendSystemMessage(Component.translatable("telepastries.pastry.custom.unbound").withStyle(ChatFormatting.RED));
+				player.displayClientMessage(Component.translatable("telepastries.pastry.custom.unbound").withStyle(ChatFormatting.RED), false);
 			}
-			return ItemInteractionResult.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 	}
 
