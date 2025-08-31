@@ -84,7 +84,7 @@ public class TeleConfig {
 
 			resetItems = builder
 					.comment("Defines the item needed to reset the pastry teleportation point [default: minecraft:milk_bucket]")
-					.defineList("resetItems", () -> Arrays.asList(resetItemsList), o -> (o instanceof String));
+					.defineList("resetItems", () -> Arrays.asList(resetItemsList), String::new, o -> (o instanceof String));
 
 			builder.pop();
 			builder.comment("Nether settings")
@@ -101,7 +101,7 @@ public class TeleConfig {
 
 			netherCakeRefillItems = builder
 					.comment("Set the refill items used by Nether Cake (Only change if you know what you're doing) [modid:itemname].")
-					.defineList("netherCakeRefillItems", () -> Arrays.asList(netherItems), o -> (o instanceof String));
+					.defineList("netherCakeRefillItems", () -> Arrays.asList(netherItems), String::new, o -> (o instanceof String));
 
 			builder.pop();
 			builder.comment("End settings")
@@ -118,7 +118,7 @@ public class TeleConfig {
 
 			endCakeRefillItems = builder
 					.comment("Set the refill items used by End Cake (Only change if you know what you're doing) [modid:itemname].")
-					.defineList("endCakeRefillItems", () -> Arrays.asList(endItems), o -> (o instanceof String));
+					.defineList("endCakeRefillItems", () -> Arrays.asList(endItems), String::new, o -> (o instanceof String));
 
 			builder.pop();
 			builder.comment("Overworld settings")
@@ -140,7 +140,7 @@ public class TeleConfig {
 
 			overworldCakeRefillItems = builder
 					.comment("Set the refill items used by Overworld Cake (Only change if you know what you're doing) [modid:itemname].")
-					.defineList("overworldCakeRefillItems", () -> Arrays.asList(overworldItems), o -> (o instanceof String));
+					.defineList("overworldCakeRefillItems", () -> Arrays.asList(overworldItems), String::new, o -> (o instanceof String));
 
 			builder.pop();
 			builder.comment("Compat settings")
@@ -157,7 +157,7 @@ public class TeleConfig {
 
 			twilightCakeRefillItems = builder
 					.comment("Set the refill items used by the Twilight Forest Cake (Only change if you know what you're doing) [modid:itemname]")
-					.defineList("TwilightCakeRefillItems", () -> Arrays.asList(twilightItems), o -> (o instanceof String));
+					.defineList("TwilightCakeRefillItems", () -> Arrays.asList(twilightItems), String::new, o -> (o instanceof String));
 
 			consumeLostCitiesCake = builder
 					.comment("Defines if the Lost Cities Cake gets partly consumed when eaten [default: true]")
@@ -170,7 +170,7 @@ public class TeleConfig {
 
 			lostCitiesCakeRefillItem = builder
 					.comment("Set the refill items used by the Lost Cities Cake (Only change if you know what you're doing) [modid:itemname]")
-					.defineList("lostCitiesCakeRefillItem", () -> Arrays.asList(lostcityItems), o -> (o instanceof String));
+					.defineList("lostCitiesCakeRefillItem", () -> Arrays.asList(lostcityItems), String::new, o -> (o instanceof String));
 
 			builder.pop();
 			builder.comment("Custom Cake settings");
@@ -195,7 +195,7 @@ public class TeleConfig {
 
 			customCakeRefillItem = builder
 					.comment("Set the refill items used by the Custom Cake (Only change if you know what you're doing) [modid:itemname]")
-					.defineList("customCakeRefillItem", () -> Arrays.asList(customItems), o -> (o instanceof String));
+					.defineList("customCakeRefillItem", () -> Arrays.asList(customItems), String::new, o -> (o instanceof String));
 
 			customCakeMinY = builder
 					.comment("Set the minimum Y location that the cake can spawn you at [Default: 2]")
@@ -227,7 +227,7 @@ public class TeleConfig {
 
 			customCake2RefillItem = builder
 					.comment("Set the refill items used by the Custom Cake (Only change if you know what you're doing) [modid:itemname]")
-					.defineList("customCake2RefillItem", () -> Arrays.asList(customItems2), o -> (o instanceof String));
+					.defineList("customCake2RefillItem", () -> Arrays.asList(customItems2), String::new, o -> (o instanceof String));
 
 			customCake2MinY = builder
 					.comment("Set the minimum Y location that the cake can spawn you at [Default: 2]")
@@ -259,7 +259,7 @@ public class TeleConfig {
 
 			customCake3RefillItem = builder
 					.comment("Set the refill items used by the Custom Cake (Only change if you know what you're doing) [modid:itemname]")
-					.defineList("customCake3RefillItem", () -> Arrays.asList(customItems3), o -> (o instanceof String));
+					.defineList("customCake3RefillItem", () -> Arrays.asList(customItems3), String::new, o -> (o instanceof String));
 
 			customCake3MinY = builder
 					.comment("Set the minimum Y location that the cake can spawn you at [Default: 2]")
