@@ -45,7 +45,7 @@ public class CakeTeleportHelper {
 	public static TeleportTransition getCakeTeleportData(ServerLevel destWorld, Entity entity) {
 		entity.fallDistance = 0;
 		if (entity instanceof LivingEntity livingEntity) { //Give resistance
-			livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 200, false, false));
+			livingEntity.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 200, 200, false, false));
 		}
 
 		// First, check if there is already an existing position to pull from
@@ -245,7 +245,7 @@ public class CakeTeleportHelper {
 		ResourceLocation dimLocation = dim.location();
 
 		if (data.contains(Reference.MOD_PREFIX + dimLocation)) {
-			BlockPos dimPos = BlockPos.of(data.getLong(Reference.MOD_PREFIX + dimLocation));
+			BlockPos dimPos = BlockPos.of(data.getLongOr(Reference.MOD_PREFIX + dimLocation, 0));
 			TelePastries.LOGGER.debug("Found {}'s position of {} to: {}", getEntityName(entityIn), dimLocation, dimPos);
 			return dimPos;
 		}
@@ -258,7 +258,7 @@ public class CakeTeleportHelper {
 		if (tag == null || !tag.contains(Player.PERSISTED_NBT_TAG)) {
 			return new CompoundTag();
 		}
-		return tag.getCompound(Player.PERSISTED_NBT_TAG);
+		return tag.getCompoundOrEmpty(Player.PERSISTED_NBT_TAG);
 	}
 
 	/**
@@ -312,7 +312,8 @@ public class CakeTeleportHelper {
 		// Set overworld back to respawn position when using cake.
 		if (destWorld.dimension() == Level.OVERWORLD) {
 			if (entity instanceof ServerPlayer serverPlayer) {
-				serverPlayer.setRespawnPosition(Level.OVERWORLD, pos, serverPlayer.getYRot(), true, false);
+				ServerPlayer.RespawnConfig config = new ServerPlayer.RespawnConfig(ServerLevel.OVERWORLD, pos, serverPlayer.getYRot(), true);
+				serverPlayer.setRespawnPosition(config, false);
 			}
 		}
 
@@ -320,7 +321,8 @@ public class CakeTeleportHelper {
 			ResourceKey<Level> twilightKey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath("twilightforest", "twilight_forest"));
 			if (destWorld.dimension() == twilightKey) {
 				if (entity instanceof ServerPlayer serverPlayer) {
-					serverPlayer.setRespawnPosition(twilightKey, pos, serverPlayer.getYRot(), true, false);
+					ServerPlayer.RespawnConfig config = new ServerPlayer.RespawnConfig(twilightKey, pos, serverPlayer.getYRot(), true);
+					serverPlayer.setRespawnPosition(config, false);
 				}
 			}
 		}
@@ -329,7 +331,8 @@ public class CakeTeleportHelper {
 			ResourceKey<Level> lostCityKey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath("lostcities", "lostcity"));
 			if (destWorld.dimension() == lostCityKey) {
 				if (entity instanceof ServerPlayer serverPlayer) {
-					serverPlayer.setRespawnPosition(lostCityKey, pos, serverPlayer.getYRot(), true, false);
+					ServerPlayer.RespawnConfig config = new ServerPlayer.RespawnConfig(lostCityKey, pos, serverPlayer.getYRot(), true);
+					serverPlayer.setRespawnPosition(config, false);
 				}
 			}
 		}

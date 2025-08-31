@@ -247,6 +247,6 @@ public class BlockCakeBase extends BlockPastryBase {
 		if (tag == null || !tag.contains(Player.PERSISTED_NBT_TAG)) {
 			return new CompoundTag();
 		}
-		return tag.getCompound(Player.PERSISTED_NBT_TAG);
+		return tag.getCompoundOrEmpty(Player.PERSISTED_NBT_TAG);
 	}
 }

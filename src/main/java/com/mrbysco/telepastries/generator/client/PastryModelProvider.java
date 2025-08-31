@@ -8,8 +8,6 @@ import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.data.models.blockstates.Variant;
-import net.minecraft.client.data.models.blockstates.VariantProperties;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
@@ -68,16 +66,16 @@ public class PastryModelProvider extends ModelProvider {
 		blockModels.registerSimpleFlatItemModel(holder.asItem());
 		blockModels.blockStateOutput
 				.accept(
-						MultiVariantGenerator.multiVariant(holder.get())
+						MultiVariantGenerator.dispatch(holder.get())
 								.with(
-										PropertyDispatch.property(BlockStateProperties.BITES)
-												.select(0, Variant.variant().with(VariantProperties.MODEL, model))
-												.select(1, Variant.variant().with(VariantProperties.MODEL, slice1))
-												.select(2, Variant.variant().with(VariantProperties.MODEL, slice2))
-												.select(3, Variant.variant().with(VariantProperties.MODEL, slice3))
-												.select(4, Variant.variant().with(VariantProperties.MODEL, slice4))
-												.select(5, Variant.variant().with(VariantProperties.MODEL, slice5))
-												.select(6, Variant.variant().with(VariantProperties.MODEL, slice6))
+										PropertyDispatch.initial(BlockStateProperties.BITES)
+												.select(0, BlockModelGenerators.plainVariant(model))
+												.select(1, BlockModelGenerators.plainVariant(slice1))
+												.select(2, BlockModelGenerators.plainVariant(slice2))
+												.select(3, BlockModelGenerators.plainVariant(slice3))
+												.select(4, BlockModelGenerators.plainVariant(slice4))
+												.select(5, BlockModelGenerators.plainVariant(slice5))
+												.select(6, BlockModelGenerators.plainVariant(slice6))
 								)
 				);
 	}
