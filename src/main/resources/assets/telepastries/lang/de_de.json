@@ -1,0 +1,32 @@
+
+{
+    "_comment": "Config",
+    "telepastries.config.title": "TelePastries Konfig",
+
+    "_comment": "Creative Tab",
+    "itemGroup.tele_tab": "TelePastries",
+
+    "_comment": "Block",
+    "block.telepastries.nether_cake": "Nether Kuchen",
+    "block.telepastries.end_cake": "Ende Kuchen",
+    "block.telepastries.overworld_cake": "Oberwelt Kuchen",
+
+    "block.telepastries.twilight_cake": "Dämmerungs Kuchen",
+    "block.telepastries.lost_city_cake": "Verlorene Stadt Kuchen",
+    "block.telepastries.hunting_dimension_cake": "Jagende Dimension Kuchen",
+    "block.telepastries.custom_cake": "%s Kuchen",
+    "block.telepastries.custom_cake2": "%s Kuchen",
+    "block.telepastries.custom_cake3": "%s Kuchen",
+
+    "_comment": "Message",
+    "telepastries.pastry.reset.complete": "Dimension %s 's gespeicherte Position wurde zurückgesetzt..",
+    "telepastries.pastry.reset.failed": "Dimension %s hat keine gespeicherte Position.",
+    "telepastries.pastry.support.disabled": "Der Kuchen ist deaktiviert weil %s nicht installiert ist.",
+    "telepastries.pastry.custom.unbound": "Der benutzerdefinierte Kuchen hat hat keine gebundene Dimension in der Konfig.",
+    "telepastries.pastry.custom.invalid": "Zielort des Kuchens ist ungültig %s.",
+    "telepastries.same_dimension": "Du kannst dich nicht in dieselbe Dimension teleportieren.",
+    "telepastries.teleport_restricted": "Du kannst dich nur in eine Oberwelt Dimension teleportieren.",
+
+    "_comment": "Waila",
+    "config.jade.plugin_telepastries.bites": "Kuchen bisse"
+}
