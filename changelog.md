@@ -1,1 +1,1 @@
-* Only fire the EntityTravelToDimensionEvent on server side
+* Add missing translations for the built-in config screen
