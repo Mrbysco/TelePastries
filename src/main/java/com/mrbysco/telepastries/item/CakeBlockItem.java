@@ -2,7 +2,7 @@ package com.mrbysco.telepastries.item;
 
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -22,8 +22,8 @@ public class CakeBlockItem extends BlockItem {
 		boolean flag = (!this.mustSurvive() || state.canSurvive(context.getLevel(), context.getClickedPos())) && context.getLevel().isUnobstructed(state, context.getClickedPos(), collisionContext);
 		if (!flag) {
 			BlockCakeBase cakeBlock = (BlockCakeBase) getBlock();
-			ResourceLocation cakeLocation = cakeBlock.getCakeWorld().location();
-			ResourceLocation currentLocation = player.level().dimension().location();
+			Identifier cakeLocation = cakeBlock.getCakeWorld().identifier();
+			Identifier currentLocation = player.level().dimension().identifier();
 			if (cakeLocation.equals(currentLocation)) {
 				player.displayClientMessage(Component.translatable("telepastries.same_dimension"), true);
 			} else {

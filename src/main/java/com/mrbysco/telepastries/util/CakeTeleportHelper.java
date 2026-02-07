@@ -8,17 +8,17 @@ import com.mrbysco.telepastries.config.TeleConfig;
 import it.unimi.dsi.fastutil.longs.Long2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -31,6 +31,7 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.EndPlatformFeature;
 import net.minecraft.world.level.portal.TeleportTransition;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.Nullable;
@@ -214,7 +215,7 @@ public class CakeTeleportHelper {
 	public static void addDimensionPosition(Entity entityIn, ResourceKey<Level> dim, BlockPos position) {
 		CompoundTag entityData = entityIn.getPersistentData();
 		CompoundTag data = getTag(entityData);
-		ResourceLocation dimLocation = dim.location();
+		Identifier dimLocation = dim.identifier();
 
 		BlockPos usedPos;
 		if (dim == Level.END) {
@@ -242,7 +243,7 @@ public class CakeTeleportHelper {
 	public static BlockPos getDimensionPosition(Entity entityIn, ResourceKey<Level> dim) {
 		CompoundTag entityData = entityIn.getPersistentData();
 		CompoundTag data = getTag(entityData);
-		ResourceLocation dimLocation = dim.location();
+		Identifier dimLocation = dim.identifier();
 
 		if (data.contains(Reference.MOD_PREFIX + dimLocation)) {
 			BlockPos dimPos = BlockPos.of(data.getLongOr(Reference.MOD_PREFIX + dimLocation, 0));
@@ -268,7 +269,7 @@ public class CakeTeleportHelper {
 	 * @return The bounded y values the entity must spawn in-between
 	 */
 	private static Pair<Integer, Integer> customCompatBounds(ServerLevel destWorld) {
-		ResourceLocation customLocation = ResourceLocation.tryParse(TeleConfig.COMMON.customCakeDimension.get());
+		Identifier customLocation = Identifier.tryParse(TeleConfig.COMMON.customCakeDimension.get());
 		if (customLocation != null) {
 			ResourceKey<Level> customWorldKey = ResourceKey.create(Registries.DIMENSION, customLocation);
 			if (destWorld.dimension() == customWorldKey) {
@@ -278,7 +279,7 @@ public class CakeTeleportHelper {
 			}
 		}
 
-		ResourceLocation customLocation2 = ResourceLocation.tryParse(TeleConfig.COMMON.customCake2Dimension.get());
+		Identifier customLocation2 = Identifier.tryParse(TeleConfig.COMMON.customCake2Dimension.get());
 		if (customLocation2 != null) {
 			ResourceKey<Level> customWorldKey = ResourceKey.create(Registries.DIMENSION, customLocation2);
 			if (destWorld.dimension() == customWorldKey) {
@@ -288,7 +289,7 @@ public class CakeTeleportHelper {
 			}
 		}
 
-		ResourceLocation customLocation3 = ResourceLocation.tryParse(TeleConfig.COMMON.customCake3Dimension.get());
+		Identifier customLocation3 = Identifier.tryParse(TeleConfig.COMMON.customCake3Dimension.get());
 		if (customLocation3 != null) {
 			ResourceKey<Level> customWorldKey = ResourceKey.create(Registries.DIMENSION, customLocation3);
 			if (destWorld.dimension() == customWorldKey) {
@@ -312,26 +313,26 @@ public class CakeTeleportHelper {
 		// Set overworld back to respawn position when using cake.
 		if (destWorld.dimension() == Level.OVERWORLD) {
 			if (entity instanceof ServerPlayer serverPlayer) {
-				ServerPlayer.RespawnConfig config = new ServerPlayer.RespawnConfig(ServerLevel.OVERWORLD, pos, serverPlayer.getYRot(), true);
+				ServerPlayer.RespawnConfig config = new ServerPlayer.RespawnConfig(LevelData.RespawnData.of(ServerLevel.OVERWORLD, pos, serverPlayer.getYRot(), serverPlayer.getXRot()), true);
 				serverPlayer.setRespawnPosition(config, false);
 			}
 		}
 
 		if (ModList.get().isLoaded("twilightforest")) {
-			ResourceKey<Level> twilightKey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath("twilightforest", "twilight_forest"));
+			ResourceKey<Level> twilightKey = ResourceKey.create(Registries.DIMENSION, Identifier.fromNamespaceAndPath("twilightforest", "twilight_forest"));
 			if (destWorld.dimension() == twilightKey) {
 				if (entity instanceof ServerPlayer serverPlayer) {
-					ServerPlayer.RespawnConfig config = new ServerPlayer.RespawnConfig(twilightKey, pos, serverPlayer.getYRot(), true);
+					ServerPlayer.RespawnConfig config = new ServerPlayer.RespawnConfig(LevelData.RespawnData.of(twilightKey, pos, serverPlayer.getYRot(), serverPlayer.getXRot()), true);
 					serverPlayer.setRespawnPosition(config, false);
 				}
 			}
 		}
 
 		if (ModList.get().isLoaded("lostcities")) {
-			ResourceKey<Level> lostCityKey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath("lostcities", "lostcity"));
+			ResourceKey<Level> lostCityKey = ResourceKey.create(Registries.DIMENSION, Identifier.fromNamespaceAndPath("lostcities", "lostcity"));
 			if (destWorld.dimension() == lostCityKey) {
 				if (entity instanceof ServerPlayer serverPlayer) {
-					ServerPlayer.RespawnConfig config = new ServerPlayer.RespawnConfig(lostCityKey, pos, serverPlayer.getYRot(), true);
+					ServerPlayer.RespawnConfig config = new ServerPlayer.RespawnConfig(LevelData.RespawnData.of(lostCityKey, pos, serverPlayer.getYRot(), serverPlayer.getXRot()), true);
 					serverPlayer.setRespawnPosition(config, false);
 				}
 			}

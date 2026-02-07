@@ -33,15 +33,15 @@ public class TeleRegistry {
 	public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Reference.MOD_ID);
 	public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Reference.MOD_ID);
 
-	public static final DeferredBlock<BlockNetherCake> NETHER_CAKE = BLOCKS.registerBlock("nether_cake", BlockNetherCake::new, BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL));
-	public static final DeferredBlock<BlockEndCake> END_CAKE = BLOCKS.registerBlock("end_cake", BlockEndCake::new, BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL));
-	public static final DeferredBlock<BlockOverworldCake> OVERWORLD_CAKE = BLOCKS.registerBlock("overworld_cake", BlockOverworldCake::new, BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL));
+	public static final DeferredBlock<BlockNetherCake> NETHER_CAKE = BLOCKS.registerBlock("nether_cake", BlockNetherCake::new, cakeProperties());
+	public static final DeferredBlock<BlockEndCake> END_CAKE = BLOCKS.registerBlock("end_cake", BlockEndCake::new, cakeProperties());
+	public static final DeferredBlock<BlockOverworldCake> OVERWORLD_CAKE = BLOCKS.registerBlock("overworld_cake", BlockOverworldCake::new, cakeProperties());
 
-	public static final DeferredBlock<BlockTwilightCake> TWILIGHT_CAKE = BLOCKS.registerBlock("twilight_cake", BlockTwilightCake::new, BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL));
-	public static final DeferredBlock<BlockLostCityCake> LOST_CITY_CAKE = BLOCKS.registerBlock("lost_city_cake", BlockLostCityCake::new, BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL));
-	public static final DeferredBlock<BlockCustomCake> CUSTOM_CAKE = BLOCKS.registerBlock("custom_cake", BlockCustomCake::new, BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL));
-	public static final DeferredBlock<BlockCustomCake2> CUSTOM_CAKE2 = BLOCKS.registerBlock("custom_cake2", BlockCustomCake2::new, BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL));
-	public static final DeferredBlock<BlockCustomCake3> CUSTOM_CAKE3 = BLOCKS.registerBlock("custom_cake3", BlockCustomCake3::new, BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL));
+	public static final DeferredBlock<BlockTwilightCake> TWILIGHT_CAKE = BLOCKS.registerBlock("twilight_cake", BlockTwilightCake::new, cakeProperties());
+	public static final DeferredBlock<BlockLostCityCake> LOST_CITY_CAKE = BLOCKS.registerBlock("lost_city_cake", BlockLostCityCake::new, cakeProperties());
+	public static final DeferredBlock<BlockCustomCake> CUSTOM_CAKE = BLOCKS.registerBlock("custom_cake", BlockCustomCake::new, cakeProperties());
+	public static final DeferredBlock<BlockCustomCake2> CUSTOM_CAKE2 = BLOCKS.registerBlock("custom_cake2", BlockCustomCake2::new, cakeProperties());
+	public static final DeferredBlock<BlockCustomCake3> CUSTOM_CAKE3 = BLOCKS.registerBlock("custom_cake3", BlockCustomCake3::new, cakeProperties());
 
 	public static final DeferredItem<CakeBlockItem> NETHER_CAKE_ITEM = ITEMS.registerItem("nether_cake", (properties) -> new CakeBlockItem(NETHER_CAKE.get(), properties));
 	public static final DeferredItem<CakeBlockItem> END_CAKE_ITEM = ITEMS.registerItem("end_cake", (properties) -> new CakeBlockItem(END_CAKE.get(), properties));
@@ -52,6 +52,10 @@ public class TeleRegistry {
 	public static final DeferredItem<CakeBlockItem> CUSTOM_CAKE_ITEM = ITEMS.registerItem("custom_cake", (properties) -> new CustomCakeBlockItem(CUSTOM_CAKE.get(), properties));
 	public static final DeferredItem<CakeBlockItem> CUSTOM_CAKE2_ITEM = ITEMS.registerItem("custom_cake2", (properties) -> new CustomCake2BlockItem(CUSTOM_CAKE2.get(), properties));
 	public static final DeferredItem<CakeBlockItem> CUSTOM_CAKE3_ITEM = ITEMS.registerItem("custom_cake3", (properties) -> new CustomCake3BlockItem(CUSTOM_CAKE3.get(), properties));
+
+	private static Supplier<BlockBehaviour.Properties> cakeProperties() {
+		return () -> BlockBehaviour.Properties.ofFullCopy(Blocks.CAKE).strength(0.5F).sound(SoundType.WOOL);
+	}
 
 	public static final Supplier<CreativeModeTab> PASTRIES_TAB = CREATIVE_MODE_TABS.register("tab", (properties) -> CreativeModeTab.builder()
 			.icon(() -> new ItemStack(TeleRegistry.OVERWORLD_CAKE.get()))

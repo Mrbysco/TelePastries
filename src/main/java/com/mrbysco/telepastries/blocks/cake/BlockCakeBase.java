@@ -7,11 +7,12 @@ import com.mrbysco.telepastries.config.TeleConfig;
 import com.mrbysco.telepastries.util.CakeTeleportHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -61,7 +62,7 @@ public class BlockCakeBase extends BlockPastryBase {
 
 	@Override
 	@SuppressWarnings("deprecated")
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
 		return SHAPES[state.getValue(BITES)];
 	}
 
@@ -78,9 +79,9 @@ public class BlockCakeBase extends BlockPastryBase {
 				stack.shrink(1);
 			}
 		} else {
-			if (canTeleportTo(level.dimension().location(), getCakeWorld().location())) {
+			if (canTeleportTo(level.dimension().identifier(), getCakeWorld().identifier())) {
 				if (TeleConfig.COMMON.resetPastry.get() && isResetItem(stack)) {
-					if (level.isClientSide) {
+					if (level.isClientSide()) {
 						removeDimensionPosition((ServerPlayer) player, getCakeWorld());
 					}
 
@@ -96,7 +97,7 @@ public class BlockCakeBase extends BlockPastryBase {
 					//TelePastries.logger.debug("At onBlockActivated after eatCake");
 				}
 			} else {
-				if (level.dimension().location().equals(getCakeWorld().location())) {
+				if (level.dimension().identifier().equals(getCakeWorld().identifier())) {
 					player.displayClientMessage(Component.translatable("telepastries.same_dimension"), true);
 				} else {
 					player.displayClientMessage(Component.translatable("telepastries.teleport_restricted"), true);
@@ -108,9 +109,9 @@ public class BlockCakeBase extends BlockPastryBase {
 		return InteractionResult.FAIL;
 	}
 
-	public boolean canTeleportTo(ResourceLocation location, ResourceLocation toLocation) {
+	public boolean canTeleportTo(Identifier location, Identifier toLocation) {
 		if (TeleConfig.COMMON.disableHopping.get()) {
-			ResourceLocation overworldLocation = Level.OVERWORLD.location();
+			Identifier overworldLocation = Level.OVERWORLD.identifier();
 			if (location.equals(overworldLocation)) {
 				return !location.equals(toLocation);
 			} else {
@@ -122,17 +123,17 @@ public class BlockCakeBase extends BlockPastryBase {
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
+	public boolean canSurvive(BlockState state, LevelReader levelReader, BlockPos pos) {
 		if (TeleConfig.COMMON.disableHopping.get()) {
-			ResourceLocation overworldLocation = Level.OVERWORLD.location();
-			ResourceLocation worldLocation = ((Level) worldIn).dimension().location();
+			Identifier overworldLocation = Level.OVERWORLD.identifier();
+			Identifier worldLocation = ((Level) levelReader).dimension().identifier();
 			if (worldLocation.equals(overworldLocation)) {
-				return !getCakeWorld().location().equals(overworldLocation);
+				return !getCakeWorld().identifier().equals(overworldLocation);
 			} else {
-				return getCakeWorld().location().equals(overworldLocation);
+				return getCakeWorld().identifier().equals(overworldLocation);
 			}
 		}
-		return super.canSurvive(state, worldIn, pos);
+		return super.canSurvive(state, levelReader, pos);
 	}
 
 	private InteractionResult eatSlice(LevelAccessor levelAccessor, BlockPos pos, BlockState state, Player player) {
@@ -169,7 +170,7 @@ public class BlockCakeBase extends BlockPastryBase {
 	private boolean isResetItem(ItemStack stack) {
 		List<? extends String> items = TeleConfig.COMMON.resetItems.get();
 		if (items.isEmpty()) return false;
-		ResourceLocation registryLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
+		Identifier registryLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
 		return registryLocation != null && items.contains(registryLocation.toString());
 	}
 
@@ -178,13 +179,13 @@ public class BlockCakeBase extends BlockPastryBase {
 			if (levelAccessor instanceof ServerLevel serverLevel && !player.isPassenger() && !player.isVehicle() &&
 					player.canTeleport(player.level(), serverLevel)) {
 				ServerPlayer serverPlayer = (ServerPlayer) player;
-				MinecraftServer server = player.getServer();
+				MinecraftServer server = serverLevel.getServer();
 				ServerLevel destinationWorld = server != null ? server.getLevel(getCakeWorld()) : null;
 				if (destinationWorld == null) {
 					player.displayClientMessage(
-							Component.translatable("telepastries.pastry.custom.invalid", getCakeWorld().location()).withStyle(ChatFormatting.RED),
+							Component.translatable("telepastries.pastry.custom.invalid", getCakeWorld().identifier()).withStyle(ChatFormatting.RED),
 							false);
-					TelePastries.LOGGER.error("Destination of cake invalid {} isn't known", getCakeWorld().location());
+					TelePastries.LOGGER.error("Destination of cake invalid {} isn't known", getCakeWorld().identifier());
 					return;
 				}
 
@@ -224,20 +225,20 @@ public class BlockCakeBase extends BlockPastryBase {
 	}
 
 	@Override
-	@SuppressWarnings("deprecated")
-	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
-		return (7 - blockState.getValue(BITES)) * 2;
+	protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
+		return (7 - state.getValue(BITES)) * 2;
 	}
 
 	protected void removeDimensionPosition(ServerPlayer player, ResourceKey<Level> dim) {
 		CompoundTag playerData = player.getPersistentData();
 		CompoundTag data = getTag(playerData);
 
-		if (data.contains(Reference.MOD_PREFIX + dim.location())) {
-			data.remove(Reference.MOD_PREFIX + dim.location());
-			player.sendSystemMessage(Component.translatable("telepastries.pastry.reset.complete", dim.location()));
+		Identifier dimension = dim.identifier();
+		if (data.contains(Reference.MOD_PREFIX + dimension)) {
+			data.remove(Reference.MOD_PREFIX + dimension);
+			player.sendSystemMessage(Component.translatable("telepastries.pastry.reset.complete", dimension));
 		} else {
-			player.sendSystemMessage(Component.translatable("telepastries.pastry.reset.failed", dim.location()));
+			player.sendSystemMessage(Component.translatable("telepastries.pastry.reset.failed", dimension));
 		}
 
 		playerData.put(Player.PERSISTED_NBT_TAG, data);

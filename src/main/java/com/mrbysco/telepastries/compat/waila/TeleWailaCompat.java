@@ -4,7 +4,7 @@ import com.mrbysco.telepastries.Reference;
 import com.mrbysco.telepastries.blocks.cake.BlockCakeBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -27,7 +27,7 @@ public class TeleWailaCompat implements IWailaPlugin {
 	}
 
 	public static class PastryBodyHandler implements IBlockComponentProvider {
-		private static final ResourceLocation BITES = ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "bites");
+		private static final Identifier BITES = Identifier.fromNamespaceAndPath(Reference.MOD_ID, "bites");
 
 		public static final PastryBodyHandler INSTANCE = new PastryBodyHandler();
 
@@ -37,7 +37,7 @@ public class TeleWailaCompat implements IWailaPlugin {
 		}
 
 		@Override
-		public ResourceLocation getUid() {
+		public Identifier getUid() {
 			return BITES;
 		}
 	}

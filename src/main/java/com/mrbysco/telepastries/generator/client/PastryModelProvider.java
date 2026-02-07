@@ -13,7 +13,7 @@ import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
@@ -43,10 +43,10 @@ public class PastryModelProvider extends ModelProvider {
 	}
 
 	private void makeCake(BlockModelGenerators blockModels, DeferredBlock<? extends BlockCakeBase> holder, String dimension) {
-		ResourceLocation side = modLocation("block/" + dimension + "/cake_side");
-		ResourceLocation top = modLocation("block/" + dimension + "/cake_top");
-		ResourceLocation bottom = modLocation("block/" + dimension + "/cake_bottom");
-		ResourceLocation inside = modLocation("block/" + dimension + "/cake_inner");
+		Identifier side = modLocation("block/" + dimension + "/cake_side");
+		Identifier top = modLocation("block/" + dimension + "/cake_top");
+		Identifier bottom = modLocation("block/" + dimension + "/cake_bottom");
+		Identifier inside = modLocation("block/" + dimension + "/cake_inner");
 
 		TextureMapping cakeMapping = TextureMapping
 				.singleSlot(TextureSlot.PARTICLE, side)
@@ -55,13 +55,13 @@ public class PastryModelProvider extends ModelProvider {
 		TextureMapping cakeSliceMapping = cakeMapping.copy()
 				.put(TextureSlot.INSIDE, inside);
 
-		ResourceLocation model = CAKE.create(holder.get(), cakeMapping, blockModels.modelOutput);
-		ResourceLocation slice1 = CAKE_SLICE1.createWithSuffix(holder.get(), "_slice1", cakeSliceMapping, blockModels.modelOutput);
-		ResourceLocation slice2 = CAKE_SLICE2.createWithSuffix(holder.get(), "_slice2", cakeSliceMapping, blockModels.modelOutput);
-		ResourceLocation slice3 = CAKE_SLICE3.createWithSuffix(holder.get(), "_slice3", cakeSliceMapping, blockModels.modelOutput);
-		ResourceLocation slice4 = CAKE_SLICE4.createWithSuffix(holder.get(), "_slice4", cakeSliceMapping, blockModels.modelOutput);
-		ResourceLocation slice5 = CAKE_SLICE5.createWithSuffix(holder.get(), "_slice5", cakeSliceMapping, blockModels.modelOutput);
-		ResourceLocation slice6 = CAKE_SLICE6.createWithSuffix(holder.get(), "_slice6", cakeSliceMapping, blockModels.modelOutput);
+		Identifier model = CAKE.create(holder.get(), cakeMapping, blockModels.modelOutput);
+		Identifier slice1 = CAKE_SLICE1.createWithSuffix(holder.get(), "_slice1", cakeSliceMapping, blockModels.modelOutput);
+		Identifier slice2 = CAKE_SLICE2.createWithSuffix(holder.get(), "_slice2", cakeSliceMapping, blockModels.modelOutput);
+		Identifier slice3 = CAKE_SLICE3.createWithSuffix(holder.get(), "_slice3", cakeSliceMapping, blockModels.modelOutput);
+		Identifier slice4 = CAKE_SLICE4.createWithSuffix(holder.get(), "_slice4", cakeSliceMapping, blockModels.modelOutput);
+		Identifier slice5 = CAKE_SLICE5.createWithSuffix(holder.get(), "_slice5", cakeSliceMapping, blockModels.modelOutput);
+		Identifier slice6 = CAKE_SLICE6.createWithSuffix(holder.get(), "_slice6", cakeSliceMapping, blockModels.modelOutput);
 
 		blockModels.registerSimpleFlatItemModel(holder.asItem());
 		blockModels.blockStateOutput

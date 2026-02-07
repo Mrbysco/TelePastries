@@ -10,7 +10,7 @@
 //import mcjty.theoneprobe.api.ProbeMode;
 //import net.minecraft.ChatFormatting;
 //import net.minecraft.network.chat.Component;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.world.entity.player.Player;
 //import net.minecraft.world.item.ItemStack;
 //import net.minecraft.world.level.Level;
@@ -36,8 +36,8 @@
 //	public static final class PastryInfo implements IProbeInfoProvider {
 //
 //		@Override
-//		public ResourceLocation getID() {
-//			return ResourceLocation.fromNamespaceAndPath(Reference.MOD_ID, "main");
+//		public Identifier getID() {
+//			return Identifier.fromNamespaceAndPath(Reference.MOD_ID, "main");
 //		}
 //
 //		@Override

@@ -8,8 +8,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +32,7 @@ public class BlockCustomCake extends BlockCakeBase {
 		if (!TeleConfig.COMMON.customCakeDimension.get().isEmpty()) {
 			return super.useItemOn(stack, state, level, pos, player, hand, result);
 		} else {
-			if (player.getUsedItemHand() == hand && !level.isClientSide) {
+			if (player.getUsedItemHand() == hand && !level.isClientSide()) {
 				player.displayClientMessage(Component.translatable("telepastries.pastry.custom.unbound").withStyle(ChatFormatting.RED), false);
 			}
 			return InteractionResult.SUCCESS;
@@ -48,13 +48,13 @@ public class BlockCustomCake extends BlockCakeBase {
 	public boolean isRefillItem(ItemStack stack) {
 		List<? extends String> items = TeleConfig.COMMON.customCakeRefillItem.get();
 		if (items.isEmpty()) return false;
-		ResourceLocation registryLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
+		Identifier registryLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
 		return registryLocation != null && items.contains(registryLocation.toString());
 	}
 
 	@Override
 	public ResourceKey<Level> getCakeWorld() {
-		return ResourceKey.create(Registries.DIMENSION, ResourceLocation.tryParse(TeleConfig.COMMON.customCakeDimension.get()));
+		return ResourceKey.create(Registries.DIMENSION, Identifier.tryParse(TeleConfig.COMMON.customCakeDimension.get()));
 	}
 
 	@Override

@@ -5,8 +5,8 @@ import com.mrbysco.telepastries.util.CakeTeleportHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,7 +31,7 @@ public class BlockEndCake extends BlockCakeBase {
 			if (levelAccessor instanceof ServerLevel serverLevel && !player.isPassenger() && !player.isVehicle() &&
 					player.canTeleport(player.level(), serverLevel)) {
 				ServerPlayer serverPlayer = (ServerPlayer) player;
-				MinecraftServer server = player.getServer();
+				MinecraftServer server = serverLevel.getServer();
 				ServerLevel destinationWorld = server != null ? server.getLevel(getCakeWorld()) : null;
 				if (destinationWorld == null)
 					return;
@@ -48,13 +48,13 @@ public class BlockEndCake extends BlockCakeBase {
 	public boolean isRefillItem(ItemStack stack) {
 		List<? extends String> items = TeleConfig.COMMON.endCakeRefillItems.get();
 		if (items.isEmpty()) return false;
-		ResourceLocation registryLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
+		Identifier registryLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
 		return registryLocation != null && items.contains(registryLocation.toString());
 	}
 
 	@Override
 	public ResourceKey<Level> getCakeWorld() {
-		return ResourceKey.create(Registries.DIMENSION, ResourceLocation.withDefaultNamespace("the_end"));
+		return ResourceKey.create(Registries.DIMENSION, Identifier.withDefaultNamespace("the_end"));
 	}
 
 	@Override
