@@ -33,7 +33,7 @@ public class BlockCustomCake2 extends BlockCakeBase {
 			return super.useItemOn(stack, state, level, pos, player, hand, result);
 		} else {
 			if (player.getUsedItemHand() == hand && !level.isClientSide()) {
-				player.displayClientMessage(Component.translatable("telepastries.pastry.custom.unbound").withStyle(ChatFormatting.RED), false);
+				player.sendSystemMessage(Component.translatable("telepastries.pastry.custom.unbound").withStyle(ChatFormatting.RED));
 			}
 			return InteractionResult.SUCCESS;
 		}

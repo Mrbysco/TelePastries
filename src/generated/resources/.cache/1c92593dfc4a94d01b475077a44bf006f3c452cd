@@ -1,9 +1,9 @@
-// 1.21.11	2026-02-07T14:25:13.9024958	TelePastries Recipes
+// 26.1.2	2026-04-27T01:15:45.4954265	TelePastries Recipes
 c7b74099d746b797a2228142b6c8ae593b09fa27 data/telepastries/advancement/recipes/transportation/end_cake.json
 777c96e0af1a90cce9106b1f72640206415c82a7 data/telepastries/advancement/recipes/transportation/nether_cake.json
 88e6a47da5ad1617dd2e75ef22e6d58050a0cad9 data/telepastries/advancement/recipes/transportation/overworld_cake.json
 101078746c8498bfa0ad687cbd5d6ff531081fe5 data/telepastries/advancement/recipes/transportation/twilight_cake.json
-b8fb081cfda093d131c63dc0a6b57aa0ec3d1e47 data/telepastries/recipe/end_cake.json
-4a6d3310c022ecfb6cf04b54c35b18e0ae4d32e2 data/telepastries/recipe/nether_cake.json
-be685a2dc79cbc904b53deecb39e599e7df9846d data/telepastries/recipe/overworld_cake.json
-98b9a49449c7a0b8dc6d499b5e4dfd9d9bdfcdd6 data/telepastries/recipe/twilight_cake.json
+9838069a51f15f8040b29894372bc8ef93c5492f data/telepastries/recipe/end_cake.json
+ef75c20878556a4e500e8f1c514a59233010af75 data/telepastries/recipe/nether_cake.json
+b110ef190434f398a331a974f2cb6531a084f56e data/telepastries/recipe/overworld_cake.json
+96d0e70413a0a1ebe118ac599691122d901074b2 data/telepastries/recipe/twilight_cake.json

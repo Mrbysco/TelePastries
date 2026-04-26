@@ -13,7 +13,7 @@ public class BlockPastryBase extends Block {
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-		return worldIn.getBlockState(pos.below()).isSolid();
+	public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+		return level.getBlockState(pos.below()).isSolid();
 	}
 }

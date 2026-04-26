@@ -12,19 +12,20 @@ import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
 public class PastryModelProvider extends ModelProvider {
-	public static final ModelTemplate CAKE = ModelTemplates.create("cake", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE).extend().renderType("cutout").build();
-	public static final ModelTemplate CAKE_SLICE1 = ModelTemplates.create("cake_slice1", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE).extend().renderType("cutout").build();
-	public static final ModelTemplate CAKE_SLICE2 = ModelTemplates.create("cake_slice2", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE).extend().renderType("cutout").build();
-	public static final ModelTemplate CAKE_SLICE3 = ModelTemplates.create("cake_slice3", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE).extend().renderType("cutout").build();
-	public static final ModelTemplate CAKE_SLICE4 = ModelTemplates.create("cake_slice4", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE).extend().renderType("cutout").build();
-	public static final ModelTemplate CAKE_SLICE5 = ModelTemplates.create("cake_slice5", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE).extend().renderType("cutout").build();
-	public static final ModelTemplate CAKE_SLICE6 = ModelTemplates.create("cake_slice6", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE).extend().renderType("cutout").build();
+	public static final ModelTemplate CAKE = ModelTemplates.create("cake", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE);
+	public static final ModelTemplate CAKE_SLICE1 = ModelTemplates.create("cake_slice1", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE);
+	public static final ModelTemplate CAKE_SLICE2 = ModelTemplates.create("cake_slice2", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE);
+	public static final ModelTemplate CAKE_SLICE3 = ModelTemplates.create("cake_slice3", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE);
+	public static final ModelTemplate CAKE_SLICE4 = ModelTemplates.create("cake_slice4", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE);
+	public static final ModelTemplate CAKE_SLICE5 = ModelTemplates.create("cake_slice5", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE);
+	public static final ModelTemplate CAKE_SLICE6 = ModelTemplates.create("cake_slice6", TextureSlot.PARTICLE, TextureSlot.BOTTOM, TextureSlot.TOP, TextureSlot.SIDE, TextureSlot.INSIDE);
 
 	public PastryModelProvider(PackOutput packOutput) {
 		super(packOutput, Reference.MOD_ID);
@@ -49,11 +50,12 @@ public class PastryModelProvider extends ModelProvider {
 		Identifier inside = modLocation("block/" + dimension + "/cake_inner");
 
 		TextureMapping cakeMapping = TextureMapping
-				.singleSlot(TextureSlot.PARTICLE, side)
-				.put(TextureSlot.SIDE, side).put(TextureSlot.TOP, top)
-				.put(TextureSlot.BOTTOM, bottom);
+				.singleSlot(TextureSlot.PARTICLE, new Material(side))
+				.put(TextureSlot.SIDE, new Material(side))
+				.put(TextureSlot.TOP, new Material(top))
+				.put(TextureSlot.BOTTOM, new Material(bottom));
 		TextureMapping cakeSliceMapping = cakeMapping.copy()
-				.put(TextureSlot.INSIDE, inside);
+				.put(TextureSlot.INSIDE, new Material(inside));
 
 		Identifier model = CAKE.create(holder.get(), cakeMapping, blockModels.modelOutput);
 		Identifier slice1 = CAKE_SLICE1.createWithSuffix(holder.get(), "_slice1", cakeSliceMapping, blockModels.modelOutput);

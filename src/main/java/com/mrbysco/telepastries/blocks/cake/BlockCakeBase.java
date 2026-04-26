@@ -98,9 +98,9 @@ public class BlockCakeBase extends BlockPastryBase {
 				}
 			} else {
 				if (level.dimension().identifier().equals(getCakeWorld().identifier())) {
-					player.displayClientMessage(Component.translatable("telepastries.same_dimension"), true);
+					player.sendOverlayMessage(Component.translatable("telepastries.same_dimension"));
 				} else {
-					player.displayClientMessage(Component.translatable("telepastries.teleport_restricted"), true);
+					player.sendOverlayMessage(Component.translatable("telepastries.teleport_restricted"));
 				}
 				return InteractionResult.PASS;
 			}
@@ -123,17 +123,17 @@ public class BlockCakeBase extends BlockPastryBase {
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, LevelReader levelReader, BlockPos pos) {
+	public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
 		if (TeleConfig.COMMON.disableHopping.get()) {
 			Identifier overworldLocation = Level.OVERWORLD.identifier();
-			Identifier worldLocation = ((Level) levelReader).dimension().identifier();
+			Identifier worldLocation = ((Level) level).dimension().identifier();
 			if (worldLocation.equals(overworldLocation)) {
 				return !getCakeWorld().identifier().equals(overworldLocation);
 			} else {
 				return getCakeWorld().identifier().equals(overworldLocation);
 			}
 		}
-		return super.canSurvive(state, levelReader, pos);
+		return super.canSurvive(state, level, pos);
 	}
 
 	private InteractionResult eatSlice(LevelAccessor levelAccessor, BlockPos pos, BlockState state, Player player) {
@@ -182,9 +182,9 @@ public class BlockCakeBase extends BlockPastryBase {
 				MinecraftServer server = serverLevel.getServer();
 				ServerLevel destinationWorld = server != null ? server.getLevel(getCakeWorld()) : null;
 				if (destinationWorld == null) {
-					player.displayClientMessage(
-							Component.translatable("telepastries.pastry.custom.invalid", getCakeWorld().identifier()).withStyle(ChatFormatting.RED),
-							false);
+					player.sendSystemMessage(
+							Component.translatable("telepastries.pastry.custom.invalid", getCakeWorld().identifier()).withStyle(ChatFormatting.RED)
+					);
 					TelePastries.LOGGER.error("Destination of cake invalid {} isn't known", getCakeWorld().identifier());
 					return;
 				}

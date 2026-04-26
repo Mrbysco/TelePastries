@@ -25,9 +25,9 @@ public class CakeBlockItem extends BlockItem {
 			Identifier cakeLocation = cakeBlock.getCakeWorld().identifier();
 			Identifier currentLocation = player.level().dimension().identifier();
 			if (cakeLocation.equals(currentLocation)) {
-				player.displayClientMessage(Component.translatable("telepastries.same_dimension"), true);
+				player.sendOverlayMessage(Component.translatable("telepastries.same_dimension"));
 			} else {
-				player.displayClientMessage(Component.translatable("telepastries.teleport_restricted"), true);
+				player.sendOverlayMessage(Component.translatable("telepastries.teleport_restricted"));
 			}
 		}
 		return flag;

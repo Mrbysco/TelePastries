@@ -34,7 +34,7 @@ public class BlockLostCityCake extends BlockCakeBase {
 			return super.useItemOn(stack, state, level, pos, player, hand, result);
 		} else {
 			if (player.getUsedItemHand() == hand && !level.isClientSide()) {
-				player.displayClientMessage(Component.translatable("telepastries.pastry.support.disabled", "lostcities").withStyle(ChatFormatting.RED), false);
+				player.sendSystemMessage(Component.translatable("telepastries.pastry.support.disabled", "lostcities").withStyle(ChatFormatting.RED));
 			}
 			return InteractionResult.SUCCESS;
 		}
